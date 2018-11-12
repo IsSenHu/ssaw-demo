@@ -1,0 +1,29 @@
+server:
+  port: 20001
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@www.senhu.com:10001/eureka/
+  instance:
+    prefer-ip-address: true   #注册服务时使用ip而非计算机名
+
+ribbon:                       #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
+  eager-load:
+    enabled: true             #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
+
+spring:
+  application:
+    name: ssaw-demo-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+
+
+

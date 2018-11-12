@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="commons" />
+        <module name="ssaw-consumer-demo" />
+        <module name="ssaw-eureka-server" />
+        <module name="ssaw-service-demo" />
+        <module name="ssaw-turbine" />
+        <module name="support-cassandra" />
+        <module name="support-couchbase" />
+        <module name="support-envers" />
+        <module name="support-es" />
+        <module name="support-feign" />
+        <module name="support-geode" />
+        <module name="support-hadoop" />
+        <module name="support-jdbc" />
+        <module name="support-jdbc-extensions" />
+        <module name="support-jpa" />
+        <module name="support-ldap" />
+        <module name="support-mongodb" />
+        <module name="support-mybatis" />
+        <module name="support-neo4J" />
+        <module name="support-pivotal-gemFire" />
+        <module name="support-reactive-redis" />
+        <module name="support-redis" />
+        <module name="support-rest" />
+        <module name="support-rocketmq" />
+        <module name="support-solr" />
+        <module name="support-swagger" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="base" target="1.8" />
+      <module name="commons" target="1.8" />
+      <module name="demo" target="1.8" />
+      <module name="ssaw-consumer-demo" target="1.8" />
+      <module name="ssaw-eureka-server" target="1.8" />
+      <module name="ssaw-hystrix-dashboard" target="1.8" />
+      <module name="ssaw-service-demo" target="1.8" />
+      <module name="ssaw-turbine" target="1.8" />
+      <module name="support-cassandra" target="1.8" />
+      <module name="support-couchbase" target="1.8" />
+      <module name="support-envers" target="1.8" />
+      <module name="support-es" target="1.8" />
+      <module name="support-feign" target="1.8" />
+      <module name="support-geode" target="1.8" />
+      <module name="support-hadoop" target="1.8" />
+      <module name="support-jdbc" target="1.8" />
+      <module name="support-jdbc-extensions" target="1.8" />
+      <module name="support-jpa" target="1.8" />
+      <module name="support-ldap" target="1.8" />
+      <module name="support-mongodb" target="1.8" />
+      <module name="support-mybatis" target="1.8" />
+      <module name="support-neo4J" target="1.8" />
+      <module name="support-pivotal-gemFire" target="1.8" />
+      <module name="support-reactive-redis" target="1.8" />
+      <module name="support-redis" target="1.8" />
+      <module name="support-rest" target="1.8" />
+      <module name="support-rocketmq" target="1.8" />
+      <module name="support-solr" target="1.8" />
+      <module name="support-swagger" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

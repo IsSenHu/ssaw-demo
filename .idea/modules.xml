@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/base/base.iml" filepath="$PROJECT_DIR$/base/base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/commons/commons.iml" filepath="$PROJECT_DIR$/base/commons/commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ssaw.iml" filepath="$PROJECT_DIR$/.idea/ssaw.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssaw-consumer-demo/ssaw-consumer-demo.iml" filepath="$PROJECT_DIR$/ssaw-consumer-demo/ssaw-consumer-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssaw-eureka-server/ssaw-eureka-server.iml" filepath="$PROJECT_DIR$/ssaw-eureka-server/ssaw-eureka-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssaw-service-demo/ssaw-service-demo.iml" filepath="$PROJECT_DIR$/ssaw-service-demo/ssaw-service-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssaw-turbine/ssaw-turbine.iml" filepath="$PROJECT_DIR$/ssaw-turbine/ssaw-turbine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-cassandra/support-cassandra.iml" filepath="$PROJECT_DIR$/base/support-cassandra/support-cassandra.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-couchbase/support-couchbase.iml" filepath="$PROJECT_DIR$/base/support-couchbase/support-couchbase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-envers/support-envers.iml" filepath="$PROJECT_DIR$/base/support-envers/support-envers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-es/support-es.iml" filepath="$PROJECT_DIR$/base/support-es/support-es.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-feign/support-feign.iml" filepath="$PROJECT_DIR$/base/support-feign/support-feign.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-geode/support-geode.iml" filepath="$PROJECT_DIR$/base/support-geode/support-geode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-hadoop/support-hadoop.iml" filepath="$PROJECT_DIR$/base/support-hadoop/support-hadoop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-jdbc/support-jdbc.iml" filepath="$PROJECT_DIR$/base/support-jdbc/support-jdbc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-jdbc-extensions/support-jdbc-extensions.iml" filepath="$PROJECT_DIR$/base/support-jdbc-extensions/support-jdbc-extensions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-jpa/support-jpa.iml" filepath="$PROJECT_DIR$/base/support-jpa/support-jpa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-ldap/support-ldap.iml" filepath="$PROJECT_DIR$/base/support-ldap/support-ldap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-mongodb/support-mongodb.iml" filepath="$PROJECT_DIR$/base/support-mongodb/support-mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-mybatis/support-mybatis.iml" filepath="$PROJECT_DIR$/base/support-mybatis/support-mybatis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-neo4J/support-neo4J.iml" filepath="$PROJECT_DIR$/base/support-neo4J/support-neo4J.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-pivotal-gemFire/support-pivotal-gemFire.iml" filepath="$PROJECT_DIR$/base/support-pivotal-gemFire/support-pivotal-gemFire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-reactive-redis/support-reactive-redis.iml" filepath="$PROJECT_DIR$/base/support-reactive-redis/support-reactive-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-redis/support-redis.iml" filepath="$PROJECT_DIR$/base/support-redis/support-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-rest/support-rest.iml" filepath="$PROJECT_DIR$/base/support-rest/support-rest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-rocketmq/support-rocketmq.iml" filepath="$PROJECT_DIR$/base/support-rocketmq/support-rocketmq.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-solr/support-solr.iml" filepath="$PROJECT_DIR$/base/support-solr/support-solr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-swagger/support-swagger.iml" filepath="$PROJECT_DIR$/base/support-swagger/support-swagger.iml" />
+    </modules>
+  </component>
+</project>
