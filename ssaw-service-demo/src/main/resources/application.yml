@@ -7,7 +7,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://admin:14780118635@www.senhu.com:10001/eureka/
+      defaultZone: http://admin:14780118635@localhost:10001/eureka/
   instance:
     prefer-ip-address: true   #注册服务时使用ip而非计算机名
 
@@ -24,6 +24,32 @@ spring:
     username: husen
     password: 521428
     virtual-host: /
+
+  datasource:                 #数据源配置
+    name: ssaw_demo
+    url: jdbc:mysql://118.24.38.46:3306/ssaw_demo?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 521428Slly
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filters: mergeStat,config,slf4j
+      max-active: 10000
+      initial-size: 5
+      max-wait: 60000
+      min-idle: 3
+      time-between-eviction-runs-millis: 18000000
+      min-evictable-idle-time-millis: 1000000
+      validation-query: SELECT1FROMDUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+      max-pool-prepared-statement-per-connection-size: 50
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      log-abandoned: false
 
 
 

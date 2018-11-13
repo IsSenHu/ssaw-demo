@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ssaw-service-demo</artifactId>
+    <artifactId>ssaw-turbine-stream</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ssaw-service-demo</name>
-    <description>服务提供者Demo</description>
+    <name>ssaw-turbine-stream</name>
+    <description>turbine与rabbitmq整合 解决网络不通问题</description>
 
     <parent>
         <groupId>com.ssaw</groupId>
@@ -18,17 +18,12 @@
     </parent>
 
     <properties>
-        <support-mybatis.version>0.0.1-SNAPSHOT</support-mybatis.version>
-        <support-druid.version>0.0.1-SNAPSHOT</support-druid.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- spring-cloud服务注册与发现 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -47,28 +42,12 @@
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-turbine-stream</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-        </dependency>
-
-        <!-- 单元测试 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- mybatis 支持 -->
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>support-mybatis</artifactId>
-            <version>${support-mybatis.version}</version>
-        </dependency>
-
-        <!-- druid -->
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>support-druid</artifactId>
-            <version>${support-druid.version}</version>
         </dependency>
     </dependencies>
 
@@ -103,4 +82,6 @@
             </snapshots>
         </repository>
     </repositories>
+
+
 </project>

@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ssaw-service-demo</artifactId>
+    <artifactId>ssaw-hystrix-monitor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ssaw-service-demo</name>
-    <description>服务提供者Demo</description>
+    <name>ssaw-hystrix-monitor</name>
+    <description>监控台</description>
 
     <parent>
         <groupId>com.ssaw</groupId>
@@ -17,21 +17,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <properties>
-        <support-mybatis.version>0.0.1-SNAPSHOT</support-mybatis.version>
-        <support-druid.version>0.0.1-SNAPSHOT</support-druid.version>
-    </properties>
-
     <dependencies>
+        <!-- 安全认证 需要登录才能进入 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- spring-cloud服务注册与发现 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <!-- spring-cloud断路器（feign自带断路器，可以不要此依赖，但要使用断路器监控就必须要） -->
@@ -40,35 +30,10 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
 
+        <!-- 断路监控 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-netflix-hystrix-stream</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-        </dependency>
-
-        <!-- 单元测试 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- mybatis 支持 -->
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>support-mybatis</artifactId>
-            <version>${support-mybatis.version}</version>
-        </dependency>
-
-        <!-- druid -->
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>support-druid</artifactId>
-            <version>${support-druid.version}</version>
+            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
         </dependency>
     </dependencies>
 
@@ -103,4 +68,6 @@
             </snapshots>
         </repository>
     </repositories>
+
+
 </project>

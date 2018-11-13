@@ -6,12 +6,40 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/base/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-turbine-stream/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-turbine/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-service-demo/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-consumer-demo/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-turbine/pom.xml" />
+        <option value="$PROJECT_DIR$/base/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/base/commons/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-cassandra/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-couchbase/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-envers/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-es/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-feign/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-geode/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-hadoop/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-jdbc-extensions/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-jdbc/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-jpa/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-ldap/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-mongodb/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-mybatis/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-neo4J/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-pivotal-gemFire/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-reactive-redis/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-redis/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-rest/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-rocketmq/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-solr/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-swagger/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK" />

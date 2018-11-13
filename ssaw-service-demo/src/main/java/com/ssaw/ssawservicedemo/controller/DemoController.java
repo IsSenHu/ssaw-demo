@@ -1,11 +1,13 @@
 package com.ssaw.ssawservicedemo.controller;
 
+import com.ssaw.ssawservicedemo.entity.User;
 import com.ssaw.ssawservicedemo.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,5 +28,10 @@ public class DemoController {
     @GetMapping("/get")
     public Map<String, String> get() {
         return demoService.get();
+    }
+
+    @GetMapping("/users")
+    public List<User> users() {
+        return demoService.users();
     }
 }

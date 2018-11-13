@@ -1,0 +1,13 @@
+server:
+  port: 16001
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@www.senhu.com:10001/eureka/
+  instance:
+    prefer-ip-address: true  #注册服务时使用ip而非计算机名
+
+spring:
+  application:
+    name: ssaw-hystrix-monitor
