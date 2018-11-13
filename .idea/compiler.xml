@@ -9,6 +9,7 @@
         <module name="commons" />
         <module name="ssaw-consumer-demo" />
         <module name="ssaw-eureka-server" />
+        <module name="ssaw-hystrix-monitor" />
         <module name="ssaw-service-demo" />
         <module name="ssaw-turbine" />
         <module name="support-cassandra" />
@@ -23,7 +24,6 @@
         <module name="support-jpa" />
         <module name="support-ldap" />
         <module name="support-mongodb" />
-        <module name="support-mybatis" />
         <module name="support-neo4J" />
         <module name="support-pivotal-gemFire" />
         <module name="support-reactive-redis" />
@@ -41,10 +41,12 @@
       <module name="ssaw-consumer-demo" target="1.8" />
       <module name="ssaw-eureka-server" target="1.8" />
       <module name="ssaw-hystrix-dashboard" target="1.8" />
+      <module name="ssaw-hystrix-monitor" target="1.8" />
       <module name="ssaw-service-demo" target="1.8" />
       <module name="ssaw-turbine" target="1.8" />
       <module name="support-cassandra" target="1.8" />
       <module name="support-couchbase" target="1.8" />
+      <module name="support-druid" target="1.8" />
       <module name="support-envers" target="1.8" />
       <module name="support-es" target="1.8" />
       <module name="support-feign" target="1.8" />

@@ -7,10 +7,12 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/ssaw.iml" filepath="$PROJECT_DIR$/.idea/ssaw.iml" />
       <module fileurl="file://$PROJECT_DIR$/ssaw-consumer-demo/ssaw-consumer-demo.iml" filepath="$PROJECT_DIR$/ssaw-consumer-demo/ssaw-consumer-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/ssaw-eureka-server/ssaw-eureka-server.iml" filepath="$PROJECT_DIR$/ssaw-eureka-server/ssaw-eureka-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssaw-hystrix-monitor/ssaw-hystrix-monitor.iml" filepath="$PROJECT_DIR$/ssaw-hystrix-monitor/ssaw-hystrix-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/ssaw-service-demo/ssaw-service-demo.iml" filepath="$PROJECT_DIR$/ssaw-service-demo/ssaw-service-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/ssaw-turbine/ssaw-turbine.iml" filepath="$PROJECT_DIR$/ssaw-turbine/ssaw-turbine.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-cassandra/support-cassandra.iml" filepath="$PROJECT_DIR$/base/support-cassandra/support-cassandra.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-couchbase/support-couchbase.iml" filepath="$PROJECT_DIR$/base/support-couchbase/support-couchbase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/support-druid/support-druid.iml" filepath="$PROJECT_DIR$/base/support-druid/support-druid.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-envers/support-envers.iml" filepath="$PROJECT_DIR$/base/support-envers/support-envers.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-es/support-es.iml" filepath="$PROJECT_DIR$/base/support-es/support-es.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-feign/support-feign.iml" filepath="$PROJECT_DIR$/base/support-feign/support-feign.iml" />

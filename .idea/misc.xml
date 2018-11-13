@@ -6,11 +6,14 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/base/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-service-demo/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-consumer-demo/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-turbine/pom.xml" />
+        <option value="$PROJECT_DIR$/base/support-mybatis/pom.xml" />
+        <option value="$PROJECT_DIR$/base/pom.xml" />
+        <option value="$PROJECT_DIR$/base/commons/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml" />
       </list>
     </option>
   </component>

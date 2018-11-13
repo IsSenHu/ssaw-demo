@@ -1,11 +1,15 @@
 package com.ssaw.ssawservicedemo.service.impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.ssaw.ssawservicedemo.dao.UserMapper;
+import com.ssaw.ssawservicedemo.entity.User;
 import com.ssaw.ssawservicedemo.service.DemoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.StopWatch;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,6 +20,13 @@ import java.util.Random;
 @Service
 @Slf4j
 public class DemoServiceImpl implements DemoService {
+
+    private final UserMapper userMapper;
+
+    @Autowired
+    public DemoServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     @Override
     @HystrixCommand(fallbackMethod = "getFallBack", commandKey = "demoKey")
@@ -34,6 +45,11 @@ public class DemoServiceImpl implements DemoService {
 
         log.info("调用花费时间:{}ms", stopWatch.getTime());
         return result;
+    }
+
+    @Override
+    public List<User> users() {
+        return userMapper.selectList(null);
     }
 
     @SuppressWarnings("unused")

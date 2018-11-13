@@ -1,5 +1,8 @@
 package com.ssaw.ssawservicedemo.service;
 
+import com.ssaw.ssawservicedemo.entity.User;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,4 +11,6 @@ import java.util.Map;
  */
 public interface DemoService {
     Map<String,String> get();
+
+    List<User> users();
 }
