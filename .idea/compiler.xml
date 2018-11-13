@@ -12,6 +12,7 @@
         <module name="ssaw-hystrix-monitor" />
         <module name="ssaw-service-demo" />
         <module name="ssaw-turbine" />
+        <module name="ssaw-turbine-stream" />
         <module name="support-cassandra" />
         <module name="support-couchbase" />
         <module name="support-envers" />
@@ -44,6 +45,7 @@
       <module name="ssaw-hystrix-monitor" target="1.8" />
       <module name="ssaw-service-demo" target="1.8" />
       <module name="ssaw-turbine" target="1.8" />
+      <module name="ssaw-turbine-stream" target="1.8" />
       <module name="support-cassandra" target="1.8" />
       <module name="support-couchbase" target="1.8" />
       <module name="support-druid" target="1.8" />

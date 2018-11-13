@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/ssaw-hystrix-monitor/ssaw-hystrix-monitor.iml" filepath="$PROJECT_DIR$/ssaw-hystrix-monitor/ssaw-hystrix-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/ssaw-service-demo/ssaw-service-demo.iml" filepath="$PROJECT_DIR$/ssaw-service-demo/ssaw-service-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/ssaw-turbine/ssaw-turbine.iml" filepath="$PROJECT_DIR$/ssaw-turbine/ssaw-turbine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssaw-turbine-stream/ssaw-turbine-stream.iml" filepath="$PROJECT_DIR$/ssaw-turbine-stream/ssaw-turbine-stream.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-cassandra/support-cassandra.iml" filepath="$PROJECT_DIR$/base/support-cassandra/support-cassandra.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-couchbase/support-couchbase.iml" filepath="$PROJECT_DIR$/base/support-couchbase/support-couchbase.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/support-druid/support-druid.iml" filepath="$PROJECT_DIR$/base/support-druid/support-druid.iml" />
