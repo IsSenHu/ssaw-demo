@@ -16,9 +16,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
         http.csrf().disable();
-        http.authorizeRequests().anyRequest().authenticated().and().httpBasic();
+        http.authorizeRequests().anyRequest().authenticated().and().httpBasic()
+                .and()
+                .formLogin()
+                .usernameParameter("admin")
+                .passwordParameter("14780118635")
+                .successForwardUrl("/hystrix");
     }
 }
