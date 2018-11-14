@@ -7,13 +7,13 @@ eureka:
     service-url:
       defaultZone: http://admin:14780118635@localhost:10001/eureka/
   instance:
-    prefer-ip-address: true #注册服务时使用ip而非计算机名
+    prefer-ip-address: true #娉ㄥ唽鏈嶅姟鏃朵娇鐢╥p鑰岄潪璁＄畻鏈哄悕
 
 spring:
   application:
     name: ssaw-turbine-stream
 
-  rabbitmq:                 #rabbit配置
+  rabbitmq:                 #rabbit閰嶇疆
     host: localhost
     port: 5672
     username: husen

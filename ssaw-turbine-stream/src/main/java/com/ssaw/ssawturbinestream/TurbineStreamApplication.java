@@ -8,7 +8,7 @@ import org.springframework.cloud.netflix.turbine.stream.EnableTurbineStream;
  * @author HS
  */
 @SpringBootApplication
-@EnableTurbineStream()
+@EnableTurbineStream
 public class TurbineStreamApplication {
 
     public static void main(String[] args) {
