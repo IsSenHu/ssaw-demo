@@ -7,12 +7,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="commons" />
+        <module name="ssaw-config" />
+        <module name="ssaw-config-server" />
         <module name="ssaw-consumer-demo" />
         <module name="ssaw-eureka-server" />
         <module name="ssaw-hystrix-monitor" />
         <module name="ssaw-service-demo" />
         <module name="ssaw-turbine" />
         <module name="ssaw-turbine-stream" />
+        <module name="ssaw-zuul" />
         <module name="support-cassandra" />
         <module name="support-couchbase" />
         <module name="support-envers" />
@@ -39,6 +42,8 @@
       <module name="base" target="1.8" />
       <module name="commons" target="1.8" />
       <module name="demo" target="1.8" />
+      <module name="ssaw-config" target="1.8" />
+      <module name="ssaw-config-server" target="1.8" />
       <module name="ssaw-consumer-demo" target="1.8" />
       <module name="ssaw-eureka-server" target="1.8" />
       <module name="ssaw-hystrix-dashboard" target="1.8" />
@@ -46,6 +51,7 @@
       <module name="ssaw-service-demo" target="1.8" />
       <module name="ssaw-turbine" target="1.8" />
       <module name="ssaw-turbine-stream" target="1.8" />
+      <module name="ssaw-zuul" target="1.8" />
       <module name="support-cassandra" target="1.8" />
       <module name="support-couchbase" target="1.8" />
       <module name="support-druid" target="1.8" />

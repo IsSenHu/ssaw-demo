@@ -1,5 +1,6 @@
 package com.ssaw.ssawconsumerdemo.controller;
 
+import com.ssaw.ssawconsumerdemo.feign.DemoFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,15 +17,15 @@ import java.util.Map;
 @RequestMapping("/demo")
 public class DemoController {
 
-    private final RestTemplate restTemplate;
+    private final DemoFeign demoFeign;
 
     @Autowired
-    public DemoController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public DemoController(DemoFeign demoFeign) {
+        this.demoFeign = demoFeign;
     }
 
     @GetMapping("/get")
     public Map get() {
-        return restTemplate.getForObject("http://SSAW-DEMO-SERVICE/demo/get", Map.class, new HashMap<>());
+        return demoFeign.get();
     }
 }

@@ -2,7 +2,9 @@
   <dictionary name="HS">
     <words>
       <w>hystrix</w>
+      <w>rocketmq</w>
       <w>ssaw</w>
+      <w>zuul</w>
     </words>
   </dictionary>
 </component>

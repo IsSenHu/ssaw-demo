@@ -15,6 +15,9 @@
         <option value="$PROJECT_DIR$/base/commons/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml" />
         <option value="$PROJECT_DIR$/ssaw-turbine-stream/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-config/pom.xml" />
       </list>
     </option>
   </component>

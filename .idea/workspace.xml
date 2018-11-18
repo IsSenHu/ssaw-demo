@@ -1,7 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1ab6c5a2-ac83-4791-a76b-1dbc85da78f4" name="Default" comment="" />
+    <list default="true" id="1ab6c5a2-ac83-4791-a76b-1dbc85da78f4" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/ssaw-consumer-demo/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/controller/ValueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/HS.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/HS.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_freemarker_freemarker_2_3_28.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_freemarker_2_1_0_RELEASE.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_hystrix_dashboard_2_1_0_M1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_hystrix_dashboard_2_1_0_M1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_support_5_1_2_RELEASE.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_webjars_d3js_3_4_11.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_webjars_jquery_2_1_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-consumer-demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ssaw-consumer-demo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/ConsumerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/ConsumerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/controller/DemoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/controller/DemoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-consumer-demo/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-eureka-server" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-hystrix-monitor/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/HystrixMonitorApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/WebSecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/config.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-service-demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ssaw-service-demo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-service-demo/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ssaw-service-demo/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-turbine-stream/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-turbine-stream/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-turbine-stream/src/main/java/com/ssaw/ssawturbinestream/TurbineStreamApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssaw-turbine-stream/src/main/resources/application.yml" beforeDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/base/support-pivotal-gemFire/target/" />
     <ignored path="$PROJECT_DIR$/base/support-es/target/" />
     <ignored path="$PROJECT_DIR$/base/support-hadoop/target/" />
@@ -34,12 +69,18 @@
     <ignored path="$PROJECT_DIR$/base/support-druid/target/" />
     <ignored path="$PROJECT_DIR$/ssaw-hystrix-monitor/target/" />
     <ignored path="$PROJECT_DIR$/ssaw-turbine-stream/target/" />
+    <ignored path="$PROJECT_DIR$/ssaw-zuul/target/" />
+    <ignored path="$PROJECT_DIR$/ssaw-config-server/target/" />
+    <ignored path="$PROJECT_DIR$/ssaw-config/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/ssaw$DemoService.ic" NAME="DemoService Coverage Results" MODIFIED="1542447621900" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="2096375821">
@@ -86,39 +127,21 @@
     <favorites_list name="ssaw" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="bootstrap.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ssaw-service-demo/src/main/resources/bootstrap.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
+            <state relative-caret-position="63">
+              <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/pom.xml">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ssaw-service-demo/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="30" selection-start-line="30" selection-end-line="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="application.yml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/src/main/resources/application.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="8" column="11" lean-forward="true" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TurbineStreamApplication.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/src/main/java/com/ssaw/ssawturbinestream/TurbineStreamApplication.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+            <state relative-caret-position="220">
+              <caret line="119" column="20" lean-forward="true" selection-start-line="119" selection-start-column="20" selection-end-line="119" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -146,63 +169,67 @@
       <find>9159</find>
       <find>9912</find>
       <find>hystrix.stream</find>
+      <find>spring-boot-starter-aop</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="ROOT_SYNC" value="SYNC" />
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/ssaw-eureka-server" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/base/.gitignore" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/src/main/java/com/husen/ssaweurekaserver/SsawEurekaServerApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/src/main/java/com/husen/ssaweurekaserver/EurekaServerApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/src/main/java/com/husen/ssaweurekaserver/SecurityConfig.java" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/src/main/resources/application-peer1..yml" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/src/main/resources/application-peer2.yml" />
-        <option value="$PROJECT_DIR$/ssaw-eureka-server/.gitignore" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/SsawServiceDemoApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/service/impl/DemoServiceImlp.java" />
-        <option value="$PROJECT_DIR$/ssaw-consumer-demo/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/SsawConsumerDemoApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/ConsumerApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/controller/DemoConrtoller.java" />
-        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/controller/DemoController.java" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-dashboard/src/main/java/com/ssaw/ssawhystrixdashboard/SsawHystrixDashboardApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-dashboard/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-dashboard/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-dashboard/src/main/java/com/ssaw/ssawhystrixdashboard/DashboardApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-turbine/src/main/java/com/ssaw/ssawturbine/TurbineApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-turbine/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-turbine/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/base/support-mybatis/pom.xml" />
-        <option value="$PROJECT_DIR$/base/pom.xml" />
         <option value="$PROJECT_DIR$/base/support-druid/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/entity/User.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/test/java/com/ssaw/ssawservicedemo/SsawServiceDemoApplicationTests.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/dao/BasePackageClasse.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/dao/UserMapper.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/controller/DemoController.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/service/DemoService.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/service/impl/DemoServiceImpl.java" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/HystrixMonitorApplication.java" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/ssaw-turbine/src/main/java/com/ssaw/ssawturbine/SsawTurbineApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/DemoApplication.java" />
-        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-turbine-stream/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/WebSecurityConfig.java" />
+        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/resources/config.properties" />
         <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/config.properties" />
-        <option value="$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/ssaw-turbine-stream/src/main/java/com/ssaw/ssawturbinestream/TurbineStreamApplication.java" />
         <option value="$PROJECT_DIR$/ssaw-turbine-stream/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/ConsumerApplication.java" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/controller/DemoController.java" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/feign/DemoFeign.java" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/feign/fallback/DemoFeignFallback.java" />
+        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/resources/application.yml" />
+        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/dao/UserMapper.java" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/resources/application.yml" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/filter/AccessFilter.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/filter/ThrowExceptionFilter.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/filter/ErrorFilter.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/processor/SsawFilterProcessor.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/ZuulApplication.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/filter/ExceptionExtFilter.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/java/com/ssaw/ssawzuul/error/attributes/SsawErrorAttributes.java" />
+        <option value="$PROJECT_DIR$/ssaw-zuul/src/main/resources/application.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config-server/src/main/java/com/ssaw/ssawconfigserver/SsawConfigServerApplication.java" />
+        <option value="$PROJECT_DIR$/ssaw-config/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-config/test/application-demo-test.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/demo/application-demo.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/demo/application-demo-dev.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/demo/application-demo-prod.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/config-repository/demo/application-demo.properties" />
+        <option value="$PROJECT_DIR$/ssaw-config/config-repository/demo/application-demo.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/config-repository/demo/application-demo-dev.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/config-repository/demo/application-demo-prod.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/config-repository/demo/application-demo-test.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config-server/src/main/java/com/ssaw/ssawconfigserver/controller/ValueController.java" />
+        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/controller/ValueController.java" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/application.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/application-dev.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/application-prod.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/application-test.yml" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/resources/bootstrap.yml" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/SecurityConfig.java" />
+        <option value="$PROJECT_DIR$/ssaw-config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ssaw-config-server/src/main/java/com/ssaw/ssawconfigserver/ConfigServerApplication.java" />
+        <option value="$PROJECT_DIR$/ssaw-config-server/src/main/resources/application.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo-dev.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo-prod.yml" />
+        <option value="$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo-test.yml" />
+        <option value="$PROJECT_DIR$/base/pom.xml" />
+        <option value="$PROJECT_DIR$/base/.gitignore" />
+        <option value="$PROJECT_DIR$/ssaw-service-demo/src/main/resources/bootstrap.yml" />
+        <option value="$PROJECT_DIR$/ssaw-service-demo/pom.xml" />
       </list>
     </option>
   </component>
@@ -231,12 +258,7 @@
       <expand>
         <path>
           <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="ssaw-hystrix-monitor" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="ssaw-hystrix-monitor" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+          <item name="ssaw-turbine" type="9519ce18:MavenProjectsStructure$ProjectNode" />
         </path>
       </expand>
       <select />
@@ -244,15 +266,16 @@
   </component>
   <component name="MavenRunner">
     <option name="jreName" value="#JAVA_HOME" />
+    <option name="skipTests" value="true" />
   </component>
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="260" />
-    <option name="y" value="20" />
-    <option name="width" value="1400" />
-    <option name="height" value="1000" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="390" />
+    <option name="y" value="30" />
+    <option name="width" value="2100" />
+    <option name="height" value="1500" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -263,6 +286,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -270,83 +294,47 @@
               <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
               <item name="ssaw" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ssaw" type="462c0819:PsiDirectoryNode" />
-              <item name="ssaw-turbine-stream" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ssaw" type="462c0819:PsiDirectoryNode" />
-              <item name="ssaw-turbine-stream" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ssaw" type="462c0819:PsiDirectoryNode" />
-              <item name="ssaw-turbine-stream" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ssaw" type="462c0819:PsiDirectoryNode" />
-              <item name="ssaw-turbine-stream" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ssaw" type="462c0819:PsiDirectoryNode" />
-              <item name="ssaw-turbine-stream" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="ssawturbinestream" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ssaw" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ssaw" type="462c0819:PsiDirectoryNode" />
-              <item name="ssaw-turbine-stream" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
-    <property name="RequestMappingsPanelWidth0" value="15" />
-    <property name="RequestMappingsPanelWidth1" value="15" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="SearchEverywhereHistoryKey" value="TurbineController&#9;PSI&#9;JAVA://org.springframework.cloud.netflix.turbine.stream.TurbineController&#10;HystrixStreamS&#9;PSI&#9;JAVA://com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet&#10;hysEnd&#9;PSI&#9;JAVA://org.springframework.cloud.netflix.hystrix.HystrixStreamEndpoint" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542131798120" />
     <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/base/commons/pom.xml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ssaw-base" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="show.run.dashboard.notification" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\my\ssaw\ssaw-config" />
+      <recent name="F:\my\ssaw\ssaw-config\config-repository" />
       <recent name="F:\my\ssaw\ssaw-consumer-demo\src\main\resources" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ssaw.ssawconsumerdemo" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\my\ssaw" />
-      <recent name="F:\my\ssaw\ssaw-eureka-server\src\main\resources" />
-      <recent name="F:\my\ssaw\base" />
+      <recent name="F:\my\ssaw\base\commons" />
+      <recent name="F:\my\ssaw\base\support-cassandra" />
+      <recent name="F:\my\ssaw\base\support-couchbase" />
+      <recent name="F:\my\ssaw\base\support-druid" />
+      <recent name="F:\my\ssaw\base\support-envers" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -361,7 +349,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.SsawTurbineStreamApplication">
+  <component name="RunManager" selected="Spring Boot.DemoService">
     <configuration name="WebSecurityConfig" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.ssaw.ssawhystrixmonitor.WebSecurityConfig" />
       <module name="ssaw-hystrix-monitor" />
@@ -425,7 +413,7 @@
       <module name="ssaw-consumer-demo" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.ssaw.ssawconsumerdemo.*" />
+          <option name="PATTERN" value="com.ssaw.ssawconfigserver.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -464,9 +452,17 @@
       <option name="ACTIVE_PROFILES" value="peer2" />
       <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
+    <configuration name="SsawConfigServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ssaw-config-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssaw.ssawconfigserver.ConfigServerApplication" />
+    </configuration>
     <configuration name="SsawTurbineStreamApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="ssaw-turbine-stream" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssaw.ssawturbinestream.TurbineStreamApplication" />
+    </configuration>
+    <configuration name="SsawZuulApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ssaw-zuul" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssaw.ssawzuul.ZuulApplication" />
     </configuration>
     <configuration name="TurbineApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="ssaw-turbine" />
@@ -505,6 +501,8 @@
       <item itemvalue="Spring Boot.Peer1" />
       <item itemvalue="Spring Boot.Peer2" />
       <item itemvalue="Spring Boot.SsawTurbineStreamApplication" />
+      <item itemvalue="Spring Boot.SsawZuulApplication" />
+      <item itemvalue="Spring Boot.SsawConfigServerApplication" />
       <item itemvalue="Spring Boot.ConsumerApplication" />
       <item itemvalue="JUnit.SsawServiceDemoApplicationTests" />
       <item itemvalue="Spring Boot.HystrixMonitorApplication" />
@@ -512,9 +510,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.ConsumerApplication" />
         <item itemvalue="Spring Boot.HystrixMonitorApplication" />
         <item itemvalue="Application.WebSecurityConfig" />
-        <item itemvalue="Spring Boot.ConsumerApplication" />
         <item itemvalue="JUnit.SsawServiceDemoApplicationTests" />
       </list>
     </recent_temporary>
@@ -545,7 +543,16 @@
       <workItem from="1542130066785" duration="507000" />
       <workItem from="1542130601715" duration="1196000" />
       <workItem from="1542159931530" duration="121000" />
-      <workItem from="1542160065935" duration="1301000" />
+      <workItem from="1542160065935" duration="9893000" />
+      <workItem from="1542199135494" duration="2115000" />
+      <workItem from="1542245622524" duration="43000" />
+      <workItem from="1542245712825" duration="68000" />
+      <workItem from="1542248786699" duration="3544000" />
+      <workItem from="1542281128271" duration="3218000" />
+      <workItem from="1542332528910" duration="2607000" />
+      <workItem from="1542418911190" duration="639000" />
+      <workItem from="1542433026807" duration="20378000" />
+      <workItem from="1542512491248" duration="1661000" />
     </task>
     <servers />
   </component>
@@ -555,15 +562,14 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57179000" />
+    <option name="totallyTimeSpent" value="100044000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="848" extended-state="7" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" />
-      <window_info anchor="right" id="Maven Projects" order="5" weight="0.32942432" />
+      <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" weight="0.32901832" />
+      <window_info active="true" anchor="right" id="Maven Projects" order="5" visible="true" weight="0.32908848" />
       <window_info anchor="bottom" id="Database Changes" order="14" show_stripe_button="false" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="7" />
@@ -574,28 +580,65 @@
       <window_info id="UI Designer" order="3" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.59699893" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.3290461" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="bottom" id="Java Enterprise" order="10" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.60878885" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.68213785" />
       <window_info anchor="bottom" id="Spring" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3279743" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32630098" />
       <window_info anchor="bottom" id="MyBatis Sql Log" order="7" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49950248" visible="true" weight="0.19616205" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49950248" visible="true" weight="0.20911528" />
       <window_info anchor="right" id="Bean Validation" order="9" weight="0.32984033" />
       <window_info id="Web" order="2" sideWeight="0.5004975" side_tool="true" weight="0.23652695" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="2" sideWeight="0.5004975" side_tool="true" weight="0.23652695" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3290461" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32911393" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="Coverage" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="bottom" id="MyBatis Sql Log" order="7" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="bottom" id="Spring" order="8" />
+      <window_info id="Image Layers" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.60878885" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Favorites" order="3" sideWeight="0.5004975" side_tool="true" weight="0.23652695" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3279743" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info id="Designer" order="7" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3290461" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Tail" order="15" />
+      <window_info anchor="bottom" id="Java Enterprise" order="10" />
+      <window_info anchor="bottom" id="Database Changes" order="14" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="right" id="Maven Projects" order="5" weight="0.32942432" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49950248" visible="true" weight="0.19616205" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="Web" order="4" sideWeight="0.5004975" side_tool="true" weight="0.23652695" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="right" id="Bean Validation" order="9" weight="0.32984033" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.59699893" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -607,291 +650,133 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/base" />
       <path value="$PROJECT_DIR$/ssaw-eureka-server" />
+      <path value="$PROJECT_DIR$/ssaw-config" />
     </ignored-roots>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/ConsumerApplication.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/5.1.2.RELEASE/spring-context-5.1.2.RELEASE.jar!/org/springframework/context/annotation/ConfigurationClassEnhancer.class">
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/app-consumer-test.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/app-consumer-dev.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-consumer-demo/src/main/java/com/ssaw/ssawconsumerdemo/ConsumerApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="123" selection-start-line="123" selection-end-line="123" />
+        <state relative-caret-position="231">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/5.1.2.RELEASE/spring-beans-5.1.2.RELEASE.jar!/org/springframework/beans/factory/support/SimpleInstantiationStrategy.class">
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-consumer-demo/app-consumer.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-consumer-demo/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="111" selection-start-line="111" selection-end-line="111" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/5.1.2.RELEASE/spring-beans-5.1.2.RELEASE.jar!/org/springframework/beans/factory/support/DefaultSingletonBeanRegistry.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="110" column="84" selection-start-line="110" selection-start-column="84" selection-end-line="110" selection-end-column="84" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/5.1.2.RELEASE/spring-beans-5.1.2.RELEASE.jar!/org/springframework/beans/factory/support/AbstractBeanFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="189" selection-start-line="189" selection-end-line="189" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineController.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/5.1.2.RELEASE/spring-beans-5.1.2.RELEASE.jar!/org/springframework/beans/factory/support/ConstructorResolver.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="486" selection-start-line="486" selection-end-line="486" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/5.1.2.RELEASE/spring-beans-5.1.2.RELEASE.jar!/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="319" selection-start-line="319" selection-end-line="319" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineStreamProperties.class" />
-    <entry file="file://$PROJECT_DIR$/ssaw-eureka-server/src/main/java/com/husen/ssaweurekaserver/EurekaServerApplication.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/5.1.2.RELEASE/spring-core-5.1.2.RELEASE.jar!/org/springframework/cglib/proxy/MethodProxy.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="119" selection-start-line="119" selection-end-line="119" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-stream-binder-rabbit-core/2.1.0.M3/spring-cloud-stream-binder-rabbit-core-2.1.0.M3.jar!/org/springframework/cloud/stream/binder/rabbit/properties/RabbitConsumerProperties.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="28" column="36" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="36" />
+        <state relative-caret-position="63">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/DemoApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="9" column="66" selection-start-line="9" selection-start-column="66" selection-end-line="9" selection-end-column="66" />
+        <state relative-caret-position="84">
+          <caret line="13" column="3" lean-forward="true" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+          <folding>
+            <element signature="e#1519#1520#0" expanded="true" />
+            <element signature="e#1560#1561#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-stream-binder-rabbit-core/2.1.0.M3/spring-cloud-stream-binder-rabbit-core-2.1.0.M3.jar!/org/springframework/cloud/stream/binder/rabbit/properties/RabbitBindingProperties.class">
+    <entry file="file://$PROJECT_DIR$/ssaw-config-server/src/main/java/com/ssaw/ssawconfigserver/SecurityConfig.java" />
+    <entry file="file://$PROJECT_DIR$/ssaw-eureka-server/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-consumer-demo/src/main/resources/bootstrap.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        <state relative-caret-position="63">
+          <caret line="3" column="8" lean-forward="true" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-stream-binder-rabbit-core/2.1.0.M3/spring-cloud-stream-binder-rabbit-core-2.1.0.M3.jar!/org/springframework/cloud/stream/binder/rabbit/properties/RabbitExtendedBindingProperties.class">
+    <entry file="file://$PROJECT_DIR$/ssaw-config-server/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/controller/ValueController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="65" column="5" selection-start-line="65" selection-start-column="5" selection-end-line="65" selection-end-column="5" />
+        <state relative-caret-position="336">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-service-demo/src/main/resources/application.yml">
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo-dev.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo-prod.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config/ssaw-demo/app-demo-test.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config-server/src/main/resources/application.yml" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config-server/src/main/java/com/ssaw/ssawconfigserver/ConfigServerApplication.java" />
+    <entry file="file://$PROJECT_DIR$/base/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/base/support-jdbc/support-jdbc.iml" />
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432" />
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineStreamProperties.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        <state relative-caret-position="504">
+          <caret line="24" column="12" lean-forward="true" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineStreamConfiguration.java">
+    <entry file="file://$PROJECT_DIR$/base/support-swagger/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-solr/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-rocketmq/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-rest/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-redis/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-reactive-redis/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-pivotal-gemFire/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-neo4J/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-mybatis/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-mongodb/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-ldap/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-jpa/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-jdbc-extensions/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-jdbc/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-hadoop/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-geode/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-feign/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-es/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-envers/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-druid/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-cassandra/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/commons/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/base/support-couchbase/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/ssaw-config/README.md" />
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-config-client/2.1.0.M1/spring-cloud-config-client-2.1.0.M1.jar!/org/springframework/cloud/config/client/RetryProperties.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="32" column="42" lean-forward="true" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="42" />
+        <state relative-caret-position="76">
+          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/EnableTurbineStream.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-config-client/2.1.0.M1/spring-cloud-config-client-2.1.0.M1-sources.jar!/org/springframework/cloud/config/client/RetryProperties.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="35" column="28" lean-forward="true" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+        <state relative-caret-position="304">
+          <caret line="32" column="36" lean-forward="true" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="36" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineStreamProperties.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/TurbineStreamConfiguration.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-turbine-stream/2.1.0.M1/spring-cloud-netflix-turbine-stream-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/turbine/stream/EnableTurbineStream.java" />
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine/src/main/resources/application.yml" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-stream/2.1.0.M3/spring-cloud-stream-2.1.0.M3.jar!/org/springframework/cloud/stream/config/BindingServiceProperties.class">
+    <entry file="file://$PROJECT_DIR$/ssaw-service-demo/src/main/resources/bootstrap.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="65" column="16" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
+        <state relative-caret-position="63">
+          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$MAVEN_REPOSITORY$/com/ssaw/support-druid/0.0.2/support-druid-0.0.2.pom">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="19" column="18" lean-forward="true" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$MAVEN_REPOSITORY$/com/ssaw/support-druid/0.0.3-SNAPSHOT/support-druid-0.0.3-SNAPSHOT.pom">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/ssaw-service-demo/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="45" column="21" selection-start-line="42" selection-start-column="8" selection-end-line="45" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-eureka-server/src/main/java/com/husen/ssaweurekaserver/SecurityConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="21" column="80" lean-forward="true" selection-start-line="18" selection-start-column="8" selection-end-line="21" selection-end-column="80" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/config.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/application.yml" />
-    <entry file="file://$PROJECT_DIR$/ssaw-eureka-server/src/main/java/com/husen/ssaweurekaserver/SecurityConfig.java" />
-    <entry file="file://$PROJECT_DIR$/ssaw-consumer-demo/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="35" column="20" lean-forward="true" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="45" column="22" selection-start-line="45" selection-start-column="22" selection-end-line="45" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-service-demo/src/main/java/com/ssaw/ssawservicedemo/DemoApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine/src/main/java/com/ssaw/ssawturbine/SsawTurbineApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/resources/application.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" column="14" lean-forward="true" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="24" column="21" lean-forward="true" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/HystrixMonitorApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/WebSecurityConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-hystrix-monitor/src/main/java/com/ssaw/ssawhystrixmonitor/HystrixMonitorApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix-dashboard/2.1.0.M1/spring-cloud-netflix-hystrix-dashboard-2.1.0.M1.jar!/org/springframework/cloud/netflix/hystrix/dashboard/EnableHystrixDashboard.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix-dashboard/2.1.0.M1/spring-cloud-netflix-hystrix-dashboard-2.1.0.M1.jar!/org/springframework/cloud/netflix/hystrix/dashboard/HystrixDashboardConfiguration.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-132">
-          <caret line="58" selection-start-line="58" selection-end-line="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix-dashboard/2.1.0.M1/spring-cloud-netflix-hystrix-dashboard-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/hystrix/dashboard/EnableHystrixDashboard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="32" column="29" lean-forward="true" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix-dashboard/2.1.0.M1/spring-cloud-netflix-hystrix-dashboard-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/hystrix/dashboard/HystrixDashboardConfiguration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="57" column="51" lean-forward="true" selection-start-line="57" selection-start-column="51" selection-end-line="57" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix-dashboard/2.1.0.M1/spring-cloud-netflix-hystrix-dashboard-2.1.0.M1-sources.jar!/org/springframework/cloud/netflix/hystrix/dashboard/HystrixDashboardProperties.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/src/main/java/com/ssaw/ssawturbinestream/TurbineStreamApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ssaw-turbine-stream/src/main/resources/application.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="11" lean-forward="true" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+        <state relative-caret-position="220">
+          <caret line="119" column="20" lean-forward="true" selection-start-line="119" selection-start-column="20" selection-end-line="119" selection-end-column="20" />
         </state>
       </provider>
     </entry>

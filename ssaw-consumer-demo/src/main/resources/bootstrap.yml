@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: app-consumer
+  cloud:
+    config:
+      profile: test
+      label: dev-husen
+      uri: http://ip1:17001/
+
+server:
+  port: 20002
