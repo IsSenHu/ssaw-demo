@@ -12,7 +12,9 @@
 
 ### IntelliJ IDEA ###
 .idea
-.idea/*
+.idea/modules.xml
+.idea/workspace.xml
+.idea/*.xml
 *.iws
 *.iml
 *.ipr
