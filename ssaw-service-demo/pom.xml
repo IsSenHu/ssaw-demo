@@ -64,6 +64,7 @@
             <groupId>com.ssaw</groupId>
             <artifactId>support-mybatis</artifactId>
             <version>${support-mybatis.version}</version>
+            <type>pom</type>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
