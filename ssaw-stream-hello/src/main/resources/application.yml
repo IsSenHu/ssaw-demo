@@ -1,0 +1,18 @@
+server:
+  port: 20003
+
+spring:
+  application:
+    name: ssaw-stream-hello
+  rabbitmq:
+    host: www.senhu.com
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: ssaw-sensor-data
