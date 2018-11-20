@@ -5,7 +5,7 @@ spring:
   application:
     name: ssaw-stream-hello
   rabbitmq:
-    host: www.senhu.com
+    host: localhost
     port: 5672
     username: husen
     password: 521428
@@ -16,3 +16,5 @@ spring:
       bindings:
         input:
           destination: ssaw-sensor-data
+          group: Group-A                      #指定分组 同一组一个消息只有一个实例会消费
+          content-type: application/json
