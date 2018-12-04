@@ -4,9 +4,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * @author HuSen.
- * @date 2018/11/27 18:59.
+ * @date 2018/12/4 17:15.
  */
 @FeignClient
-public interface UserFeign {
+public interface RoleFeign {
 
 }

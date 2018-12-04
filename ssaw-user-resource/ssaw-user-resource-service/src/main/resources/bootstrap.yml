@@ -36,4 +36,4 @@ management:
         include: bus-refresh            #消息总线刷新的位置
 
 server:
-  port: 20001
+  port: 20005
