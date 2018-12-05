@@ -21,7 +21,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(1)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String USERNAME = "admin";
@@ -49,9 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .authorizeRequests()
                 .and().formLogin().permitAll()
                 .and().csrf().disable();
+
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
