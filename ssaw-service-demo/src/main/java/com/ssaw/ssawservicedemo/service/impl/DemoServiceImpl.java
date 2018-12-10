@@ -31,11 +31,6 @@ public class DemoServiceImpl implements DemoService {
     public Map<String, String> get() {
         Map<String, String> result = new HashMap<>(1);
         result.put("key", "demo");
-        try {
-            Thread.sleep(11000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return result;
     }
 

@@ -1,5 +1,6 @@
 package com.ssaw.ssawconsumerdemo;
 
+import com.ssaw.commons.enable.EnableFeignHeader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.ssaw")
+@EnableFeignHeader
 public class ConsumerApplication {
 
     @Bean

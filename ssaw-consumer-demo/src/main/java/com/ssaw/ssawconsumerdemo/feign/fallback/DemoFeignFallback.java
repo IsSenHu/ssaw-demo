@@ -3,7 +3,6 @@ package com.ssaw.ssawconsumerdemo.feign.fallback;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawconsumerdemo.feign.DemoFeign;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
-import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 

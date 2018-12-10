@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2018/11/27 18:59.
  */
 @Component
-@FeignClient(name = "ssaw-user-server", serviceId = "ssaw-user-server", path = "/api/user", fallback = UserFeignFallBack.class)
+@FeignClient(name = "ssaw-user-server", path = "/api/user", fallback = UserFeignFallBack.class)
 public interface UserFeign {
 
     @GetMapping("/get/{username}")
