@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ssaw-user-resource</artifactId>
+    <artifactId>ssaw-authenticate-center</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>ssaw-user-resource</name>
+    <name>ssaw-authenticate-center</name>
     <description>用户资源模块</description>
 
     <parent>
@@ -17,8 +17,8 @@
     </parent>
 
     <modules>
-        <module>ssaw-user-resource-feign</module>
-        <module>ssaw-user-resource-service</module>
+        <module>ssaw-authenticate-center-feign</module>
+        <module>ssaw-authenticate-center-service</module>
     </modules>
 
     <dependencies>
