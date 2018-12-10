@@ -1,0 +1,40 @@
+server:
+  port: 20007
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  servlet:
+    session:
+      cookie:
+        name: UISESSION
+
+spring:
+  application:
+    name: ssaw-ui
+  security:
+    user:
+      password: admin
+  main:
+    allow-bean-definition-overriding: true
+
+security:
+  oauth2:
+    sso:
+      login-path: /login
+    client:
+      client-id: pig
+      client-secret: 521428Slyt
+      access-token-uri: http://localhost:20006/oauth/token
+      user-authorization-uri: http://localhost:20006/oauth/authorize
+      auto-approve-scopes: ALL
+    resource:
+      user-info-uri: http://localhost:20006/user
+      prefer-token-info: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@www.senhu.com:10001/eureka/
+  instance:
+    prefer-ip-address: true   #注册服务时使用ip而非计算机名
+
