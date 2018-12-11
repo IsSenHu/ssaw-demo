@@ -1,7 +1,8 @@
 package com.ssaw.ssawuserresourceservice.config;
 
+import com.ssaw.ssawuserresourceservice.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,11 +10,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * @author HuSen.
@@ -23,18 +21,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin";
+    private final UserService userService;
 
-    /**
-     * @return 使用内存用户名和密码
-     */
-    @Override
-    @Bean
-    protected UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername(USERNAME).password(getPasswordEncoder().encode(PASSWORD)).authorities("USER").build());
-        return manager;
+    @Autowired
+    public WebSecurityConfig(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -43,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(getPasswordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(getPasswordEncoder());
     }
 
     @Override

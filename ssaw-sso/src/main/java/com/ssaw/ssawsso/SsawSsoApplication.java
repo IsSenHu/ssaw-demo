@@ -1,6 +1,7 @@
 package com.ssaw.ssawsso;
 
 import com.ssaw.commons.enable.EnableFeignHeader;
+import com.ssaw.ssawuserresourcefeign.feign.BasicFeignPackageClass;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -14,7 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.ssaw")
+@EnableFeignClients(basePackageClasses = BasicFeignPackageClass.class)
 @EnableFeignHeader
 @EnableResourceServer
 @ComponentScan(basePackages = "com.ssaw")

@@ -23,6 +23,10 @@ public class ClientDetailsEntity implements ClientDetails {
     @Id
     private String clientId;
 
+    /** 用户ID */
+    @Column(name = "user_id")
+    private Long userId;
+
     /** clientSecret */
     @Column(name = "client_secret")
     private String clientSecret;
@@ -54,6 +58,10 @@ public class ClientDetailsEntity implements ClientDetails {
     @Override
     public String getClientId() {
         return clientId;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     @Override
