@@ -113,7 +113,7 @@ public class ClientDetailsEntity implements ClientDetails {
      */
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return null;
+        return new ArrayList<>(0);
     }
 
     @Override

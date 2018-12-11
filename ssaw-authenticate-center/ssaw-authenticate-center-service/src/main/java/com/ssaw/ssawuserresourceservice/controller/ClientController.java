@@ -1,15 +1,15 @@
 package com.ssaw.ssawuserresourceservice.controller;
 
 import com.ssaw.commons.annotations.RequestLog;
+import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawuserresourcefeign.dto.ClientDto;
 import com.ssaw.ssawuserresourceservice.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 /**
  * @author HuSen.
@@ -30,5 +30,12 @@ public class ClientController extends BaseController {
     @RequestLog(method = "查询客户端>>>[findById(String clientId)]")
     public CommonResult<ClientDto> findById(@PathVariable(name = "clientId") String clientId) {
         return clientService.findById(clientId);
+    }
+
+    @Validating
+    @PostMapping("/save")
+    @RequestLog(method = "保存或修改客户端>>>[save(ClientDto clientDto)]")
+    public CommonResult<ClientDto> save(@RequestBody @Valid ClientDto clientDto, BindingResult result) {
+        return clientService.save(clientDto);
     }
 }

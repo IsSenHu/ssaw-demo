@@ -55,4 +55,9 @@ public class ClientServiceImpl implements ClientService {
     public CommonResult<ClientDto> findById(String clientId) {
         return null;
     }
+
+    @Override
+    public CommonResult<ClientDto> save(ClientDto clientDto) {
+        return null;
+    }
 }

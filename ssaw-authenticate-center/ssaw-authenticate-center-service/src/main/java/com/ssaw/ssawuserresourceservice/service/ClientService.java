@@ -11,4 +11,6 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 public interface ClientService extends ClientDetailsService {
 
     CommonResult<ClientDto> findById(String clientId);
+
+    CommonResult<ClientDto> save(ClientDto clientDto);
 }
