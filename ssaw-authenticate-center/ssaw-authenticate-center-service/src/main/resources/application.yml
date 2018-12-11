@@ -1,0 +1,74 @@
+server:
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  port: 20008
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
+  instance:
+    prefer-ip-address: true
+
+ribbon:                       #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
+  eager-load:
+    enabled: true             #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
+
+spring:
+  application:
+    name: ssaw-user-server
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+  zipkin:
+    sender:
+      type: rabbit
+
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      probability: 1.0
+
+  datasource:
+    url: jdbc:mysql://118.24.38.46:3306/ssaw_authenticate_center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 521428Slyt!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      filters: mergeStat,config,slf4j
+      max-active: 10000
+      initial-size: 2
+      max-wait: 60000
+      min-idle: 3
+      time-between-eviction-runs-millis: 18000000
+      min-evictable-idle-time-millis: 1000000
+      validation-query: SELECT1FROMDUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+      max-pool-prepared-statement-per-connection-size: 50
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      log-abandoned: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+
+  redis:
+    host: 118.24.38.46
+    port: 6379
+    password: 521428Slyt
+    database: 14
+  main:
+    allow-bean-definition-overriding: true

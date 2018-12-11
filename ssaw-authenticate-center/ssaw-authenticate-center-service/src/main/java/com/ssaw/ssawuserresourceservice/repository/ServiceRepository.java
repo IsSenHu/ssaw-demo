@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Integer> {
 
+    long countByServiceName(String serviceName);
+
+    ServiceEntity findByServiceName(String serviceName);
 }

@@ -3,6 +3,7 @@ package com.ssaw.ssawuserresourceservice.entity;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author HuSen.
@@ -32,4 +33,28 @@ public class ServiceEntity {
      */
     @Column(name = "scopes")
     private String scopes;
+
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_time")
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    @Column(name = "update_time")
+    private LocalDateTime updateTime;
+
+    /**
+     * 创建人
+     */
+    @Column(name = "create_man")
+    private String createMan;
+
+    /**
+     * 修改人
+     */
+    @Column(name = "update_man")
+    private String updateMan;
 }

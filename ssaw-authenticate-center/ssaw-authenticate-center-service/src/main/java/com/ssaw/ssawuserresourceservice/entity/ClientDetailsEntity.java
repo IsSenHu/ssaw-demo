@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -54,6 +55,45 @@ public class ClientDetailsEntity implements ClientDetails {
     /** refresh token 过期时间 */
     @Column(name = "refresh_token_validity_seconds")
     private Integer refreshTokenValiditySeconds;
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_time")
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    @Column(name = "update_time")
+    private LocalDateTime updateTime;
+
+    /**
+     * 创建人
+     */
+    @Column(name = "create_man")
+    private String createMan;
+
+    /**
+     * 修改人
+     */
+    @Column(name = "update_man")
+    private String updateMan;
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public String getCreateMan() {
+        return createMan;
+    }
+
+    public String getUpdateMan() {
+        return updateMan;
+    }
 
     @Override
     public String getClientId() {
