@@ -1,6 +1,8 @@
 package com.ssaw.ssawuserresourceservice.service.impl;
 
 import com.ssaw.commons.security.SecurityUtils;
+import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.ssawuserresourcefeign.dto.ClientDto;
 import com.ssaw.ssawuserresourceservice.entity.ClientDetailsEntity;
 import com.ssaw.ssawuserresourceservice.repository.ClientRepository;
 import com.ssaw.ssawuserresourceservice.service.ClientService;
@@ -30,7 +32,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+    public ClientDetails loadClientByClientId(String clientId) {
         Optional<ClientDetailsEntity> optionalDetailsEntity = clientRepository.findById(clientId);
         if(!optionalDetailsEntity.isPresent()) {
             log.error("客户端:{}, 不存在", clientId);
@@ -47,5 +49,10 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientRegistrationException("帐号与客户端不匹配!");
         }
         return clientDetailsEntity;
+    }
+
+    @Override
+    public CommonResult<ClientDto> findById(String clientId) {
+        return null;
     }
 }
