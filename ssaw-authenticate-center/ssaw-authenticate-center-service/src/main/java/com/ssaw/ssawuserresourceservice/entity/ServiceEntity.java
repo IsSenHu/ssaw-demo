@@ -2,7 +2,6 @@ package com.ssaw.ssawuserresourceservice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 
 /**
@@ -33,9 +32,4 @@ public class ServiceEntity {
      */
     @Column(name = "scopes")
     private String scopes;
-
-    /**
-     * 该服务所关联的资源
-     */
-    private ResourceEntity resource;
 }
