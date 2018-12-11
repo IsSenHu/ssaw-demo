@@ -3,7 +3,6 @@ package com.ssaw.ssawuserresourceservice;
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.ssawuserresourcefeign.feign.BasicFeignPackageClass;
-import com.ssaw.support.annotations.EnableSccServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -19,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @SpringBootApplication
-@EnableSccServer
 @EnableAutoRequestResolve
 @EnableFeignClients(basePackageClasses = BasicFeignPackageClass.class)
 @ComponentScan(basePackages = "com.ssaw")

@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>ssaw-authenticate-center-service</name>
-	<description>用户资源服务</description>
+	<description>认证中心服务</description>
 
 	<parent>
 		<groupId>com.ssaw</groupId>
@@ -106,12 +106,19 @@
 			<artifactId>spring-cloud-starter-zipkin</artifactId>
 		</dependency>
 
-		<!-- feign -->
+		<!-- user feign -->
 		<dependency>
 			<groupId>com.ssaw</groupId>
 			<artifactId>ssaw-user-resource-feign</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<!-- self feign -->
+        <dependency>
+            <groupId>com.ssaw</groupId>
+            <artifactId>ssaw-authenticate-center-feign</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
 		<!-- support-oauth2 -->
 		<dependency>
