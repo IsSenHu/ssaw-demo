@@ -56,6 +56,7 @@ public class ServiceServiceImpl implements ServiceService {
             }
             ServiceEntity serviceEntity = serviceDtoToServiceEntity.apply(serviceDto);
             serviceEntity.setCreateTime(LocalDateTime.now());
+            serviceEntity.setIsBind(false);
             serviceRepository.save(serviceEntity);
         } else {
             Optional<ServiceEntity> optional = serviceRepository.findById(serviceDto.getId());

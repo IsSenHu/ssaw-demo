@@ -19,6 +19,7 @@ public class ServiceDtoToServiceEntity implements Function<ServiceDto, ServiceEn
             serviceEntity.setId(serviceDto.getId());
             serviceEntity.setScopes(serviceDto.getScopes());
             serviceEntity.setServiceName(serviceDto.getServiceName());
+            serviceEntity.setIsBind(serviceDto.getIsBind());
         }
         return serviceEntity;
     }

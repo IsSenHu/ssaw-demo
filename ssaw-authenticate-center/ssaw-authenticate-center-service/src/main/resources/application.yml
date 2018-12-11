@@ -61,9 +61,10 @@ spring:
       log-abandoned: false
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: false
+      ddl-auto: update
+    show-sql: true
     open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL57Dialect
 
   redis:
     host: 118.24.38.46

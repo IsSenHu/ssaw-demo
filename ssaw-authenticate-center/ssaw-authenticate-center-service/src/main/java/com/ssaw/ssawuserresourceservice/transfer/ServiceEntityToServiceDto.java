@@ -24,6 +24,7 @@ public class ServiceEntityToServiceDto implements Function<ServiceEntity, Servic
             serviceDto.setCreateMan(serviceEntity.getCreateMan());
             serviceDto.setUpdateTime(serviceEntity.getUpdateTime());
             serviceDto.setUpdateMan(serviceEntity.getUpdateMan());
+            serviceDto.setIsBind(serviceEntity.getIsBind());
         }
         return serviceDto;
     }

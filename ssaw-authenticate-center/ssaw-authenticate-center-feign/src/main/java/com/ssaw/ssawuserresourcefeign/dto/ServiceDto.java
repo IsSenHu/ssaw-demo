@@ -46,4 +46,9 @@ public class ServiceDto implements Serializable {
      * 修改人
      */
     private String updateMan;
+
+    /**
+     * 是否已被绑定
+     */
+    private Boolean isBind;
 }

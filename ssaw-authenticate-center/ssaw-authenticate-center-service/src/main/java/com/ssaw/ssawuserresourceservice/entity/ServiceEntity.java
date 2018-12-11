@@ -57,4 +57,10 @@ public class ServiceEntity {
      */
     @Column(name = "update_man")
     private String updateMan;
+
+    /**
+     * 是否已被绑定
+     */
+    @Column(name = "is_bind")
+    private Boolean isBind;
 }

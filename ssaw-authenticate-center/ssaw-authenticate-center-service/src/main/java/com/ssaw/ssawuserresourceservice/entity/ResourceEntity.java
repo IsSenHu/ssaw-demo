@@ -31,7 +31,8 @@ public class ResourceEntity {
     /**
      * 该资源所关联的服务
      */
-    @OneToOne(targetEntity = ServiceEntity.class, cascade = CascadeType.REFRESH)
+    @OneToOne(targetEntity = ServiceEntity.class, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
     private ServiceEntity service;
 
     /**
