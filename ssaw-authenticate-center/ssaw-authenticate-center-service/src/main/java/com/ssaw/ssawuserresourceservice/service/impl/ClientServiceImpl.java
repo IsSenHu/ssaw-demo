@@ -4,7 +4,7 @@ import com.ssaw.commons.security.SecurityUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawuserresourcefeign.dto.ClientDto;
 import com.ssaw.ssawuserresourceservice.entity.ClientDetailsEntity;
-import com.ssaw.ssawuserresourceservice.repository.ClientRepository;
+import com.ssaw.ssawuserresourceservice.repository.client.ClientRepository;
 import com.ssaw.ssawuserresourceservice.service.ClientService;
 import com.ssaw.ssawuserresourceservice.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;

@@ -5,9 +5,7 @@ import com.ssaw.commons.vo.CommonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
-
 import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
 import static com.ssaw.commons.constant.Constants.ResultCodes.PARAM_ERROR;
 

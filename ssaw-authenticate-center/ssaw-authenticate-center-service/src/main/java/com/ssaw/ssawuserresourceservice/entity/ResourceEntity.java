@@ -1,61 +1,22 @@
 package com.ssaw.ssawuserresourceservice.entity;
 
+import com.ssaw.supportjpa.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * @author HuSen.
- * @date 2018/12/10 20:00.
+ * @date 2018/12/12 10:26.
  */
 @Setter
 @Getter
 @Entity
-@Table(name = "tb_resource")
-public class ResourceEntity {
-
+@Table(name = "t_resource")
+public class ResourceEntity extends BaseEntity {
     /**
-     * ID
+     * 资源ID 和服务名相同
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    /**
-     * 资源唯一标识
-     */
-    @Column(name = "unique_mark", unique = true)
-    private String uniqueMark;
-
-    /**
-     * 该资源所关联的服务
-     */
-    @OneToOne(targetEntity = ServiceEntity.class, cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "service_id", referencedColumnName = "id")
-    private ServiceEntity service;
-
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    private LocalDateTime createTime;
-
-    /**
-     * 修改时间
-     */
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
-
-    /**
-     * 创建人
-     */
-    @Column(name = "create_man")
-    private String createMan;
-
-    /**
-     * 修改人
-     */
-    @Column(name = "update_man")
-    private String updateMan;
+    @Column(name = "resource_id", unique = true)
+    private String resourceId;
 }
