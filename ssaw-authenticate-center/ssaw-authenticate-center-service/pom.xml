@@ -30,6 +30,11 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+
 		<!-- spring-cloud断路器（feign自带断路器，可以不要此依赖，但要使用断路器监控就必须要） -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -133,13 +138,6 @@
 			<groupId>com.ssaw</groupId>
 			<artifactId>support-redis</artifactId>
 			<version>${support-redis.version}</version>
-		</dependency>
-
-		<!-- support-SSC -->
-		<dependency>
-			<groupId>com.ssaw</groupId>
-			<artifactId>support-statistical-certification-center-client</artifactId>
-			<version>${support-ssc.version}</version>
 		</dependency>
 
 		<!-- guava -->
