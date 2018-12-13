@@ -21,5 +21,5 @@ public class ScopeEntity extends BaseEntity {
     private String uri;
 
     @Column
-    private Integer resourceId;
+    private Long resourceId;
 }

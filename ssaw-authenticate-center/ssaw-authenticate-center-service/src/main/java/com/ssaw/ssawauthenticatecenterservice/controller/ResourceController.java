@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author HuSen.
@@ -58,5 +59,11 @@ public class ResourceController extends BaseController {
     @RequestLog(method = "ResourceController.delete(Long id)")
     public CommonResult<Long> delete(@PathVariable(name = "id") Long id) {
         return resourceService.delete(id);
+    }
+
+    @GetMapping("/search/{resourceId}")
+    @RequestLog(method = "ResourceController.search(String resourceId)")
+    public CommonResult<List<ResourceDto>> search(@PathVariable(name = "resourceId") String resourceId) {
+        return resourceService.search(resourceId);
     }
 }

@@ -10,6 +10,7 @@ import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ResourceSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ResourceTransfer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import static com.ssaw.commons.constant.Constants.ResultCodes.*;
@@ -58,10 +61,7 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
         PageRequest pageRequest = getPageRequest(pageReqDto);
         Page<ResourceEntity> page = resourceRepository.findAll(new ResourceSpecification(pageReqDto.getData()), pageRequest);
         TableData<ResourceDto> tableData = new TableData<>();
-        tableData.setPage(page.getNumber() + 1);
-        tableData.setSize(page.getSize());
-        tableData.setTotalPages(page.getTotalPages());
-        tableData.setTotals(page.getTotalElements());
+        setTableData(page, tableData);
         tableData.setContent(page.getContent().stream().map(resourceTransfer::entity2Dto).collect(Collectors.toList()));
         return tableData;
     }
@@ -100,5 +100,19 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
         }
         resourceRepository.deleteById(id);
         return CommonResult.createResult(SUCCESS, "成功!", id);
+    }
+
+    @Override
+    public CommonResult<List<ResourceDto>> search(String resourceId) {
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        ResourceDto resourceDto = new ResourceDto();
+        resourceDto.setResourceId(StringUtils.equals("none", resourceId) ? "" : resourceId);
+        Page<ResourceEntity> page = resourceRepository.findAll(new ResourceSpecification(resourceDto), pageRequest);
+        if(CollectionUtils.isNotEmpty(page.getContent())) {
+            List<ResourceDto> resourceDtoList = page.getContent().stream().map(resourceTransfer::entity2Dto).collect(Collectors.toList());
+            return CommonResult.createResult(SUCCESS, "成功!", resourceDtoList);
+        } else {
+            return CommonResult.createResult(SUCCESS, "成功!", new ArrayList<>(0));
+        }
     }
 }

@@ -5,6 +5,8 @@ import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ResourceDto;
 
+import java.util.List;
+
 /**
  * @author HuSen.
  * @date 2018/12/11 14:14.
@@ -20,4 +22,6 @@ public interface ResourceService {
     CommonResult<ResourceDto> update(ResourceDto resourceDto);
 
     CommonResult<Long> delete(Long id);
+
+    CommonResult<List<ResourceDto>> search(String resourceId);
 }

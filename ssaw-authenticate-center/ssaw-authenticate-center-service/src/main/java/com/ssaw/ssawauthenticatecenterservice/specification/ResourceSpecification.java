@@ -29,7 +29,7 @@ public class ResourceSpecification implements Specification<ResourceEntity> {
         List<Predicate> predicates = new ArrayList<>();
         if(!Objects.isNull(resourceDto) && StringUtils.isNotBlank(resourceDto.getResourceId())) {
             // 资源ID
-            predicates.add(criteriaBuilder.like(root.get("resourceId").as(String.class), resourceDto.getResourceId() + "%"));
+            predicates.add(criteriaBuilder.like(root.get("resourceId").as(String.class), "%" + resourceDto.getResourceId() + "%"));
         }
         return criteriaQuery.where(predicates.toArray(new Predicate[0])).getRestriction();
     }

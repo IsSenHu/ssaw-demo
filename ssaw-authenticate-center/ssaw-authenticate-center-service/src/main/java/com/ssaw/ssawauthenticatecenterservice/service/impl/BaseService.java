@@ -1,7 +1,9 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
 import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -24,5 +26,12 @@ public class BaseService {
             order = Sort.Order.desc("createTime");
         }
         return PageRequest.of(pageReqDto.getPage() - 1, pageReqDto.getSize(), Sort.by(order));
+    }
+
+    void setTableData(Page<?> page, TableData<?> tableData) {
+        tableData.setTotals(page.getTotalElements());
+        tableData.setTotalPages(page.getTotalPages());
+        tableData.setSize(page.getSize());
+        tableData.setPage(page.getNumber() + 1);
     }
 }

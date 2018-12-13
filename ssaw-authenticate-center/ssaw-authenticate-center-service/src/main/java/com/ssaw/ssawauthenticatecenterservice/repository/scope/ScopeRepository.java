@@ -12,5 +12,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ScopeRepository extends JpaRepository<ScopeEntity, Long>, JpaSpecificationExecutor<ScopeEntity>, ScopeDao {
+    long countByScopeOrUri(String scope, String uri);
+
     long countByScope(String scope);
+
+    long countByUri(String uri);
 }
