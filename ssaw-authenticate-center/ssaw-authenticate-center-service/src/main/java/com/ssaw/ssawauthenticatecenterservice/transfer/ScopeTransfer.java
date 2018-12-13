@@ -2,23 +2,23 @@ package com.ssaw.ssawauthenticatecenterservice.transfer;
 
 import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
 
 /**
  * @author HuSen.
- * @date 2018/12/12 11:52.
+ * @date 2018/12/13 12:56.
  */
 @Component
-public class ScopeDtoToScopeEntity implements Function<ScopeDto, ScopeEntity> {
-    @Override
-    public ScopeEntity apply(ScopeDto scopeDto) {
+public class ScopeTransfer {
+
+    public ScopeEntity dto2Entity(ScopeDto scopeDto) {
         ScopeEntity entity = null;
-        if(null != scopeDto) {
+        if (scopeDto != null) {
             entity = new ScopeEntity();
-            BeanUtils.copyProperties(scopeDto, entity);
+            entity.setId(scopeDto.getId());
+            entity.setUri(scopeDto.getUri());
+            entity.setScope(scopeDto.getScope());
+            entity.setResourceId(scopeDto.getResourceId());
         }
         return entity;
     }

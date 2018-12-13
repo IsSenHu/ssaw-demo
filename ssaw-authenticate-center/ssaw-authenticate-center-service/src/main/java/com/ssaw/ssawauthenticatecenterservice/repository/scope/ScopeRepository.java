@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ScopeRepository extends JpaRepository<ScopeEntity, Long>, JpaSpecificationExecutor<ScopeEntity>, ScopeDao {
-
+    long countByScope(String scope);
 }

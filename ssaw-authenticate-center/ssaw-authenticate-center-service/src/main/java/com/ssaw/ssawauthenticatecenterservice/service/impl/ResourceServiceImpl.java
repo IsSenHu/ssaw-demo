@@ -10,6 +10,7 @@ import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ResourceSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ResourceTransfer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -78,7 +79,17 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<ResourceDto> update(ResourceDto resourceDto) {
-        return null;
+        return resourceRepository.findById(resourceDto.getId()).map(entity -> {
+            if(!StringUtils.equals(entity.getResourceId(), resourceDto.getResourceId())
+                    && resourceRepository.countByResourceId(resourceDto.getResourceId()) > 0) {
+                return CommonResult.createResult(PARAM_ERROR, "该资源ID已存在!", resourceDto);
+            }
+            entity.setResourceId(resourceDto.getResourceId());
+            entity.setDescription(resourceDto.getDescription());
+            entity.setModifyTime(LocalDateTime.now());
+            resourceRepository.save(entity);
+            return CommonResult.createResult(SUCCESS, "成功!", resourceDto);
+        }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该资源不存在!", resourceDto));
     }
 
     @Override
