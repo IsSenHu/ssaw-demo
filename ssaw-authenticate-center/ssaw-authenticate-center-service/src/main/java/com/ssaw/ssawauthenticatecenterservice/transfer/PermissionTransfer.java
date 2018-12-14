@@ -60,4 +60,14 @@ public class PermissionTransfer {
         return dto;
     }
 
+    public PermissionDto simpleEntity2Dto(PermissionEntity entity) {
+        PermissionDto dto = null;
+        if(null != entity) {
+            dto = new PermissionDto();
+            dto.setId(entity.getScopeId());
+            dto.setName(entity.getName());
+        }
+        return dto;
+    }
+
 }

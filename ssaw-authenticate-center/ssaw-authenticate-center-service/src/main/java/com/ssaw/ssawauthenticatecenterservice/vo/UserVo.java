@@ -17,6 +17,7 @@ public class UserVo implements UserDetails {
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantedAuthorities;

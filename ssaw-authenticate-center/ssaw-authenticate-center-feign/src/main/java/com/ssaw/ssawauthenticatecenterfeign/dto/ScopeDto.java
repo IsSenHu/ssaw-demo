@@ -1,14 +1,11 @@
 package com.ssaw.ssawauthenticatecenterfeign.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ssaw.commons.dto.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author HuSen.
@@ -16,9 +13,7 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
-public class ScopeDto implements Serializable {
-
-    private Long id;
+public class ScopeDto extends BaseDto {
 
     @NotBlank(message = "作用域不能为空!")
     @Length(max = 50, message = "作用域最大长度不能超过50!")
@@ -32,14 +27,4 @@ public class ScopeDto implements Serializable {
     private Long resourceId;
 
     private String resourceName;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime createTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime modifyTime;
-
-    private String createMan;
-
-    private String modifyMan;
 }
