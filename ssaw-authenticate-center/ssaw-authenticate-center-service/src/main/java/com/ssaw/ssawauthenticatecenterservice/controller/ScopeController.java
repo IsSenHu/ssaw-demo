@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author HuSen.
@@ -58,5 +59,11 @@ public class ScopeController extends BaseController {
     @RequestLog(method = "ScopeController.update(ScopeDto scopeDto)")
     public CommonResult<ScopeDto> update(@RequestBody @Valid ScopeDto scopeDto, BindingResult result) {
         return scopeService.update(scopeDto);
+    }
+
+    @GetMapping("/search/{scope}")
+    @RequestLog(method = "ScopeController.search(Long scopeId)")
+    public CommonResult<List<ScopeDto>> search(@PathVariable(name = "scope") String scope) {
+        return scopeService.search(scope);
     }
 }

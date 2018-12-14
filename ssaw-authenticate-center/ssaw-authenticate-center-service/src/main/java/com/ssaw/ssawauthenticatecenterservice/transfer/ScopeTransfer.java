@@ -53,4 +53,20 @@ public class ScopeTransfer {
         }
         return dto;
     }
+
+    public ScopeDto entity2DtoNotGetResourceName(ScopeEntity scopeEntity) {
+        ScopeDto dto = new ScopeDto();
+        if(scopeEntity != null) {
+            dto = new ScopeDto();
+            dto.setId(scopeEntity.getId());
+            dto.setScope(scopeEntity.getScope());
+            dto.setUri(scopeEntity.getUri());
+            dto.setResourceId(scopeEntity.getResourceId());
+            dto.setCreateTime(scopeEntity.getCreateTime());
+            dto.setCreateMan(scopeEntity.getCreateMan());
+            dto.setModifyTime(scopeEntity.getModifyTime());
+            dto.setModifyMan(scopeEntity.getModifyMan());
+        }
+        return dto;
+    }
 }

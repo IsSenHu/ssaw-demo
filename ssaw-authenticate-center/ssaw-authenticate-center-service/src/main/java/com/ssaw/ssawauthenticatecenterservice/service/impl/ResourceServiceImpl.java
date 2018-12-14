@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -104,10 +105,10 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
 
     @Override
     public CommonResult<List<ResourceDto>> search(String resourceId) {
-        PageRequest pageRequest = PageRequest.of(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
         ResourceDto resourceDto = new ResourceDto();
         resourceDto.setResourceId(StringUtils.equals("none", resourceId) ? "" : resourceId);
-        Page<ResourceEntity> page = resourceRepository.findAll(new ResourceSpecification(resourceDto), pageRequest);
+        Page<ResourceEntity> page = resourceRepository.findAll(new ResourceSpecification(resourceDto), pageable);
         if(CollectionUtils.isNotEmpty(page.getContent())) {
             List<ResourceDto> resourceDtoList = page.getContent().stream().map(resourceTransfer::entity2Dto).collect(Collectors.toList());
             return CommonResult.createResult(SUCCESS, "成功!", resourceDtoList);

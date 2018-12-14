@@ -50,7 +50,7 @@ public class PermissionTransfer {
             dto.setModifyTime(entity.getModifyTime());
             dto.setScopeId(entity.getScopeId());
             if(!Objects.isNull(entity.getScopeId())) {
-                scopeRepository.findById(entity.getId()).ifPresent(scope -> dto.setScopeName(scope.getScope()));
+                scopeRepository.findById(entity.getScopeId()).ifPresent(scope -> dto.setScopeName(scope.getScope()));
             }
             dto.setResourceId(entity.getResourceId());
             if(!Objects.isNull(entity.getResourceId())) {

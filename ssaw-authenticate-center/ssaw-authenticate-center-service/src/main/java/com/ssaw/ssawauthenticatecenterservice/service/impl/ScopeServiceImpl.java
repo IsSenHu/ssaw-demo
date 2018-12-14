@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import static com.ssaw.commons.constant.Constants.ResultCodes.*;
@@ -101,5 +102,18 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
                     scopeRepository.save(entity);
                     return CommonResult.createResult(SUCCESS, "成功!", scopeDto);
                 }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该作用域不存在!", scopeDto));
+    }
+
+    @Override
+    public CommonResult<List<ScopeDto>> search(String scope) {
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        Page<ScopeEntity> page;
+        if(StringUtils.equals("none", scope)) {
+            page = scopeRepository.findAll(pageRequest);
+        } else {
+            page = scopeRepository.findAllByScopeLike("%".concat(scope.trim()).concat("%"), pageRequest);
+        }
+        return CommonResult.createResult(SUCCESS, "成功!",
+                page.getContent().stream().map(scopeTransfer::entity2DtoNotGetResourceName).collect(Collectors.toList()));
     }
 }

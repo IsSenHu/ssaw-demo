@@ -37,7 +37,7 @@ public class PermissionController extends BaseController {
 
     @PostMapping("/page")
     @RequestLog(method = "PermissionController.page(PageReqDto<PermissionDto> pageReqDto)")
-    public TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
+    public TableData<PermissionDto> page(@RequestBody PageReqDto<PermissionDto> pageReqDto) {
         return permissionService.page(pageReqDto);
     }
 
