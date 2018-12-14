@@ -10,7 +10,6 @@ import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 
 /**
@@ -33,6 +32,12 @@ public class PermissionController extends BaseController {
     @RequestLog(method = "PermissionController.add(PermissionDto permissionDto)")
     public CommonResult<PermissionDto> add(@RequestBody @Valid PermissionDto permissionDto, BindingResult result) {
         return permissionService.add(permissionDto);
+    }
+
+    @GetMapping("/findById/{id}")
+    @RequestLog(method = "PermissionController.findById(Long id)")
+    public CommonResult<PermissionDto> findById(@PathVariable(name = "id") Long id) {
+        return permissionService.findById(id);
     }
 
     @PostMapping("/page")

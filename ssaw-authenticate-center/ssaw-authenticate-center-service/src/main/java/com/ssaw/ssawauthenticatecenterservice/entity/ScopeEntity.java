@@ -22,4 +22,7 @@ public class ScopeEntity extends BaseEntity {
 
     @Column
     private Long resourceId;
+
+    @Column
+    private Long permissionId;
 }

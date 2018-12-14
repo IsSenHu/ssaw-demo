@@ -17,4 +17,6 @@ public interface PermissionService {
     CommonResult<Long> delete(Long id);
 
     CommonResult<PermissionDto> update(PermissionDto permissionDto);
+
+    CommonResult<PermissionDto> findById(Long id);
 }

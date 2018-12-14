@@ -5,6 +5,7 @@ import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
 import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
@@ -52,10 +53,14 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         if(permissionRepository.countByName(permissionDto.getName()) > 0) {
             return CommonResult.createResult(DATA_EXIST, "权限名称已存在!", permissionDto);
         }
-        scopeRepository.findById(permissionDto.getScopeId())
-                .ifPresent(scope -> entity.setResourceId(scope.getResourceId()));
+        Optional<ScopeEntity> optionalScopeEntity = scopeRepository.findById(permissionDto.getScopeId());
+        optionalScopeEntity.ifPresent(scope -> entity.setResourceId(scope.getResourceId()));
         entity.setCreateTime(LocalDateTime.now());
-        permissionRepository.save(entity);
+        PermissionEntity save = permissionRepository.save(entity);
+        optionalScopeEntity.ifPresent(scope -> {
+            scope.setPermissionId(save.getId());
+            scopeRepository.save(scope);
+        });
         return CommonResult.createResult(SUCCESS, "成功!", permissionDto);
     }
 
@@ -86,14 +91,30 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
             }
             entity.setName(permissionDto.getName());
             entity.setDescription(permissionDto.getDescription());
-            if(!Objects.equals(permissionDto.getScopeId(), entity.getScopeId())) {
+            if(!Objects.isNull(permissionDto.getScopeId()) && !Objects.equals(permissionDto.getScopeId(), entity.getScopeId())) {
                 entity.setScopeId(permissionDto.getScopeId());
+                scopeRepository.findById(entity.getScopeId())
+                        .ifPresent(scope -> {
+                            scope.setPermissionId(null);
+                            scopeRepository.save(scope);
+                        });
                 scopeRepository.findById(permissionDto.getScopeId())
-                        .ifPresent(scope -> entity.setResourceId(scope.getResourceId()));
+                        .ifPresent(scope -> {
+                            entity.setResourceId(scope.getResourceId());
+                            scope.setPermissionId(entity.getId());
+                            scopeRepository.save(scope);
+                        });
             }
             entity.setModifyTime(LocalDateTime.now());
             permissionRepository.save(entity);
             return CommonResult.createResult(SUCCESS, "成功!", permissionDto);
         }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", permissionDto));
+    }
+
+    @Override
+    public CommonResult<PermissionDto> findById(Long id) {
+        return permissionRepository.findById(id)
+                .map(entity -> CommonResult.createResult(SUCCESS, "成功!", permissionTransfer.entity2Dto(entity)))
+                .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", null));
     }
 }

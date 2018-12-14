@@ -66,4 +66,10 @@ public class ScopeController extends BaseController {
     public CommonResult<List<ScopeDto>> search(@PathVariable(name = "scope") String scope) {
         return scopeService.search(scope);
     }
+
+    @GetMapping("/searchForUpdate/{scope}")
+    @RequestLog(method = "ScopeController.searchForUpdate(Long scopeId)")
+    public CommonResult<List<ScopeDto>> searchForUpdate(@PathVariable(name = "scope") String scope) {
+        return scopeService.searchForUpdate(scope);
+    }
 }

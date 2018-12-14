@@ -109,6 +109,19 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         PageRequest pageRequest = PageRequest.of(0, 20);
         Page<ScopeEntity> page;
         if(StringUtils.equals("none", scope)) {
+            page = scopeRepository.findAllByPermissionIdIsNull(pageRequest);
+        } else {
+            page = scopeRepository.findAllByScopeLikeAndPermissionIdIsNull("%".concat(scope.trim()).concat("%"), pageRequest);
+        }
+        return CommonResult.createResult(SUCCESS, "成功!",
+                page.getContent().stream().map(scopeTransfer::entity2DtoNotGetResourceName).collect(Collectors.toList()));
+    }
+
+    @Override
+    public CommonResult<List<ScopeDto>> searchForUpdate(String scope) {
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        Page<ScopeEntity> page;
+        if(StringUtils.equals("none", scope)) {
             page = scopeRepository.findAll(pageRequest);
         } else {
             page = scopeRepository.findAllByScopeLike("%".concat(scope.trim()).concat("%"), pageRequest);
