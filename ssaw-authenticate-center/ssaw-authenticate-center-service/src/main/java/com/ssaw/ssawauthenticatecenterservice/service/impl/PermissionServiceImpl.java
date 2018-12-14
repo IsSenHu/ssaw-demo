@@ -7,12 +7,16 @@ import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
+import com.ssaw.ssawauthenticatecenterservice.specification.PermissionSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import static com.ssaw.commons.constant.Constants.ResultCodes.DATA_EXIST;
 import static com.ssaw.commons.constant.Constants.ResultCodes.PARAM_ERROR;
 import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
@@ -51,6 +55,18 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
 
     @Override
     public TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
-        return null;
+        PageRequest pageRequest = getPageRequest(pageReqDto);
+        Page<PermissionEntity> page = permissionRepository.findAll(new PermissionSpecification(pageReqDto.getData()), pageRequest);
+        TableData<PermissionDto> tableData = new TableData<>();
+        setTableData(page, tableData);
+        tableData.setContent(page.getContent().stream().map(permissionTransfer::entity2Dto).collect(Collectors.toList()));
+        return tableData;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public CommonResult<Long> delete(Long id) {
+        permissionRepository.deleteById(id);
+        return CommonResult.createResult(SUCCESS, "成功!", id);
     }
 }

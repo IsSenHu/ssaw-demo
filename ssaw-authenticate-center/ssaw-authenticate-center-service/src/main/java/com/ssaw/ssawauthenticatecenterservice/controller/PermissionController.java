@@ -9,10 +9,8 @@ import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
 import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 /**
@@ -33,13 +31,19 @@ public class PermissionController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(method = "PermissionController.add(PermissionDto permissionDto)")
-    private CommonResult<PermissionDto> add(@RequestBody @Valid PermissionDto permissionDto, BindingResult result) {
+    public CommonResult<PermissionDto> add(@RequestBody @Valid PermissionDto permissionDto, BindingResult result) {
         return permissionService.add(permissionDto);
     }
 
     @PostMapping("/page")
     @RequestLog(method = "PermissionController.page(PageReqDto<PermissionDto> pageReqDto)")
-    private TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
+    public TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
         return permissionService.page(pageReqDto);
+    }
+
+    @PostMapping("/delete/{id}")
+    @RequestLog(method = "PermissionController.delete(Long id)")
+    public CommonResult<Long> delete(@PathVariable(name = "id") Long id) {
+        return permissionService.delete(id);
     }
 }

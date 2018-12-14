@@ -13,4 +13,6 @@ public interface PermissionService {
     CommonResult<PermissionDto> add(PermissionDto permissionDto);
 
     TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto);
+
+    CommonResult<Long> delete(Long id);
 }
