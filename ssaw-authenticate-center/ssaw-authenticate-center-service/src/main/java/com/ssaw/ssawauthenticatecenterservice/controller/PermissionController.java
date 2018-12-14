@@ -46,4 +46,11 @@ public class PermissionController extends BaseController {
     public CommonResult<Long> delete(@PathVariable(name = "id") Long id) {
         return permissionService.delete(id);
     }
+
+    @Validating
+    @PostMapping("/update")
+    @RequestLog(method = "PermissionController.update(PermissionDto permissionDto)")
+    public CommonResult<PermissionDto> update(@RequestBody @Valid PermissionDto permissionDto, BindingResult result) {
+        return permissionService.update(permissionDto);
+    }
 }
