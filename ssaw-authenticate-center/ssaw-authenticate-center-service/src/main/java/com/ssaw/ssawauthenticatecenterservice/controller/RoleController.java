@@ -68,4 +68,10 @@ public class RoleController extends BaseController {
     public CommonResult<Long> changeRolePermission(@RequestBody @Valid RolePermissionReqDto reqDto, BindingResult result) {
         return roleService.changeRolePermission(reqDto);
     }
+
+    @PostMapping("/delete/{id}")
+    @RequestLog(method = "RoleController.delete(Long id)")
+    public CommonResult<Long> delete(@PathVariable(value = "id") Long id) {
+        return roleService.delete(id);
+    }
 }

@@ -1,6 +1,8 @@
 package com.ssaw.ssawuserresourcefeign.fallback;
 
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
 import org.springframework.stereotype.Component;
@@ -32,5 +34,10 @@ public class UserFeignFallBack implements UserFeign {
     @Override
     public CommonResult<Long> saveUserRoles(Long userId, List<Long> roleIds) {
         return CommonResult.createResult(ERROR, "服务降级", userId);
+    }
+
+    @Override
+    public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
+        return new TableData<>();
     }
 }

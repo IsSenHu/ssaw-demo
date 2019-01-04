@@ -3,6 +3,8 @@ package com.ssaw.ssawauthenticatecenterservice.controller;
 import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,5 +52,11 @@ public class UserController extends BaseController {
     @PostMapping("/saveUserRoles/{userId}")
     public CommonResult<Long> saveUserRoles(@PathVariable(name = "userId") Long userId, @RequestBody List<Long>  roleIds) {
         return userService.saveUserRoles(userId, roleIds);
+    }
+
+    @RequestLog(method = "分页查询用户>>>[page(PageReqDto<UserDto> pageReq)]")
+    @PostMapping("/page")
+    public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
+        return userService.page(pageReq);
     }
 }

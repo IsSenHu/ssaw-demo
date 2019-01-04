@@ -40,7 +40,7 @@ public class ClientDetailsEntity implements ClientDetails {
     @Column
     private String scopes;
 
-    /** oauth2类型 */
+    /** oauth2授权方式 */
     @Column
     private String authorizedGrantTypes;
 

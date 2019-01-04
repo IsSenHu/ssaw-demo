@@ -1,11 +1,13 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.netflix.discovery.converters.Auto;
 import com.ssaw.commons.security.SecurityUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.repository.client.ClientRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ClientService;
+import com.ssaw.ssawauthenticatecenterservice.transfer.ClientTransfer;
 import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -25,10 +27,12 @@ import java.util.Optional;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
+    private final ClientTransfer clientTransfer;
 
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    public ClientServiceImpl(ClientRepository clientRepository, ClientTransfer clientTransfer) {
         this.clientRepository = clientRepository;
+        this.clientTransfer = clientTransfer;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public CommonResult<ClientDto> save(ClientDto clientDto) {
+
         return null;
     }
 }

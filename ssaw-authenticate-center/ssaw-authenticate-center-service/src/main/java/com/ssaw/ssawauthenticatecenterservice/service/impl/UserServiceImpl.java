@@ -2,6 +2,8 @@ package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
@@ -9,6 +11,7 @@ import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,7 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseService implements UserService {
 
     private final UserFeign userFeign;
 
@@ -46,5 +49,30 @@ public class UserServiceImpl implements UserService {
         userVo.setPassword(data.getPassword());
         userVo.setGrantedAuthorities(new ArrayList<>(0));
         return userVo;
+    }
+
+    @Override
+    public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
+        return userFeign.page(pageReq);
+    }
+
+    @Override
+    public CommonResult<UserDto> add(UserDto userDto) {
+        return userFeign.save(userDto);
+    }
+
+    @Override
+    public CommonResult<UserDto> findByUsername(String username) {
+        return userFeign.findByUsername(username);
+    }
+
+    @Override
+    public CommonResult<Long> delete(Long id) {
+        return userFeign.delete(id);
+    }
+
+    @Override
+    public CommonResult<UserDto> update(UserDto userDto) {
+        return userFeign.save(userDto);
     }
 }

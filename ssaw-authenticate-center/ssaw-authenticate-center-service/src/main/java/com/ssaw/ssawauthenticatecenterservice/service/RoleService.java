@@ -25,4 +25,6 @@ public interface RoleService {
     CommonResult<List<PermissionDto>> findAllPermissionByRoleId(Long id);
 
     CommonResult<Long> changeRolePermission(RolePermissionReqDto reqDto);
+
+    CommonResult<Long> delete(Long id);
 }

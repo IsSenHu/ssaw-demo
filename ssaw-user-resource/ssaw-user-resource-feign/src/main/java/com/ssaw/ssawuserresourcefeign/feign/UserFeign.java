@@ -1,6 +1,8 @@
 package com.ssaw.ssawuserresourcefeign.feign;
 
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawuserresourcefeign.fallback.UserFeignFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -31,4 +33,7 @@ public interface UserFeign {
 
     @PostMapping("/saveUserRoles/{userId}")
     CommonResult<Long> saveUserRoles(@PathVariable(name = "userId") Long userId, @RequestBody List<Long> roleIds);
+
+    @PostMapping("/page")
+    TableData<UserDto> page(@RequestBody PageReqDto<UserDto> pageReq);
 }

@@ -1,6 +1,8 @@
 package com.ssaw.ssawauthenticatecenterservice.service;
 
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 
 import java.util.List;
@@ -17,4 +19,6 @@ public interface UserService {
     CommonResult<Long> saveUserRoles(Long userId, List<Long> roleIds);
 
     CommonResult<Long> delete(Long userId);
+
+    TableData<UserDto> page(PageReqDto<UserDto> pageReq);
 }

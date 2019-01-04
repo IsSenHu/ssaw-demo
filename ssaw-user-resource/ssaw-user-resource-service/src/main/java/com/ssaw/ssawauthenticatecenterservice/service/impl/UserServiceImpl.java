@@ -1,6 +1,9 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterservice.specification.UserSpecification;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.UserEntity;
 import com.ssaw.ssawauthenticatecenterservice.entity.UserRoleEntity;
@@ -14,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,5 +134,20 @@ public class UserServiceImpl extends BaseService implements UserService {
         userRepository.deleteById(userId);
         userRoleRepository.deleteAllByUserId(userId);
         return createResult(SUCCESS, "成功!", userId);
+    }
+
+    @Override
+    public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
+        Sort.Order order = Sort.Order.asc("username");
+        Pageable pageable = PageRequest.of(pageReq.getPage() - 1, pageReq.getSize(), Sort.by(order));
+        Page<UserEntity> entityPage = userRepository.findAll(new UserSpecification(pageReq.getData()), pageable);
+        List<UserDto> dtoList = entityPage.getContent().stream().map(userEntityToUserDto).collect(Collectors.toList());
+        TableData<UserDto> tableData = new TableData<>();
+        tableData.setContent(dtoList);
+        tableData.setPage(entityPage.getNumber() + 1);
+        tableData.setSize(entityPage.getSize());
+        tableData.setTotalPages(entityPage.getTotalPages());
+        tableData.setTotals(entityPage.getTotalElements());
+        return tableData;
     }
 }

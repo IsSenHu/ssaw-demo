@@ -16,7 +16,7 @@ public class BaseService {
      * @param <T> 数据类型
      * @return CommonResult
      */
-    public <T> CommonResult<T> createResult(Integer code, String message, T data) {
+    protected <T> CommonResult<T> createResult(Integer code, String message, T data) {
         return CommonResult.createResult(code, message, data);
     }
 }

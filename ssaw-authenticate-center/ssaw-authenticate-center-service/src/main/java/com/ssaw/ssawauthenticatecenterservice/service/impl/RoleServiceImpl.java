@@ -141,4 +141,10 @@ public class RoleServiceImpl extends BaseService implements RoleService {
         }
         return CommonResult.createResult(SUCCESS, "成功!", reqDto.getRoleId());
     }
+
+    @Override
+    public CommonResult<Long> delete(Long id) {
+        roleRepository.deleteById(id);
+        return CommonResult.createResult(SUCCESS, "成功!", id);
+    }
 }

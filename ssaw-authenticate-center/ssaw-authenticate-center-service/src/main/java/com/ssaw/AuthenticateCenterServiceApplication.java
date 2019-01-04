@@ -2,6 +2,9 @@ package com.ssaw;
 
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
+import com.ssaw.commons.enable.EnableFeignHeader;
+import com.ssaw.ssawuserresourcefeign.feign.BasicFeignPackageClass;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -9,6 +12,7 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author HS
@@ -17,7 +21,10 @@ import org.springframework.context.annotation.Bean;
 @EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoRequestResolve
-@EnableFeignClients
+@EnableFeignClients(basePackageClasses = BasicFeignPackageClass.class)
+@EnableFeignHeader
+@ComponentScan(basePackages = "com.ssaw")
+@Slf4j
 public class AuthenticateCenterServiceApplication {
 
 	@Bean

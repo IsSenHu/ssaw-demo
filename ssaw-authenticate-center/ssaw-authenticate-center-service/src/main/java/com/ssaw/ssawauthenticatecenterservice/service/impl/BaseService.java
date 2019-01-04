@@ -29,9 +29,11 @@ public class BaseService {
     }
 
     void setTableData(Page<?> page, TableData<?> tableData) {
-        tableData.setTotals(page.getTotalElements());
-        tableData.setTotalPages(page.getTotalPages());
-        tableData.setSize(page.getSize());
-        tableData.setPage(page.getNumber() + 1);
+        if (null != page) {
+            tableData.setTotals(page.getTotalElements());
+            tableData.setTotalPages(page.getTotalPages());
+            tableData.setSize(page.getSize());
+            tableData.setPage(page.getNumber() + 1);
+        }
     }
 }
