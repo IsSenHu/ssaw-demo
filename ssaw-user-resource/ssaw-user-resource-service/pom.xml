@@ -125,6 +125,13 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
+
+		<!-- support inner -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>support-inner</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
