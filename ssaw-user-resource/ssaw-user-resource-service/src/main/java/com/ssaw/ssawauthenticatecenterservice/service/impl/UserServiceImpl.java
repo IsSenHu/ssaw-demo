@@ -1,5 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
@@ -40,15 +41,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final UserEntityToUserDto userEntityToUserDto;
     private final UserDtoToUserEntity userDtoToUserEntity;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserEntityToUserDto userEntityToUserDto, UserDtoToUserEntity userDtoToUserEntity, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserEntityToUserDto userEntityToUserDto, UserDtoToUserEntity userDtoToUserEntity, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.userEntityToUserDto = userEntityToUserDto;
         this.userDtoToUserEntity = userDtoToUserEntity;
         this.userRoleRepository = userRoleRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -72,7 +71,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         if(Objects.isNull(userDto.getId())) {
             UserEntity userEntity = userDtoToUserEntity.apply(userDto);
             // 密码加密
-            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+            userEntity.setPassword(ApplicationContextUtil.applicationContext.getBean(PasswordEncoder.class).encode(userEntity.getPassword()));
             // 默认启用
             userEntity.setIsEnable(Boolean.TRUE);
             userEntity.setCreateTime(LocalDateTime.now());

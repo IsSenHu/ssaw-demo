@@ -29,7 +29,6 @@ eureka:
   instance:
     prefer-ip-address: true
 
-
 management:
   endpoints:
     web:
@@ -38,3 +37,8 @@ management:
 
 server:
   port: 20005
+
+
+
+
+

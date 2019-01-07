@@ -19,8 +19,6 @@
 	<properties>
 		<support-druid.version>0.0.3-SNAPSHOT</support-druid.version>
 		<support-jpa.version>0.0.1-SNAPSHOT</support-jpa.version>
-		<support-redis.version>0.0.1-SNAPSHOT</support-redis.version>
-		<support-ssc.version>0.0.1-SNAPSHOT</support-ssc.version>
 	</properties>
 
 	<dependencies>
@@ -113,26 +111,12 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- support-oauth2 -->
+		<!-- support oauth2 -->
 		<dependency>
 			<groupId>com.ssaw</groupId>
 			<artifactId>support-oauth2</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>pom</type>
-		</dependency>
-
-		<!-- support redis -->
-		<dependency>
-			<groupId>com.ssaw</groupId>
-			<artifactId>support-redis</artifactId>
-			<version>${support-redis.version}</version>
-		</dependency>
-
-		<!-- support-SSC -->
-		<dependency>
-			<groupId>com.ssaw</groupId>
-			<artifactId>support-statistical-certification-center-client</artifactId>
-			<version>${support-ssc.version}</version>
 		</dependency>
 
 		<!-- guava -->

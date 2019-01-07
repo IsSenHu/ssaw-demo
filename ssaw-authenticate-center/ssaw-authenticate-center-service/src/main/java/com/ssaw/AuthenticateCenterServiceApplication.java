@@ -1,6 +1,7 @@
 package com.ssaw;
 
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
+import com.ssaw.commons.config.InnerSecurityConfig;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.commons.enable.EnableFeignHeader;
 import com.ssaw.ssawuserresourcefeign.feign.BasicFeignPackageClass;
@@ -13,6 +14,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author HS
@@ -25,6 +27,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignHeader
 @ComponentScan(basePackages = "com.ssaw")
 @Slf4j
+@Import(InnerSecurityConfig.class)
 public class AuthenticateCenterServiceApplication {
 
 	@Bean
