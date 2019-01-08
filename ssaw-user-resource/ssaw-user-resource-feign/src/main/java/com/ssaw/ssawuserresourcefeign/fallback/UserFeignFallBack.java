@@ -1,10 +1,12 @@
 package com.ssaw.ssawuserresourcefeign.fallback;
 
+import com.alibaba.fastjson.JSON;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import java.util.List;
@@ -14,6 +16,7 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.*;
  * @author HuSen.
  * @date 2018/12/4 19:41.
  */
+@Slf4j
 @Component
 public class UserFeignFallBack implements UserFeign {
     @Override
@@ -38,6 +41,8 @@ public class UserFeignFallBack implements UserFeign {
 
     @Override
     public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
+        String string = JSON.toJSONString(pageReq);
+        log.info("分页查询用户进入服务降级:{}", string);
         return new TableData<>();
     }
 }

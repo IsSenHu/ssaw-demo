@@ -1,5 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
@@ -141,6 +142,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         Pageable pageable = PageRequest.of(pageReq.getPage() - 1, pageReq.getSize(), Sort.by(order));
         Page<UserEntity> entityPage = userRepository.findAll(new UserSpecification(pageReq.getData()), pageable);
         List<UserDto> dtoList = entityPage.getContent().stream().map(userEntityToUserDto).collect(Collectors.toList());
+        log.info("分页查询参数:{},查询结果:{}", JSON.toJSONString(pageable), JSON.toJSONString(dtoList));
         TableData<UserDto> tableData = new TableData<>();
         tableData.setContent(dtoList);
         tableData.setPage(entityPage.getNumber() + 1);
