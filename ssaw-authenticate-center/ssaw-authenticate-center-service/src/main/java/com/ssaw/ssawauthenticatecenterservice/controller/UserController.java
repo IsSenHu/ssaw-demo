@@ -30,7 +30,7 @@ public class UserController extends BaseController {
 
     @RequestLog(method = "UserController.page(PageReqDto<UserDto> pageReq)")
     @PostMapping("/page")
-    public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
+    public TableData<UserDto> page(@RequestBody PageReqDto<UserDto> pageReq) {
         return userService.page(pageReq);
     }
 
