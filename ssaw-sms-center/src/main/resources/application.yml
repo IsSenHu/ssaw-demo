@@ -1,0 +1,10 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: SMS-CENTER
+  security:
+    user:
+      name: admin
+      password: 123456
