@@ -3,6 +3,7 @@ package com.ssaw;
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.commons.enable.EnableFeignHeader;
+import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.ssawuserresourcefeign.UserBasicFallbackPackageClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -36,6 +37,6 @@ public class AuthenticateCenterServiceApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(AuthenticateCenterServiceApplication.class, args);
+		ApplicationContextUtil.applicationContext = SpringApplication.run(AuthenticateCenterServiceApplication.class, args);
 	}
 }

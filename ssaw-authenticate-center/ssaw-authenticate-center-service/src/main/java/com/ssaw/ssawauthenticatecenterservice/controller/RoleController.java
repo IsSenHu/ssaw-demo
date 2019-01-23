@@ -5,15 +5,13 @@ import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.EditRoleDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.RoleDto;
-import com.ssaw.ssawauthenticatecenterservice.dto.RolePermissionReqDto;
 import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author HuSen.
@@ -39,7 +37,7 @@ public class RoleController extends BaseController {
 
     @GetMapping("/findById/{id}")
     @RequestLog(method = "RoleController.findById(Long id)")
-    public CommonResult<RoleDto> findById(@PathVariable(name = "id") Long id) {
+    public CommonResult<EditRoleDto> findById(@PathVariable(name = "id") Long id) {
         return roleService.findById(id);
     }
 
@@ -54,19 +52,6 @@ public class RoleController extends BaseController {
     @RequestLog(method = "RoleController.update(RoleDto roleDto)")
     public CommonResult<RoleDto> update(@RequestBody @Valid RoleDto roleDto, BindingResult result) {
         return roleService.update(roleDto);
-    }
-
-    @GetMapping("/findAllPermissionByRoleId/{id}")
-    @RequestLog(method = "RoleController.findAllPermissionByRoleId(Long id)")
-    public CommonResult<List<PermissionDto>> findAllPermissionByRoleId(@PathVariable(name = "id") Long id) {
-        return roleService.findAllPermissionByRoleId(id);
-    }
-
-    @Validating
-    @PostMapping("/changeRolePermission")
-    @RequestLog(method = "RoleController.changeRolePermission(RolePermissionReqDto reqDto)")
-    public CommonResult<Long> changeRolePermission(@RequestBody @Valid RolePermissionReqDto reqDto, BindingResult result) {
-        return roleService.changeRolePermission(reqDto);
     }
 
     @PostMapping("/delete/{id}")

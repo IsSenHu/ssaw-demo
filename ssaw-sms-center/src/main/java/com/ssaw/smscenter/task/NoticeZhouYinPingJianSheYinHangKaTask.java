@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class NoticeZhouYinPingJianSheYinHangKaTask {
 
     public volatile boolean me = true;
-    public volatile boolean stop = false;
+    public volatile boolean stop = true;
 
     @Scheduled(fixedDelay = 3600000, initialDelay = 5000)
     public void notice() {

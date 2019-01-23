@@ -33,6 +33,8 @@ import java.util.Map;
 @EnableAuthorizationServer
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
+    public static final String SCOPE_CACHE_KEY = "app_scopes";
+
     private final AuthenticationManager authenticationManager;
     private final RedisConnectionFactory redisConnectionFactory;
     private final UserService userService;

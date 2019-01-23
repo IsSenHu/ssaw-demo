@@ -3,22 +3,23 @@ package com.ssaw.ssawauthenticatecenterservice.service.impl;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.EditRoleDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.RoleDto;
-import com.ssaw.ssawauthenticatecenterservice.dto.RolePermissionReqDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.TreeDto;
+import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.entity.ResourceEntity;
 import com.ssaw.ssawauthenticatecenterservice.entity.RoleEntity;
 import com.ssaw.ssawauthenticatecenterservice.entity.RolePermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.repository.resource.ResourceRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.role.RoleRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.role.permission.RolePermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
 import com.ssaw.ssawauthenticatecenterservice.specification.RoleSpecification;
-import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
 import com.ssaw.ssawauthenticatecenterservice.transfer.RoleTransfer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,17 +48,17 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
     private final RolePermissionRepository rolePermissionRepository;
 
-    private final PermissionTransfer permissionTransfer;
+    private final ResourceRepository resourceRepository;
 
     private final PermissionRepository permissionRepository;
 
     @Autowired
-    public RoleServiceImpl(RoleTransfer roleTransfer, RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository, PermissionTransfer permissionTransfer, PermissionRepository permissionRepository) {
+    public RoleServiceImpl(RoleTransfer roleTransfer, RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository, PermissionRepository permissionRepository, ResourceRepository resourceRepository) {
         this.roleTransfer = roleTransfer;
         this.roleRepository = roleRepository;
         this.rolePermissionRepository = rolePermissionRepository;
-        this.permissionTransfer = permissionTransfer;
         this.permissionRepository = permissionRepository;
+        this.resourceRepository = resourceRepository;
     }
 
     @Override
@@ -74,10 +74,51 @@ public class RoleServiceImpl extends BaseService implements RoleService {
     }
 
     @Override
-    public CommonResult<RoleDto> findById(Long id) {
-        return roleRepository.findById(id)
-                .map(entity -> CommonResult.createResult(SUCCESS, "成功!", roleTransfer.entity2Dto(entity)))
-                .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", null));
+    public CommonResult<EditRoleDto> findById(Long id) {
+        RoleDto roleDto = roleRepository.findById(id)
+                .map(roleTransfer::entity2Dto)
+                .orElse(null);
+        if(roleDto == null) {
+            return CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", null);
+        }
+        EditRoleDto editRoleDto = new EditRoleDto();
+        editRoleDto.setRoleDto(roleDto);
+
+        // 查询出所有的资源
+        List<ResourceEntity> resourceRepositoryAll = resourceRepository.findAll();
+        List<TreeDto> treeDtos = new ArrayList<>(resourceRepositoryAll.size());
+        if(CollectionUtils.isNotEmpty(resourceRepositoryAll)) {
+            for(ResourceEntity resourceEntity : resourceRepositoryAll) {
+                TreeDto resource = new TreeDto();
+                resource.setId(resourceEntity.getId());
+                resource.setLabel(resourceEntity.getResourceId());
+                // 获取该资源的所有权限
+                List<PermissionEntity> permissionRepositoryAllByResourceId = permissionRepository.findAllByResourceId(resourceEntity.getId());
+                List<TreeDto> children = new ArrayList<>(permissionRepositoryAllByResourceId.size());
+                if(CollectionUtils.isNotEmpty(permissionRepositoryAllByResourceId)) {
+                    for(PermissionEntity permissionEntity : permissionRepositoryAllByResourceId) {
+                        TreeDto treeDto = new TreeDto();
+                        treeDto.setId(Long.valueOf(permissionEntity.getResourceId().toString() + permissionEntity.getId().toString()));
+                        treeDto.setLabel(permissionEntity.getName());
+                        children.add(treeDto);
+                    }
+                }
+                resource.setChildren(children);
+                treeDtos.add(resource);
+            }
+        }
+        // 设置树数据
+        editRoleDto.setTreeDtos(treeDtos);
+        // 设置用户已拥有的权限为选中
+        List<Long> defaultCheckedKeys = new ArrayList<>();
+        List<RolePermissionEntity> allByRoleId = rolePermissionRepository.findAllByRoleId(id);
+        if(CollectionUtils.isNotEmpty(allByRoleId)) {
+            Set<Long> collectPermissionId = allByRoleId.stream().map(RolePermissionEntity::getPermissionId).collect(Collectors.toSet());
+            List<PermissionEntity> allById = permissionRepository.findAllById(collectPermissionId);
+            defaultCheckedKeys = allById.stream().map(x -> Long.valueOf(x.getResourceId().toString() + x.getId().toString())).collect(Collectors.toList());
+        }
+        editRoleDto.setDefaultCheckedKeys(defaultCheckedKeys);
+        return CommonResult.createResult(SUCCESS, "成功!", editRoleDto);
     }
 
     @Override
@@ -101,45 +142,31 @@ public class RoleServiceImpl extends BaseService implements RoleService {
                 entity.setName(roleDto.getName());
                 entity.setDescription(roleDto.getDescription());
                 entity.setModifyTime(LocalDateTime.now());
+                List<TreeDto> permissions = roleDto.getPermissions();
+                // 删除现有的角色权限关系
+                rolePermissionRepository.deleteAllByRoleId(roleDto.getId());
+                // 重新新增角色权限关系
+                List<RolePermissionEntity> rolePermissionEntities = new ArrayList<>();
+                for(TreeDto treeDto : permissions) {
+                    List<TreeDto> children = treeDto.getChildren();
+                    if(CollectionUtils.isNotEmpty(children)) {
+                        List<RolePermissionEntity> collect = children.stream().map(x -> {
+                            String realId = StringUtils.substring(x.getId().toString(), treeDto.getId().toString().length());
+                            RolePermissionEntity rolePermissionEntity = new RolePermissionEntity();
+                            rolePermissionEntity.setRoleId(roleDto.getId());
+                            rolePermissionEntity.setPermissionId(Long.valueOf(realId));
+                            rolePermissionEntity.setCreateTime(LocalDateTime.now());
+                            rolePermissionEntity.setModifyTime(LocalDateTime.now());
+                            return rolePermissionEntity;
+                        }).collect(Collectors.toList());
+                        rolePermissionEntities.addAll(collect);
+                    }
+                }
+                rolePermissionRepository.saveAll(rolePermissionEntities);
                 roleRepository.save(entity);
                 return CommonResult.createResult(SUCCESS, "成功!", roleDto);
             })
             .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", roleDto));
-    }
-
-    @Override
-    public CommonResult<List<PermissionDto>> findAllPermissionByRoleId(Long id) {
-        Set<Long> permissionIdSet = rolePermissionRepository.findAllByRoleId(id)
-                .stream().map(RolePermissionEntity::getPermissionId).collect(Collectors.toSet());
-
-        List<PermissionDto> permissionDtoList;
-        if(CollectionUtils.isNotEmpty(permissionIdSet)) {
-            permissionDtoList = permissionRepository.findAllById(permissionIdSet)
-                    .stream().map(permissionTransfer::simpleEntity2Dto).collect(Collectors.toList());
-        } else {
-            permissionDtoList = new ArrayList<>(0);
-        }
-        return CommonResult.createResult(SUCCESS, "成功!", permissionDtoList);
-    }
-
-    @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<Long> changeRolePermission(RolePermissionReqDto reqDto) {
-        rolePermissionRepository.deleteAllByRoleId(reqDto.getRoleId());
-        String permissionIds = reqDto.getPermissionIds();
-        if(StringUtils.isNotBlank(permissionIds)) {
-            String[] split = permissionIds.split(",");
-            List<RolePermissionEntity> rps = Arrays.stream(split).filter(NumberUtils::isParsable).map(id -> {
-                RolePermissionEntity entity = new RolePermissionEntity();
-                entity.setRoleId(reqDto.getRoleId());
-                entity.setPermissionId(Long.parseLong(id));
-                return entity;
-            }).collect(Collectors.toList());
-            if(CollectionUtils.isNotEmpty(rps)) {
-                rolePermissionRepository.saveAll(rps);
-            }
-        }
-        return CommonResult.createResult(SUCCESS, "成功!", reqDto.getRoleId());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.ssaw.ssawauthenticatecenterservice.service;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.dto.EditRoleDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.RoleDto;
 import com.ssaw.ssawauthenticatecenterservice.dto.RolePermissionReqDto;
@@ -16,15 +17,11 @@ import java.util.List;
 public interface RoleService {
     CommonResult<RoleDto> add(RoleDto roleDto);
 
-    CommonResult<RoleDto> findById(Long id);
+    CommonResult<EditRoleDto> findById(Long id);
 
     TableData<RoleDto> page(PageReqDto<RoleDto> pageReqDto);
 
     CommonResult<RoleDto> update(RoleDto roleDto);
-
-    CommonResult<List<PermissionDto>> findAllPermissionByRoleId(Long id);
-
-    CommonResult<Long> changeRolePermission(RolePermissionReqDto reqDto);
 
     CommonResult<Long> delete(Long id);
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author HuSen.
@@ -18,4 +19,6 @@ public class RoleDto extends BaseDto {
     private String name;
 
     private String description;
+
+    private List<TreeDto> permissions;
 }

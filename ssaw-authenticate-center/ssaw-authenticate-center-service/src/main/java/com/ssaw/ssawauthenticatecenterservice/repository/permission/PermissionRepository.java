@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author HuSen.
  * @date 2018/12/13 17:06.
@@ -13,4 +15,6 @@ import org.springframework.stereotype.Repository;
 public interface PermissionRepository extends JpaRepository<PermissionEntity, Long>, JpaSpecificationExecutor<PermissionEntity> {
 
     long countByName(String name);
+
+    List<PermissionEntity> findAllByResourceId(Long resourceId);
 }

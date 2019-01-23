@@ -1,21 +1,16 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
-import com.netflix.discovery.converters.Auto;
-import com.ssaw.commons.security.SecurityUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.repository.client.ClientRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ClientService;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ClientTransfer;
-import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -42,17 +37,7 @@ public class ClientServiceImpl implements ClientService {
             log.error("客户端:{}, 不存在", clientId);
             throw new ClientRegistrationException("客户端不存在!");
         }
-        ClientDetailsEntity clientDetailsEntity = optionalDetailsEntity.get();
-        UserVo userVo = SecurityUtils.getUserDetails(UserVo.class);
-        if(Objects.isNull(userVo)) {
-            log.error("用户:{}, 未登录!", clientDetailsEntity.getUserId());
-            throw new ClientRegistrationException("用户未登录!");
-        }
-        if(NumberUtils.compare(userVo.getId(), clientDetailsEntity.getUserId()) != 0) {
-            log.error("帐号:{}, 与客户端:{}, 不匹配!", userVo.getUsername(), clientId);
-            throw new ClientRegistrationException("帐号与客户端不匹配!");
-        }
-        return clientDetailsEntity;
+        return optionalDetailsEntity.get();
     }
 
     @Override
