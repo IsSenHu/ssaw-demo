@@ -1,13 +1,15 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
+import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDetailsInfoDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
+import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 import static org.apache.commons.lang.StringUtils.join;
 
 /**
@@ -72,7 +74,10 @@ public class ClientTransfer {
             infoDto = new ClientDetailsInfoDto();
             infoDto.setClientId(entity.getClientId());
             infoDto.setUserId(entity.getUserId());
-            // TODO User findById
+            CommonResult<UserDto> byId = userFeign.findById(entity.getUserId());
+            if(byId.getCode() == SUCCESS) {
+                infoDto.setUsername(byId.getData().getUsername());
+            }
             infoDto.setClientSecret(entity.getClientSecret());
             infoDto.setResourceIds(join(entity.getResourceIds().toArray(new String[0])));
             infoDto.setScopes(join(entity.getScope().toArray(new String[0])));
