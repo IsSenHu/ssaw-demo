@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ClientRepository extends JpaRepository<ClientDetailsEntity, String>, JpaSpecificationExecutor<ClientDetailsEntity>, ClientDao {
-
+    long countByClientId(String clientId);
 }

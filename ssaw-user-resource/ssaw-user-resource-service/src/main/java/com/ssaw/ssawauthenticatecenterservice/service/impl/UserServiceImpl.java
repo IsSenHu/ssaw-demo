@@ -151,4 +151,15 @@ public class UserServiceImpl extends BaseService implements UserService {
         tableData.setTotals(entityPage.getTotalElements());
         return tableData;
     }
+
+    @Override
+    public CommonResult<UserDto> findById(Long id) {
+        if (null == id) {
+            return CommonResult.createResult(PARAM_ERROR, "用户ID必传!", null);
+        }
+        Optional<UserEntity> byId = userRepository.findById(id);
+        return byId
+                .map(userEntity -> CommonResult.createResult(SUCCESS, "成功!", userEntityToUserDto.apply(userEntity)))
+                .orElseGet(() -> CommonResult.createResult(ERROR, "该用户不存在!", null));
+    }
 }

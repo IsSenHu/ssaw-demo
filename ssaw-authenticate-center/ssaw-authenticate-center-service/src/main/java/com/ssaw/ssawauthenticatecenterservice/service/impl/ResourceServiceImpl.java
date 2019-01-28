@@ -3,12 +3,17 @@ package com.ssaw.ssawauthenticatecenterservice.service.impl;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.dto.EditClientScopeDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ResourceDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.TreeDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.ResourceEntity;
+import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
 import com.ssaw.ssawauthenticatecenterservice.repository.resource.ResourceRepository;
+import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ResourceSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ResourceTransfer;
+import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,11 +41,15 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
 
     private final ResourceTransfer resourceTransfer;
     private final ResourceRepository resourceRepository;
+    private final ScopeRepository scopeRepository;
+    private final ScopeTransfer scopeTransfer;
 
     @Autowired
-    public ResourceServiceImpl(ResourceTransfer resourceTransfer, ResourceRepository resourceRepository) {
+    public ResourceServiceImpl(ResourceTransfer resourceTransfer, ResourceRepository resourceRepository, ScopeRepository scopeRepository, ScopeTransfer scopeTransfer) {
         this.resourceTransfer = resourceTransfer;
         this.resourceRepository = resourceRepository;
+        this.scopeRepository = scopeRepository;
+        this.scopeTransfer = scopeTransfer;
     }
 
     @Override
@@ -59,8 +69,8 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
 
     @Override
     public TableData<ResourceDto> page(PageReqDto<ResourceDto> pageReqDto) {
-        PageRequest pageRequest = getPageRequest(pageReqDto);
-        Page<ResourceEntity> page = resourceRepository.findAll(new ResourceSpecification(pageReqDto.getData()), pageRequest);
+        Pageable pageable = getPageRequest(pageReqDto);
+        Page<ResourceEntity> page = resourceRepository.findAll(new ResourceSpecification(pageReqDto.getData()), pageable);
         TableData<ResourceDto> tableData = new TableData<>();
         setTableData(page, tableData);
         tableData.setContent(page.getContent().stream().map(resourceTransfer::entity2Dto).collect(Collectors.toList()));
@@ -115,5 +125,39 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
         } else {
             return CommonResult.createResult(SUCCESS, "成功!", new ArrayList<>(0));
         }
+    }
+
+    @Override
+    public CommonResult<List<ResourceDto>> findAll() {
+        return CommonResult.createResult(SUCCESS, "成功!",
+                resourceRepository.findAll().stream().map(resourceTransfer::entity2Dto).collect(Collectors.toList()));
+    }
+
+    @Override
+    public CommonResult<EditClientScopeDto> findAllScopeByResourceIds(String ids) {
+        EditClientScopeDto clientScopeDto = new EditClientScopeDto();
+        if(StringUtils.isNotEmpty(ids)) {
+            List<ResourceEntity> allById = resourceRepository.findAllById(Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toList()));
+            List<TreeDto> treeDtoList = new ArrayList<>(allById.size());
+            for(ResourceEntity entity : allById) {
+                TreeDto treeDto = new TreeDto();
+                treeDto.setId(entity.getId());
+                treeDto.setLabel(entity.getResourceId());
+                List<ScopeEntity> allByResourceId = scopeRepository.findAllByResourceId(entity.getId());
+                List<TreeDto> children = allByResourceId.stream().map(x -> {
+                    TreeDto child = new TreeDto();
+                    child.setId(x.getId());
+                    child.setLabel(x.getScope());
+                    return child;
+                }).collect(Collectors.toList());
+                treeDto.setChildren(children);
+                treeDtoList.add(treeDto);
+            }
+            clientScopeDto.setTreeDtos(treeDtoList);
+        } else {
+            clientScopeDto.setTreeDtos(new ArrayList<>(0));
+            clientScopeDto.setDefaultExpandedKeys(new ArrayList<>(0));
+        }
+        return CommonResult.createResult(SUCCESS, "成功!", clientScopeDto);
     }
 }

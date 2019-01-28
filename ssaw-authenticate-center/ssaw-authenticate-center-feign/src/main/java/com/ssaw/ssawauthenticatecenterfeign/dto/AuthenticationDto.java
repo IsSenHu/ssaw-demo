@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class AuthenticationDto implements Serializable {
     private String tokenValue;
     private String uri;
+    private String userId;
 
     @Override
     public String toString() {

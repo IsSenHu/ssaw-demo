@@ -1,10 +1,18 @@
 package com.ssaw.ssawauthenticatecenterservice.config;
 
+import com.ssaw.ssawauthenticatecenterservice.authentication.filter.MyOauth2ClientAuthenticationProcessingFilter;
+import com.ssaw.ssawauthenticatecenterservice.authentication.manager.MyOauth2AuthenticationManager;
+import com.ssaw.ssawauthenticatecenterservice.authentication.point.AuthenticationEntryPointImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
 /**
  * @author HuSen.
@@ -14,21 +22,42 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    private final RedisTokenStore redisTokenStore;
+
+    private final ClientDetailsService clientDetailsService;
+
+    @Autowired
+    public ResourceServerConfig(RedisTokenStore redisTokenStore, ClientDetailsService clientDetailsService) {
+        this.redisTokenStore = redisTokenStore;
+        this.clientDetailsService = clientDetailsService;
+    }
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId("SSAW-USER-RESOURCE");
+        resources.resourceId("SSAW-AUTHENTICATE-CENTER");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http
-                .requestMatchers().antMatchers("/api/**")
-                .and().authorizeRequests()
-                .antMatchers("/api/user/get/*").access("#oauth2.hasScope('USER_READ')")
-                .antMatchers("/api/roles/get/*").access("#oauth2.hasScope('ROLE_READ')")
-                .antMatchers("/api/user/save").access("#oauth2.hasScope('USER_WRITE')")
-                .antMatchers("/api/role/save").access("#oauth2.hasScope('ROLE_WRITE')")
-                .antMatchers("/api/user/saveUserRoles/*").access("#oauth2.hasScope('USER_ROLE_WRITE')")
-                .and().csrf().disable();
+        http.requestMatchers().antMatchers("/api/authenticate")
+            .and().authorizeRequests().anyRequest().authenticated()
+            .and().csrf().disable();
+
+        MyOauth2ClientAuthenticationProcessingFilter filter = new MyOauth2ClientAuthenticationProcessingFilter();
+        MyOauth2AuthenticationManager manager = new MyOauth2AuthenticationManager();
+
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(redisTokenStore);
+
+        manager.setTokenServices(tokenServices);
+        manager.setClientDetailsService(clientDetailsService);
+
+        filter.setAuthenticationManager(manager);
+        filter.setAuthenticationEntryPoint(new AuthenticationEntryPointImpl());
+
+        http.addFilterBefore(filter, AbstractPreAuthenticatedProcessingFilter.class);
+
+        //禁用缓存
+        http.headers().cacheControl();
     }
 }

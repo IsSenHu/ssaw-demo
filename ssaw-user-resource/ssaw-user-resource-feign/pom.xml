@@ -13,7 +13,6 @@
         <groupId>com.ssaw</groupId>
         <artifactId>ssaw-user-resource</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <dependencies>

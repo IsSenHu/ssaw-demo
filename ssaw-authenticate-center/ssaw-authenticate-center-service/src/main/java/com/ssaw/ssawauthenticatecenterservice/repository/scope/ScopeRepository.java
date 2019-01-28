@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author HuSen.
  * @date 2018/12/12 10:35.
@@ -25,4 +27,6 @@ public interface ScopeRepository extends JpaRepository<ScopeEntity, Long>, JpaSp
     Page<ScopeEntity> findAllByScopeLike (String scope, Pageable pageable);
 
     Page<ScopeEntity> findAllByPermissionIdIsNull(Pageable pageable);
+
+    List<ScopeEntity> findAllByResourceId(Long resourceId);
 }

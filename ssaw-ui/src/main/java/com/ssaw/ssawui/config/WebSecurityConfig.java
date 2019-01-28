@@ -16,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 在这里拦截需要进行单点登录的路径
         http.
-                antMatcher("/**")
+                antMatcher("/server/**")
                 // 所有请求都得经过认证和授权
                 .authorizeRequests().anyRequest().authenticated()
                 .and()

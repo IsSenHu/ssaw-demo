@@ -59,4 +59,10 @@ public class UserController extends BaseController {
     public TableData<UserDto> page(@RequestBody PageReqDto<UserDto> pageReq) {
         return userService.page(pageReq);
     }
+
+    @GetMapping("/findById/{id}")
+    @RequestLog(method = "根据ID查询用户信息>>>[findById(Long id)]")
+    public CommonResult<UserDto> findById(@PathVariable(name = "id") Long id) {
+        return userService.findById(id);
+    }
 }

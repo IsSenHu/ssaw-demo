@@ -37,9 +37,9 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
         log.info("init scope cache...");
         List<ScopeEntity> entities = scopeRepository.findAll();
         if(CollectionUtils.isNotEmpty(entities)) {
-            List<ScopeDto> dtos = entities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList());
-            CacheUtils.refreshScopes(dtos);
-            log.info("init scope caches:{}", JsonUtils.object2JsonString(dtos));
+            List<ScopeDto> scopes = entities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList());
+            CacheUtils.refreshScopes(scopes);
+            log.info("init scope caches:{}", JsonUtils.object2JsonString(scopes));
         }
     }
 }

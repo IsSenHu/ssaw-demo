@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -66,8 +67,8 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
 
     @Override
     public TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
-        PageRequest pageRequest = getPageRequest(pageReqDto);
-        Page<PermissionEntity> page = permissionRepository.findAll(new PermissionSpecification(pageReqDto.getData()), pageRequest);
+        Pageable pageable = getPageRequest(pageReqDto);
+        Page<PermissionEntity> page = permissionRepository.findAll(new PermissionSpecification(pageReqDto.getData()), pageable);
         TableData<PermissionDto> tableData = new TableData<>();
         setTableData(page, tableData);
         tableData.setContent(page.getContent().stream().map(permissionTransfer::entity2Dto).collect(Collectors.toList()));

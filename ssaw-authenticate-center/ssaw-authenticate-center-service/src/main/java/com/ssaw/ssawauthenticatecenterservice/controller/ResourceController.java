@@ -5,6 +5,7 @@ import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.dto.EditClientScopeDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ResourceDto;
 import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.service.impl.ResourceServiceImpl;
@@ -65,5 +66,17 @@ public class ResourceController extends BaseController {
     @RequestLog(method = "ResourceController.search(String resourceId)")
     public CommonResult<List<ResourceDto>> search(@PathVariable(name = "resourceId") String resourceId) {
         return resourceService.search(resourceId);
+    }
+
+    @GetMapping("/findAll")
+    @RequestLog(method = "ResourceController.findAll()")
+    public CommonResult<List<ResourceDto>> findAll() {
+        return resourceService.findAll();
+    }
+
+    @GetMapping("/findAllScopeByResourceIds")
+    @RequestLog(method = "ResourceController.findAllScopeByResourceIds(String ids)")
+    public CommonResult<EditClientScopeDto> findAllScopeByResourceIds(String ids) {
+        return resourceService.findAllScopeByResourceIds(ids);
     }
 }

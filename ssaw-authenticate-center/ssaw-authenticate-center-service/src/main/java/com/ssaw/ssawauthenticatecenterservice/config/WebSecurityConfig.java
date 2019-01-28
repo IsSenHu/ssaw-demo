@@ -43,7 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .and().formLogin().permitAll()
                 .and().csrf().disable();
-
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)

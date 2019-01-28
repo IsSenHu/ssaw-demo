@@ -36,4 +36,10 @@ public interface UserFeign {
 
     @PostMapping("/page")
     TableData<UserDto> page(@RequestBody PageReqDto<UserDto> pageReq);
+
+    @PostMapping("/authenticate")
+    CommonResult<String> authenticate();
+
+    @GetMapping("/findById/{id}")
+    CommonResult<UserDto> findById(@PathVariable(name = "id") Long id);
 }

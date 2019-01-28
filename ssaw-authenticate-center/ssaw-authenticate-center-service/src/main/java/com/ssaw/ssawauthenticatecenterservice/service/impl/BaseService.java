@@ -5,6 +5,7 @@ import com.ssaw.commons.vo.TableData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -13,12 +14,13 @@ import org.springframework.data.domain.Sort;
  */
 public class BaseService {
 
-    PageRequest getPageRequest(PageReqDto pageReqDto) {
+    Pageable getPageRequest(PageReqDto pageReqDto) {
         Sort.Order order;
         String sortValue = pageReqDto.getSortValue();
         String sortType = pageReqDto.getSortType();
-        if(StringUtils.isNotBlank(sortValue) && StringUtils.isNotBlank(sortType)
-                && (StringUtils.equalsIgnoreCase("asc", sortType) || StringUtils.equalsIgnoreCase("desc", sortType))) {
+        boolean sortByRequest = StringUtils.isNotBlank(sortValue) && StringUtils.isNotBlank(sortType)
+                && (StringUtils.equalsIgnoreCase("asc", sortType) || StringUtils.equalsIgnoreCase("desc", sortType));
+        if(sortByRequest) {
             order = StringUtils.equalsIgnoreCase("asc", sortType) ? Sort.Order.asc(sortValue) : Sort.Order.desc(sortValue);
         } else if (StringUtils.isNotBlank(sortValue)){
             order = Sort.Order.desc(sortValue);

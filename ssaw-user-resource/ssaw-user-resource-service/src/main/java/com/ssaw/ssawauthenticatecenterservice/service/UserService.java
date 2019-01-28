@@ -21,4 +21,6 @@ public interface UserService {
     CommonResult<Long> delete(Long userId);
 
     TableData<UserDto> page(PageReqDto<UserDto> pageReq);
+
+    CommonResult<UserDto> findById(Long id);
 }

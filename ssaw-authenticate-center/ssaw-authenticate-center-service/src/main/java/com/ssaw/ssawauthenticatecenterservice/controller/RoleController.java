@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author HuSen.
@@ -58,5 +59,11 @@ public class RoleController extends BaseController {
     @RequestLog(method = "RoleController.delete(Long id)")
     public CommonResult<Long> delete(@PathVariable(value = "id") Long id) {
         return roleService.delete(id);
+    }
+
+    @GetMapping("/search/{role}")
+    @RequestLog(method = "RoleController.search(String role)")
+    public CommonResult<List<RoleDto>> search(@PathVariable(name = "role") String role) {
+        return roleService.search(role);
     }
 }

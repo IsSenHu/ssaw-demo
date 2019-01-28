@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,5 +174,18 @@ public class RoleServiceImpl extends BaseService implements RoleService {
     public CommonResult<Long> delete(Long id) {
         roleRepository.deleteById(id);
         return CommonResult.createResult(SUCCESS, "成功!", id);
+    }
+
+    @Override
+    public CommonResult<List<RoleDto>> search(String role) {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<RoleEntity> page;
+        if("none".equals(role)) {
+            page = roleRepository.findAll(pageable);
+        } else {
+            page = roleRepository.findAllByNameLike("%".concat(role).concat("%"), pageable);
+        }
+        return CommonResult.createResult(SUCCESS, "成功!",
+                page.getContent().stream().map(roleTransfer::entity2Dto).collect(Collectors.toList()));
     }
 }

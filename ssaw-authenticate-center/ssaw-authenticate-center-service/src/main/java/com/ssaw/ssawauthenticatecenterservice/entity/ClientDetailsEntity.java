@@ -168,7 +168,7 @@ public class ClientDetailsEntity implements ClientDetails {
 
     @Override
     public boolean isAutoApprove(String scope) {
-        return true;
+        return false;
     }
 
     /**

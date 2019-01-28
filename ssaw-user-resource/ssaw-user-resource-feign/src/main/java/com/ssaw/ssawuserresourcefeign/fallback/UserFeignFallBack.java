@@ -45,4 +45,14 @@ public class UserFeignFallBack implements UserFeign {
         log.info("分页查询用户进入服务降级:{}", string);
         return new TableData<>();
     }
+
+    @Override
+    public CommonResult<String> authenticate() {
+        return CommonResult.createResult(ERROR, "服务降级", "服务降级");
+    }
+
+    @Override
+    public CommonResult<UserDto> findById(Long id) {
+        return CommonResult.createResult(ERROR, "服务降级", null);
+    }
 }

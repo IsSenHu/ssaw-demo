@@ -11,6 +11,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
+import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -19,21 +21,24 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.oauth2.provider.token.store.JwtClaimsSetVerifier;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+
+import java.security.KeyPair;
 import java.util.Map;
 
 /**
  * @author HuSen.
  * @date 2018/11/28 10:53.
  */
-@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @Configuration
 @EnableAuthorizationServer
-public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
+public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
 
-    public static final String SCOPE_CACHE_KEY = "app_scopes";
+    public static final String SCOPE_CACHE_KEY = "scope_cache_key";
 
     private final AuthenticationManager authenticationManager;
     private final RedisConnectionFactory redisConnectionFactory;
@@ -41,7 +46,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     private final ClientService clientService;
 
     @Autowired
-    public OAuth2Config(AuthenticationManager authenticationManager, RedisConnectionFactory redisConnectionFactory, UserService userService, ClientService clientService) {
+    public Oauth2Config(AuthenticationManager authenticationManager, RedisConnectionFactory redisConnectionFactory, UserService userService, ClientService clientService) {
         this.authenticationManager = authenticationManager;
         this.redisConnectionFactory = redisConnectionFactory;
         this.userService = userService;
@@ -49,7 +54,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     }
 
     private static final String KEY_PAIR = "myauthenticatecenter";
-    private static final String MY_PASS = "521428Slyt";
+    private static final String MY_PASS = "521428Slyp";
     private static final String KEY_STORE_PATH = "keystore.jks";
 
     /**
@@ -113,10 +118,13 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     /**
      * 自定义JwtToken转换器
-     * @see org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
      * @author HuSen
      */
     public class JwtAccessToken extends JwtAccessTokenConverter {
+
+        JwtAccessToken() {
+            super();
+        }
 
         /**
          * 生成token
@@ -126,13 +134,13 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
          */
         @Override
         public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-            DefaultOAuth2AccessToken defaultOAuth2AccessToken = new DefaultOAuth2AccessToken(accessToken);
+            DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
             // 设置额外的用户信息
             UserVo userVo = (UserVo) authentication.getPrincipal();
             userVo.setPassword(null);
             // 将用户信息添加到token额外信息中
-            defaultOAuth2AccessToken.getAdditionalInformation().put("user_info", userVo);
-            return defaultOAuth2AccessToken;
+            result.getAdditionalInformation().put("user_info", userVo);
+            return super.enhance(result, authentication);
         }
 
         /**
@@ -164,6 +172,116 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
          */
         private UserVo convertUserData(Object map) {
             return JsonUtils.jsonString2Object(JsonUtils.object2JsonString(map), UserVo.class);
+        }
+
+        @Override
+        public void setAccessTokenConverter(AccessTokenConverter tokenConverter) {
+            super.setAccessTokenConverter(tokenConverter);
+        }
+
+        @Override
+        public AccessTokenConverter getAccessTokenConverter() {
+            return super.getAccessTokenConverter();
+        }
+
+        @Override
+        public JwtClaimsSetVerifier getJwtClaimsSetVerifier() {
+            return super.getJwtClaimsSetVerifier();
+        }
+
+        @Override
+        public void setJwtClaimsSetVerifier(JwtClaimsSetVerifier jwtClaimsSetVerifier) {
+            super.setJwtClaimsSetVerifier(jwtClaimsSetVerifier);
+        }
+
+        @Override
+        public Map<String, ?> convertAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
+            return super.convertAccessToken(token, authentication);
+        }
+
+        @Override
+        public OAuth2Authentication extractAuthentication(Map<String, ?> map) {
+            return super.extractAuthentication(map);
+        }
+
+        @Override
+        public void setVerifier(SignatureVerifier verifier) {
+            super.setVerifier(verifier);
+        }
+
+        @Override
+        public void setSigner(Signer signer) {
+            super.setSigner(signer);
+        }
+
+        @Override
+        public Map<String, String> getKey() {
+            return super.getKey();
+        }
+
+        @Override
+        public void setKeyPair(KeyPair keyPair) {
+            super.setKeyPair(keyPair);
+        }
+
+        @Override
+        public void setSigningKey(String key) {
+            super.setSigningKey(key);
+        }
+
+        @Override
+        public boolean isPublic() {
+            return super.isPublic();
+        }
+
+        @Override
+        public void setVerifierKey(String key) {
+            super.setVerifierKey(key);
+        }
+
+        @Override
+        public boolean isRefreshToken(OAuth2AccessToken token) {
+            return super.isRefreshToken(token);
+        }
+
+        @Override
+        protected String encode(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+            return super.encode(accessToken, authentication);
+        }
+
+        @Override
+        protected Map<String, Object> decode(String token) {
+            return super.decode(token);
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            super.afterPropertiesSet();
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return super.equals(obj);
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
         }
     }
 }

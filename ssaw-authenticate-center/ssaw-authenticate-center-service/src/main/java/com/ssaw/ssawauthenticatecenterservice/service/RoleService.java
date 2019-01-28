@@ -24,4 +24,6 @@ public interface RoleService {
     CommonResult<RoleDto> update(RoleDto roleDto);
 
     CommonResult<Long> delete(Long id);
+
+    CommonResult<List<RoleDto>> search(String role);
 }
