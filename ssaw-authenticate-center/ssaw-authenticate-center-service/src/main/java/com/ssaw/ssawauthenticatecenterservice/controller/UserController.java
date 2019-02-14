@@ -67,4 +67,10 @@ public class UserController extends BaseController {
     public CommonResult<String> login(@RequestBody UserLoginDto userLoginDto) {
         return userService.login(userLoginDto);
     }
+
+    @PostMapping("/register")
+    @RequestLog(method = "UserController.register()")
+    public CommonResult<String> register() {
+        return null;
+    }
 }

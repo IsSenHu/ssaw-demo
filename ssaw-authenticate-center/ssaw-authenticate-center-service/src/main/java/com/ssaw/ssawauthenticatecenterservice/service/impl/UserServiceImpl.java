@@ -5,15 +5,17 @@ import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.UpdateUserDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.UserLoginDto;
 import com.ssaw.ssawauthenticatecenterservice.constants.ClientConstant;
-import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.RoleEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.UserRoleEntity;
+import com.ssaw.ssawauthenticatecenterservice.entity.*;
 import com.ssaw.ssawauthenticatecenterservice.repository.client.ClientRepository;
+import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.role.RoleRepository;
+import com.ssaw.ssawauthenticatecenterservice.repository.role.permission.RolePermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.user.UserRoleRepository;
+import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
@@ -39,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.*;
 
@@ -54,13 +57,19 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final ClientRepository clientRepository;
+    private final RolePermissionRepository rolePermissionRepository;
+    private final PermissionRepository permissionRepository;
+    private final PermissionTransfer permissionTransfer;
 
     @Autowired
-    public UserServiceImpl(UserFeign userFeign, UserRoleRepository userRoleRepository, RoleRepository roleRepository, ClientRepository clientRepository) {
+    public UserServiceImpl(UserFeign userFeign, UserRoleRepository userRoleRepository, RoleRepository roleRepository, ClientRepository clientRepository, RolePermissionRepository rolePermissionRepository, PermissionRepository permissionRepository, PermissionTransfer permissionTransfer) {
         this.userFeign = userFeign;
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.clientRepository = clientRepository;
+        this.rolePermissionRepository = rolePermissionRepository;
+        this.permissionRepository = permissionRepository;
+        this.permissionTransfer = permissionTransfer;
     }
 
     @Override
@@ -156,7 +165,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public CommonResult<String> login(UserLoginDto userLoginDto) {
-        UserDetails userDetails = loadUserByUsername(userLoginDto.getUsername());
+        UserVo userDetails = (UserVo) loadUserByUsername(userLoginDto.getUsername());
         ConfigurableApplicationContext applicationContext = ApplicationContextUtil.applicationContext;
         if (!applicationContext.getBean(PasswordEncoder.class).matches(userLoginDto.getPassword(), userDetails.getPassword())) {
             return CommonResult.createResult(ERROR, "失败", null);
@@ -176,7 +185,22 @@ public class UserServiceImpl extends BaseService implements UserService {
         token.setTokenType(ClientConstant.BEARER);
         DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(UUID.randomUUID().toString(), new Date(System.currentTimeMillis() + clientDetailsEntity.getRefreshTokenValiditySeconds() * 1000));
         token.setRefreshToken(refreshToken);
-        token.setScope(clientDetailsEntity.getScope());
+
+        // 用户的权限
+        Set<String> scope = new HashSet<>();
+        Set<String> resourceIds = new HashSet<>();
+        UserRoleEntity userRole = userRoleRepository.findByUserId(userDetails.getId());
+        if (null != userRole) {
+            List<RolePermissionEntity> rolePermissionEntityList = rolePermissionRepository.findAllByRoleId(userRole.getRoleId());
+            if (CollectionUtils.isNotEmpty(rolePermissionEntityList)) {
+                List<PermissionDto> permissionDtoList = rolePermissionEntityList.stream().map(rolePermissionEntity -> permissionRepository.findById(rolePermissionEntity.getPermissionId()))
+                        .filter(Optional::isPresent).map(Optional::get).map(permissionTransfer::entity2Dto).collect(Collectors.toList());
+                scope = permissionDtoList.stream().map(PermissionDto::getScopeName).collect(Collectors.toSet());
+                resourceIds = permissionDtoList.stream().map(PermissionDto::getResourceName).collect(Collectors.toSet());
+            }
+        }
+
+        token.setScope(scope);
 
         // Oauth2Authentication
         String redirectUri = CollectionUtils.isEmpty(clientDetailsEntity.getRegisteredRedirectUri()) ? null : clientDetailsEntity.getRegisteredRedirectUri().iterator().next();
@@ -190,7 +214,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         requestParameters.put("response_type", "code");
 
         OAuth2Request oAuth2Request = new OAuth2Request(requestParameters, clientDetailsEntity.getClientId(), CollectionUtils.emptyCollection(), true,
-                clientDetailsEntity.getScope(), clientDetailsEntity.getResourceIds(), redirectUri, ClientConstant.CODE, new HashMap<>(0));
+                scope, resourceIds, redirectUri, ClientConstant.CODE, new HashMap<>(0));
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
@@ -199,10 +223,13 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         OAuth2AccessToken enhance = jwtAccessTokenConverter.enhance(token, oAuth2Authentication);
 
-        // 保存到redis中去
+        // 移除旧Token
         RedisTokenStore redisTokenStore = applicationContext.getBean(RedisTokenStore.class);
-        redisTokenStore.storeAccessToken(enhance, oAuth2Authentication);
+        Collection<OAuth2AccessToken> oldTokens = redisTokenStore.findTokensByClientId(clientDetailsEntity.getClientId());
+        oldTokens.forEach(redisTokenStore::removeAccessToken);
 
+        // 保存新的Token
+        redisTokenStore.storeAccessToken(enhance, oAuth2Authentication);
         return CommonResult.createResult(SUCCESS, "成功", enhance.getValue());
     }
 }
