@@ -6,6 +6,9 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
+/**
+ * @author HuSen
+ */
 @EnableZuulProxy
 @SpringBootApplication
 @EnableDiscoveryClient

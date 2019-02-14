@@ -85,11 +85,11 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         OAuth2Authentication auth = (OAuth2Authentication) authenticate;
 
         // 校验请求uri是否可被该token持有者访问
-        String requestUri = request.getParameter("request-uri");
+        String requestUri = request.getParameter("requestUri");
 
         // requestUri必传，如果不传则授权失败
         if(StringUtils.isBlank(requestUri)) {
-            throw new OAuth2AccessDeniedException("request-uri are required");
+            throw new OAuth2AccessDeniedException("requestUri are required");
         }
 
         List<ScopeDto> scopes = CacheUtils.getScopes();

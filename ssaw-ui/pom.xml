@@ -60,6 +60,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- ssaw-authenticate-center-feign -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>ssaw-authenticate-center-feign</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
