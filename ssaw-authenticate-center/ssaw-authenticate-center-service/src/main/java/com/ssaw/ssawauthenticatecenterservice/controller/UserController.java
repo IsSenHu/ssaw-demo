@@ -6,21 +6,14 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.dto.UpdateUserDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.UserLoginDto;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
-import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
-import java.nio.charset.Charset;
 
 /**
  * @author HuSen.
@@ -31,9 +24,6 @@ import java.nio.charset.Charset;
 public class UserController extends BaseController {
 
     private final UserService userService;
-
-    @Autowired
-    private UserFeign userFeign;
 
     @Autowired
     public UserController(UserService userService) {
@@ -72,8 +62,9 @@ public class UserController extends BaseController {
         return userService.update(updateUserDto);
     }
 
-    @GetMapping("/testAuthenticate")
-    public CommonResult<String> testAuthenticate() {
-        return userFeign.authenticate();
+    @PostMapping("/login")
+    @RequestLog(method = "UserController.login(UserLoginDto userLoginDto)")
+    public CommonResult<String> login(@RequestBody UserLoginDto userLoginDto) {
+        return userService.login(userLoginDto);
     }
 }

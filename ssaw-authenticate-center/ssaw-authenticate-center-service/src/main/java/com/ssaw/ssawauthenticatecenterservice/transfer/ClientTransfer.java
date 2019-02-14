@@ -54,10 +54,10 @@ public class ClientTransfer {
             clientDto.setClientId(entity.getClientId());
             clientDto.setUserId(entity.getUserId());
             clientDto.setClientSecret(entity.getClientSecret());
-            clientDto.setResourceIds(join(entity.getResourceIds().toArray(new String[0])));
-            clientDto.setScopes(join(entity.getScope().toArray(new String[0])));
-            clientDto.setAuthorizedGrantTypes(join(entity.getAuthorizedGrantTypes().toArray(new String[0])));
-            clientDto.setRegisteredRedirectUris(join(entity.getRegisteredRedirectUri().toArray(new String[0])));
+            clientDto.setResourceIds(join(entity.getResourceIds().toArray(new String[0]), ","));
+            clientDto.setScopes(join(entity.getScope().toArray(new String[0]), ","));
+            clientDto.setAuthorizedGrantTypes(join(entity.getAuthorizedGrantTypes().toArray(new String[0]), ","));
+            clientDto.setRegisteredRedirectUris(join(entity.getRegisteredRedirectUri().toArray(new String[0]), ","));
             clientDto.setAccessTokenValiditySeconds(entity.getAccessTokenValiditySeconds());
             clientDto.setRefreshTokenValiditySeconds(entity.getRefreshTokenValiditySeconds());
             clientDto.setCreateTime(entity.getCreateTime());

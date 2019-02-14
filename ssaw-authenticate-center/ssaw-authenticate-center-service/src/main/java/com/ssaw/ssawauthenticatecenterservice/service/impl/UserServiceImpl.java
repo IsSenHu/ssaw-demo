@@ -1,12 +1,17 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.dto.UpdateUserDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.UserLoginDto;
+import com.ssaw.ssawauthenticatecenterservice.constants.ClientConstant;
+import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.entity.RoleEntity;
 import com.ssaw.ssawauthenticatecenterservice.entity.UserRoleEntity;
+import com.ssaw.ssawauthenticatecenterservice.repository.client.ClientRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.role.RoleRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.user.UserRoleRepository;
 import com.ssaw.ssawuserresourcefeign.dto.UserDto;
@@ -14,19 +19,28 @@ import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
-import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
-import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
+import static com.ssaw.commons.constant.Constants.ResultCodes.*;
 
 /**
  * @author HuSen.
@@ -38,14 +52,15 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     private final UserFeign userFeign;
     private final UserRoleRepository userRoleRepository;
-
     private final RoleRepository roleRepository;
+    private final ClientRepository clientRepository;
 
     @Autowired
-    public UserServiceImpl(UserFeign userFeign, UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserFeign userFeign, UserRoleRepository userRoleRepository, RoleRepository roleRepository, ClientRepository clientRepository) {
         this.userFeign = userFeign;
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
+        this.clientRepository = clientRepository;
     }
 
     @Override
@@ -137,5 +152,57 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new RuntimeException("用户修改失败!");
         }
         return save;
+    }
+
+    @Override
+    public CommonResult<String> login(UserLoginDto userLoginDto) {
+        UserDetails userDetails = loadUserByUsername(userLoginDto.getUsername());
+        ConfigurableApplicationContext applicationContext = ApplicationContextUtil.applicationContext;
+        if (!applicationContext.getBean(PasswordEncoder.class).matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+            return CommonResult.createResult(ERROR, "失败", null);
+        }
+        // 获取客户端信息
+        Optional<ClientDetailsEntity> byId = clientRepository.findById(ClientConstant.CLIENT_PREFIX.concat(userLoginDto.getUsername()));
+        if (!byId.isPresent()) {
+            return CommonResult.createResult(ERROR, "失败", null);
+        }
+        ClientDetailsEntity clientDetailsEntity = byId.get();
+
+        JwtAccessTokenConverter jwtAccessTokenConverter = applicationContext.getBean(JwtAccessTokenConverter.class);
+
+        // DefaultOauth2AccessToken
+        DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(UUID.randomUUID().toString());
+        token.setExpiration(new Date(System.currentTimeMillis() + clientDetailsEntity.getAccessTokenValiditySeconds() * 1000));
+        token.setTokenType(ClientConstant.BEARER);
+        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(UUID.randomUUID().toString(), new Date(System.currentTimeMillis() + clientDetailsEntity.getRefreshTokenValiditySeconds() * 1000));
+        token.setRefreshToken(refreshToken);
+        token.setScope(clientDetailsEntity.getScope());
+
+        // Oauth2Authentication
+        String redirectUri = CollectionUtils.isEmpty(clientDetailsEntity.getRegisteredRedirectUri()) ? null : clientDetailsEntity.getRegisteredRedirectUri().iterator().next();
+
+        Map<String, String> requestParameters = new HashMap<>(6);
+        requestParameters.put("code", "stTiiB");
+        requestParameters.put("grant_type", ClientConstant.AuthorizedGrantTypes.AUTHORIZATION_CODE.getValue());
+        requestParameters.put("client_id", clientDetailsEntity.getClientId());
+        requestParameters.put("client_secret", userLoginDto.getPassword());
+        requestParameters.put("redirect_uri", redirectUri);
+        requestParameters.put("response_type", "code");
+
+        OAuth2Request oAuth2Request = new OAuth2Request(requestParameters, clientDetailsEntity.getClientId(), CollectionUtils.emptyCollection(), true,
+                clientDetailsEntity.getScope(), clientDetailsEntity.getResourceIds(), redirectUri, ClientConstant.CODE, new HashMap<>(0));
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, usernamePasswordAuthenticationToken);
+        oAuth2Authentication.setAuthenticated(true);
+
+        OAuth2AccessToken enhance = jwtAccessTokenConverter.enhance(token, oAuth2Authentication);
+
+        // 保存到redis中去
+        RedisTokenStore redisTokenStore = applicationContext.getBean(RedisTokenStore.class);
+        redisTokenStore.storeAccessToken(enhance, oAuth2Authentication);
+
+        return CommonResult.createResult(SUCCESS, "成功", enhance.getValue());
     }
 }

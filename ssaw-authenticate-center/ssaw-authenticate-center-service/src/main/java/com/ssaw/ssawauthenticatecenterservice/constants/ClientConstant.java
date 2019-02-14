@@ -1,10 +1,21 @@
 package com.ssaw.ssawauthenticatecenterservice.constants;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author HuSen.
  * @date 2019/1/4 13:55.
  */
 public class ClientConstant {
+
+    public static final String CLIENT_PREFIX = "client";
+    public static final String BEARER = "bearer";
+    public static final Set<String> CODE = new HashSet<>(1);
+
+    static {
+        CODE.add("code");
+    }
 
     /**
      * oauth2授权方式
