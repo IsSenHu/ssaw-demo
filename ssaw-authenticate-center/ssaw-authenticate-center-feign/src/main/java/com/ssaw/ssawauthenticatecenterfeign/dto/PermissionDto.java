@@ -3,7 +3,6 @@ package com.ssaw.ssawauthenticatecenterfeign.dto;
 import com.ssaw.commons.dto.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +16,6 @@ public class PermissionDto extends BaseDto {
 
     /** 权限名字 */
     @NotBlank(message = "权限名字不能为空!")
-    @Length(max = 20, message = "权限名字长度不能超过20!")
     private String name;
 
     /** 所关联作用域ID */

@@ -12,6 +12,7 @@ public class ClientConstant {
     public static final String CLIENT_PREFIX = "client";
     public static final String BEARER = "bearer";
     public static final Set<String> CODE = new HashSet<>(1);
+    public static final int LOGIN_TIME = 86400;
 
     static {
         CODE.add("code");

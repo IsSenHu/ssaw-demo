@@ -5,6 +5,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 /**
  * @author hszyp
  */
-@EnableFeignClients(basePackages = {"com.ssaw.ssawauthenticatecenterfeign.feign"})
+@EnableFeignClients(basePackages = {"com.ssaw"})
 public class EnableFeignAutoConfiguration {
 }

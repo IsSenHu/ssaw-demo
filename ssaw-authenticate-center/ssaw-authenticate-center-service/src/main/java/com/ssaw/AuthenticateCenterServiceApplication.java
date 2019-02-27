@@ -4,17 +4,13 @@ import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServl
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.commons.enable.EnableFeignHeader;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
-import com.ssaw.ssawuserresourcefeign.UserBasicFallbackPackageClass;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author HS
@@ -23,9 +19,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoRequestResolve
-@EnableFeignClients(basePackageClasses = UserBasicFallbackPackageClass.class)
 @EnableFeignHeader
-@Slf4j
+@EnableFeignClients(basePackages = "com.ssaw")
 public class AuthenticateCenterServiceApplication {
 
 	@Bean
@@ -36,12 +31,6 @@ public class AuthenticateCenterServiceApplication {
 		servletRegistrationBean.addUrlMappings("/actuator/hystrix.stream");
 		servletRegistrationBean.setName("HystrixMetricsStreamServlet");
 		return servletRegistrationBean;
-	}
-
-	@Bean
-	@LoadBalanced
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
 	}
 
 	public static void main(String[] args) {

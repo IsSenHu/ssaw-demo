@@ -13,7 +13,6 @@ import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ResourceSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ResourceTransfer;
-import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,14 +41,12 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
     private final ResourceTransfer resourceTransfer;
     private final ResourceRepository resourceRepository;
     private final ScopeRepository scopeRepository;
-    private final ScopeTransfer scopeTransfer;
 
     @Autowired
-    public ResourceServiceImpl(ResourceTransfer resourceTransfer, ResourceRepository resourceRepository, ScopeRepository scopeRepository, ScopeTransfer scopeTransfer) {
+    public ResourceServiceImpl(ResourceTransfer resourceTransfer, ResourceRepository resourceRepository, ScopeRepository scopeRepository) {
         this.resourceTransfer = resourceTransfer;
         this.resourceRepository = resourceRepository;
         this.scopeRepository = scopeRepository;
-        this.scopeTransfer = scopeTransfer;
     }
 
     @Override
@@ -159,5 +156,24 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
             clientScopeDto.setDefaultExpandedKeys(new ArrayList<>(0));
         }
         return CommonResult.createResult(SUCCESS, "成功!", clientScopeDto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public CommonResult<ResourceDto> uploadResource(ResourceDto resourceDto) {
+        ResourceEntity byResourceId = resourceRepository.findByResourceId(resourceDto.getResourceId());
+        ResourceEntity resourceEntity;
+        if (Objects.isNull(byResourceId)) {
+            ResourceEntity entity = resourceTransfer.dto2Entity(resourceDto);
+            entity.setCreateTime(LocalDateTime.now());
+            resourceEntity = resourceRepository.save(entity);
+        } else {
+            byResourceId.setResourceId(resourceDto.getResourceId());
+            byResourceId.setDescription(resourceDto.getDescription());
+            byResourceId.setModifyTime(LocalDateTime.now());
+            resourceEntity = resourceRepository.save(byResourceId);
+        }
+        resourceDto.setId(resourceEntity.getId());
+        return CommonResult.createResult(SUCCESS, "成功", resourceDto);
     }
 }

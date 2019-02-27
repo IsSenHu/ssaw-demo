@@ -17,4 +17,8 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity, Lo
     long countByName(String name);
 
     List<PermissionEntity> findAllByResourceId(Long resourceId);
+
+    void deleteAllByResourceId(Long resourceId);
+
+    void deleteAllByScopeIdNotIn(List<Long> scopeIds);
 }

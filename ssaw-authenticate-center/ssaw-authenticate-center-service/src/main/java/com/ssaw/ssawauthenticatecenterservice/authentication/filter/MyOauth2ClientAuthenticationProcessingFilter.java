@@ -1,8 +1,11 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.filter;
 
+import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
 import com.ssaw.ssawauthenticatecenterservice.authentication.manager.MyOauth2AuthenticationManager;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,6 +24,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
@@ -29,6 +33,7 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 /**
  * @author hszyp
  */
+@Slf4j
 public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, InitializingBean {
 
     private final static Log logger = LogFactory.getLog(OAuth2AuthenticationProcessingFilter.class);
@@ -108,6 +113,17 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
+
+        String requestUri = request.getParameter("requestUri");
+
+        EnableResourceAutoProperties properties = ApplicationContextUtil.applicationContext.getBean(EnableResourceAutoProperties.class);
+        List<String> whiteList = properties.getWhiteList();
+        log.info("需要跳过的白名单:{}", whiteList);
+
+        if (whiteList.contains(requestUri)) {
+            response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(CommonResult.createResult(SUCCESS, "认证成功", requestUri))));
+            return;
+        }
 
         try {
 

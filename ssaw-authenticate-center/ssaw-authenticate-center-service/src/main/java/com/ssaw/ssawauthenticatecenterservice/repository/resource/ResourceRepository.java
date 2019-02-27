@@ -13,4 +13,8 @@ import org.springframework.stereotype.Repository;
 public interface ResourceRepository extends JpaRepository<ResourceEntity, Long>, JpaSpecificationExecutor<ResourceEntity> {
 
     long countByResourceId(String resourceId);
+
+    void deleteByResourceId(String resourceId);
+
+    ResourceEntity findByResourceId(String resourceId);
 }

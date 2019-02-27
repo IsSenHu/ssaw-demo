@@ -26,6 +26,7 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
 
     private final ScopeRepository scopeRepository;
     private final ScopeTransfer scopeTransfer;
+
     @Autowired
     public ApplicationStartup(ScopeRepository scopeRepository, ScopeTransfer scopeTransfer) {
         this.scopeRepository = scopeRepository;
@@ -37,9 +38,9 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
         log.info("init scope cache...");
         List<ScopeEntity> entities = scopeRepository.findAll();
         if(CollectionUtils.isNotEmpty(entities)) {
-            List<ScopeDto> scopes = entities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList());
-            CacheUtils.refreshScopes(scopes);
-            log.info("init scope caches:{}", JsonUtils.object2JsonString(scopes));
+            entities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.groupingBy(ScopeDto::getResourceName))
+                    .forEach(CacheUtils::refreshScopes);
+            log.info("init scope caches:{}", JsonUtils.object2JsonString(entities));
         }
     }
 }

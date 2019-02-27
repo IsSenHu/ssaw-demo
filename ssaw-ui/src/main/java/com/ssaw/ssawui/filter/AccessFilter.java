@@ -28,7 +28,7 @@ public class AccessFilter extends ZuulFilter {
     private final AuthenticateFeign authenticateFeign;
 
     @Autowired
-    public AccessFilter(AuthenticateFeign authenticateFeign) {
+    public AccessFilter(@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") AuthenticateFeign authenticateFeign) {
         this.authenticateFeign = authenticateFeign;
     }
 
@@ -59,7 +59,6 @@ public class AccessFilter extends ZuulFilter {
         CommonResult<String> result = authenticateFeign.authenticate(url);
         log.info("认证结果:{}", JSON.toJSONString(result));
         if(result.getCode() != SUCCESS) {
-            log.warn("access token is empty");
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(401);
             try {
@@ -71,7 +70,6 @@ public class AccessFilter extends ZuulFilter {
                 e.printStackTrace();
             }
         }
-        log.info("access token ok");
         return null;
     }
 }

@@ -4,7 +4,9 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
+import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
+import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ScopeService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ScopeSpecification;
@@ -17,9 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import static com.ssaw.commons.constant.Constants.ResultCodes.*;
 
@@ -33,11 +35,13 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
 
     private final ScopeTransfer scopeTransfer;
     private final ScopeRepository scopeRepository;
+    private final PermissionRepository permissionRepository;
 
     @Autowired
-    public ScopeServiceImpl(ScopeRepository scopeRepository, ScopeTransfer scopeTransfer) {
+    public ScopeServiceImpl(ScopeRepository scopeRepository, ScopeTransfer scopeTransfer, PermissionRepository permissionRepository) {
         this.scopeRepository = scopeRepository;
         this.scopeTransfer = scopeTransfer;
+        this.permissionRepository = permissionRepository;
     }
 
     @Override
@@ -109,7 +113,8 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
     public CommonResult<List<ScopeDto>> search(String scope) {
         PageRequest pageRequest = PageRequest.of(0, 20);
         Page<ScopeEntity> page;
-        if(StringUtils.equals("none", scope)) {
+        final String none = "none";
+        if(StringUtils.equals(none, scope)) {
             page = scopeRepository.findAllByPermissionIdIsNull(pageRequest);
         } else {
             page = scopeRepository.findAllByScopeLikeAndPermissionIdIsNull("%".concat(scope.trim()).concat("%"), pageRequest);
@@ -122,12 +127,78 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
     public CommonResult<List<ScopeDto>> searchForUpdate(String scope) {
         PageRequest pageRequest = PageRequest.of(0, 20);
         Page<ScopeEntity> page;
-        if(StringUtils.equals("none", scope)) {
+        final String none = "none";
+        if(StringUtils.equals(none, scope)) {
             page = scopeRepository.findAll(pageRequest);
         } else {
             page = scopeRepository.findAllByScopeLike("%".concat(scope.trim()).concat("%"), pageRequest);
         }
         return CommonResult.createResult(SUCCESS, "成功!",
                 page.getContent().stream().map(scopeTransfer::entity2DtoNotGetResourceName).collect(Collectors.toList()));
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public CommonResult<String> uploadScopes(List<ScopeDto> scopeDtoList) {
+        List<String> scopes = scopeDtoList.stream().map(ScopeDto::getScope).collect(Collectors.toList());
+        // 先删除不要的作用域
+        scopeRepository.deleteAllByScopeNotIn(scopes);
+        // 得到还存在的权限
+        List<ScopeEntity> allByScopeIn = scopeRepository.findAllByScopeIn(scopes);
+        List<Long> allScopeId = allByScopeIn.stream().map(ScopeEntity::getId).collect(Collectors.toList());
+        // 再删除不要的权限
+        permissionRepository.deleteAllByScopeIdNotIn(allScopeId);
+        Set<String> scopeSet = allByScopeIn.stream().map(ScopeEntity::getScope).collect(Collectors.toSet());
+        Map<String, ScopeDto> updateScopeMap = new HashMap<>(scopeDtoList.size());
+        List<ScopeDto> newScopeList = new ArrayList<>();
+        for (ScopeDto scopeDto : scopeDtoList) {
+            if (scopeSet.contains(scopeDto.getScope())) {
+                updateScopeMap.put(scopeDto.getScope(), scopeDto);
+            } else {
+                newScopeList.add(scopeDto);
+            }
+        }
+
+        allByScopeIn.forEach(entity -> {
+            ScopeDto scopeDto = updateScopeMap.get(entity.getScope());
+            entity.setUri(scopeDto.getUri());
+            entity.setScope(scopeDto.getScope());
+            entity.setResourceId(scopeDto.getResourceId());
+            Optional<PermissionEntity> byId = permissionRepository.findById(entity.getPermissionId());
+            byId.ifPresent(permissionEntity -> {
+                permissionEntity.setScopeId(entity.getId());
+                permissionEntity.setResourceId(entity.getResourceId());
+                permissionEntity.setName(entity.getScope());
+                permissionEntity.setDescription(entity.getUri());
+                permissionEntity.setModifyTime(LocalDateTime.now());
+                permissionRepository.save(permissionEntity);
+                entity.setPermissionId(permissionEntity.getId());
+            });
+            entity.setModifyTime(LocalDateTime.now());
+            scopeRepository.save(entity);
+        });
+
+        List<ScopeEntity> collect = newScopeList.stream().map(scopeTransfer::dto2Entity).collect(Collectors.toList());
+        collect.forEach(entity -> {
+            scopeRepository.save(entity);
+            entity.setCreateTime(LocalDateTime.now());
+            PermissionEntity permissionEntity = new PermissionEntity();
+            permissionEntity.setScopeId(entity.getId());
+            permissionEntity.setResourceId(entity.getResourceId());
+            permissionEntity.setName(entity.getScope());
+            permissionEntity.setDescription(entity.getUri());
+            permissionEntity.setCreateTime(LocalDateTime.now());
+            permissionRepository.save(permissionEntity);
+            entity.setPermissionId(permissionEntity.getId());
+            entity.setCreateTime(LocalDateTime.now());
+            scopeRepository.save(entity);
+        });
+        return CommonResult.createResult(SUCCESS, "成功", UUID.randomUUID().toString());
+    }
+
+    @Override
+    public void refreshScope(String source) {
+        log.info("因为资源服务:{} 上传作用域, 所以开始刷新作用域", source);
+
     }
 }

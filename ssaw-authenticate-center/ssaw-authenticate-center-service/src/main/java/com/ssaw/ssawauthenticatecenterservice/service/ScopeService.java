@@ -26,4 +26,8 @@ public interface ScopeService {
     CommonResult<List<ScopeDto>> search(String scopeId);
 
     CommonResult<List<ScopeDto>> searchForUpdate(String scope);
+
+    CommonResult<String> uploadScopes(List<ScopeDto> scopeDtoList);
+
+    void refreshScope(String source);
 }

@@ -3,9 +3,9 @@ package com.ssaw.ssawauthenticatecenterservice.transfer;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDetailsInfoDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.UserDto;
 import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
-import com.ssaw.ssawuserresourcefeign.dto.UserDto;
-import com.ssaw.ssawuserresourcefeign.feign.UserFeign;
+import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +19,11 @@ import static org.apache.commons.lang.StringUtils.join;
 @Component
 public class ClientTransfer {
 
-    private final UserFeign userFeign;
+    private final UserService userService;
 
     @Autowired
-    public ClientTransfer(UserFeign userFeign) {
-        this.userFeign = userFeign;
+    public ClientTransfer(UserService userService) {
+        this.userService = userService;
     }
 
     public ClientDetailsEntity dto2Entity(ClientDto dto) {
@@ -74,7 +74,7 @@ public class ClientTransfer {
             infoDto = new ClientDetailsInfoDto();
             infoDto.setClientId(entity.getClientId());
             infoDto.setUserId(entity.getUserId());
-            CommonResult<UserDto> byId = userFeign.findById(entity.getUserId());
+            CommonResult<UserDto> byId = userService.findById(entity.getUserId());
             if(byId.getCode() == SUCCESS) {
                 infoDto.setUsername(byId.getData().getUsername());
             }

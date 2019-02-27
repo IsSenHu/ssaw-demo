@@ -5,6 +5,7 @@ import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
 import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +37,7 @@ import java.util.Set;
  * @author hszyp
  * @date 2019/01/25
  */
+@Slf4j
 @Setter
 public class MyOauth2AuthenticationManager implements AuthenticationManager, InitializingBean {
 
@@ -81,9 +83,7 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         Authentication authenticate = authenticate(authentication);
         // 先设置为false 如果在最后校验通过了在设置为true
         authenticate.setAuthenticated(false);
-
         OAuth2Authentication auth = (OAuth2Authentication) authenticate;
-
         // 校验请求uri是否可被该token持有者访问
         String requestUri = request.getParameter("requestUri");
 
@@ -94,10 +94,13 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
 
         List<ScopeDto> scopes = CacheUtils.getScopes();
         ScopeDto areRequiredScope = null;
-        for(ScopeDto scope : scopes) {
-            if(antPathMatcher.match(scope.getUri(), requestUri)) {
-                areRequiredScope = scope;
-                break;
+        first : for(ScopeDto scope : scopes) {
+            String[] split = scope.getUri().split(",");
+            for (String u : split) {
+                if(antPathMatcher.match(u, requestUri)) {
+                    areRequiredScope = scope;
+                    break first;
+                }
             }
         }
 
@@ -150,8 +153,7 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         // 校验token的scope权限和客户端的scope权限是否合法
         for(String tokenScope : tokenScopes) {
             if(!allowed.contains(tokenScope)) {
-                throw new OAuth2AccessDeniedException(
-                        "Invalid token contains disallowed scope (" + tokenScope + ") for this client");
+                throw new OAuth2AccessDeniedException("Invalid token contains disallowed scope (" + tokenScope + ") for this client");
             }
         }
         auth.setAuthenticated(true);

@@ -29,4 +29,10 @@ public interface ScopeRepository extends JpaRepository<ScopeEntity, Long>, JpaSp
     Page<ScopeEntity> findAllByPermissionIdIsNull(Pageable pageable);
 
     List<ScopeEntity> findAllByResourceId(Long resourceId);
+
+    void deleteAllByResourceId(Long resourceId);
+
+    void deleteAllByScopeNotIn(List<String> scopes);
+
+    List<ScopeEntity> findAllByScopeIn(List<String> scopes);
 }

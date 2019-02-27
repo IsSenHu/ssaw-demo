@@ -4,9 +4,12 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.dto.UpdateUserDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.UserDto;
+import com.ssaw.ssawauthenticatecenterfeign.dto.UserInfoDto;
 import com.ssaw.ssawauthenticatecenterfeign.dto.UserLoginDto;
-import com.ssaw.ssawuserresourcefeign.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author HuSen.
@@ -23,5 +26,11 @@ public interface UserService extends UserDetailsService {
 
     CommonResult<UserDto> update(UpdateUserDto updateUserDto);
 
-    CommonResult<String> login(UserLoginDto userLoginDto);
+    CommonResult<UserInfoDto> login(UserLoginDto userLoginDto);
+
+    CommonResult<String> register(UserDto userDto);
+
+    CommonResult<UserDto> findById(Long userId);
+
+    CommonResult<String> logout(HttpServletRequest request);
 }

@@ -29,4 +29,6 @@ public interface ResourceService {
     CommonResult<List<ResourceDto>> findAll();
 
     CommonResult<EditClientScopeDto> findAllScopeByResourceIds(String ids);
+
+    CommonResult<ResourceDto> uploadResource(ResourceDto resourceDto);
 }

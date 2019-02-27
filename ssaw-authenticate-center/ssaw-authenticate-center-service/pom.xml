@@ -29,6 +29,7 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 
+		<!-- openfeign -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -108,13 +109,6 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-zipkin</artifactId>
-		</dependency>
-
-		<!-- user feign -->
-		<dependency>
-			<groupId>com.ssaw</groupId>
-			<artifactId>ssaw-user-resource-feign</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
 		<!-- self feign -->
