@@ -3,14 +3,17 @@ package com.ssaw.ssawauthenticatecenterservice.service.impl;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
-import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.permission.PermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ScopeService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ScopeSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
+import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -36,14 +40,21 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
     private final ScopeTransfer scopeTransfer;
     private final ScopeRepository scopeRepository;
     private final PermissionRepository permissionRepository;
+    private final ResourceRepository resourceRepository;
 
     @Autowired
-    public ScopeServiceImpl(ScopeRepository scopeRepository, ScopeTransfer scopeTransfer, PermissionRepository permissionRepository) {
+    public ScopeServiceImpl(ScopeRepository scopeRepository, ScopeTransfer scopeTransfer, PermissionRepository permissionRepository, ResourceRepository resourceRepository) {
         this.scopeRepository = scopeRepository;
         this.scopeTransfer = scopeTransfer;
         this.permissionRepository = permissionRepository;
+        this.resourceRepository = resourceRepository;
     }
 
+    /**
+     * 新增作用域
+     * @param scopeDto 新增作用域请求对象
+     * @return 新增结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<ScopeDto> add(ScopeDto scopeDto) {
@@ -59,6 +70,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         return CommonResult.createResult(SUCCESS, "成功!", scopeDto);
     }
 
+    /**
+     * 分页查询作用域
+     * @param pageReqDto 分页查询参数
+     * @return 分页结果
+     */
     @Override
     public TableData<ScopeDto> page(PageReqDto<ScopeDto> pageReqDto) {
         Pageable pageable = getPageRequest(pageReqDto);
@@ -69,6 +85,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         return tableData;
     }
 
+    /**
+     * 根据ID删除作用域
+     * @param id ID
+     * @return 删除结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<Long> delete(Long id) {
@@ -79,6 +100,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         return CommonResult.createResult(SUCCESS, "成功!", id);
     }
 
+    /**
+     * 根据ID查询作用域
+     * @param id ID
+     * @return 作用域
+     */
     @Override
     public CommonResult<ScopeDto> findById(Long id) {
         if(Objects.isNull(id)) {
@@ -89,6 +115,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
                 .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该作用域不存在!", null));
     }
 
+    /**
+     * 修改作用域
+     * @param scopeDto 修改作用域请求对象
+     * @return 修改结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<ScopeDto> update(ScopeDto scopeDto) {
@@ -109,6 +140,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
                 }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该作用域不存在!", scopeDto));
     }
 
+    /**
+     * 根据作用域名称搜索作用域
+     * @param scope 作用域名称
+     * @return 作用域
+     */
     @Override
     public CommonResult<List<ScopeDto>> search(String scope) {
         PageRequest pageRequest = PageRequest.of(0, 20);
@@ -123,6 +159,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
                 page.getContent().stream().map(scopeTransfer::entity2DtoNotGetResourceName).collect(Collectors.toList()));
     }
 
+    /**
+     * 根据作用域名称搜索作用域
+     * @param scope 作用域名称
+     * @return 作用域
+     */
     @Override
     public CommonResult<List<ScopeDto>> searchForUpdate(String scope) {
         PageRequest pageRequest = PageRequest.of(0, 20);
@@ -137,6 +178,11 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
                 page.getContent().stream().map(scopeTransfer::entity2DtoNotGetResourceName).collect(Collectors.toList()));
     }
 
+    /**
+     * 上传作用域
+     * @param scopeDtoList 作用域集合
+     * @return 上传结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<String> uploadScopes(List<ScopeDto> scopeDtoList) {
@@ -196,9 +242,16 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         return CommonResult.createResult(SUCCESS, "成功", UUID.randomUUID().toString());
     }
 
+    /**
+     * 刷新作用域缓存
+     * @param source 来源
+     */
     @Override
     public void refreshScope(String source) {
         log.info("因为资源服务:{} 上传作用域, 所以开始刷新作用域", source);
-
+        ResourceEntity resourceEntity = resourceRepository.findByResourceId(source);
+        Assert.notNull(resourceEntity, "找不到资源服务");
+        List<ScopeEntity> scopeEntities = scopeRepository.findAllByResourceId(resourceEntity.getId());
+        CacheUtils.refreshScopes(source, scopeEntities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList()));
     }
 }

@@ -1,9 +1,9 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ResourceEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
-import com.ssaw.ssawauthenticatecenterservice.repository.resource.ResourceRepository;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Optional;

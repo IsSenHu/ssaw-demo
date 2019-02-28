@@ -1,7 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.specification;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.PermissionDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.CriteriaBuilder;

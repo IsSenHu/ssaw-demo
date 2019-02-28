@@ -1,7 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.RoleDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.RoleEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
 import org.springframework.stereotype.Component;
 
 /**

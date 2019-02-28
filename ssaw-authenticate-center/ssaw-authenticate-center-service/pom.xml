@@ -123,7 +123,6 @@
 			<groupId>com.ssaw</groupId>
 			<artifactId>support-oauth2</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<type>pom</type>
 		</dependency>
 
 		<!-- support redis -->
@@ -132,13 +131,6 @@
 			<artifactId>support-redis</artifactId>
 			<version>${support-redis.version}</version>
 			<type>pom</type>
-		</dependency>
-
-		<!-- guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
 		</dependency>
 	</dependencies>
 

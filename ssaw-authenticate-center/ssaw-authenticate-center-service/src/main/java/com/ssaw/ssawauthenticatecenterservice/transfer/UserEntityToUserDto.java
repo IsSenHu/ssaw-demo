@@ -1,7 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.UserDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.UserEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.UserDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.user.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

@@ -1,10 +1,7 @@
 package com.ssaw.ssawauthenticatecenterfeign.feign;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.ssawauthenticatecenterfeign.dto.Button;
-import com.ssaw.ssawauthenticatecenterfeign.dto.Menu;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ResourceDto;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.*;
 import com.ssaw.ssawauthenticatecenterfeign.fallback.AuthenticateFeignFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -26,7 +23,7 @@ public interface AuthenticateFeign {
      * @return 认证结果
      */
     @GetMapping("/api/authenticate")
-    CommonResult<String> authenticate(@RequestParam(name = "requestUri") String requestUri);
+    CommonResult<SimpleUserAttributeVO> authenticate(@RequestParam(name = "requestUri") String requestUri);
 
     /**
      * 新增一个资源

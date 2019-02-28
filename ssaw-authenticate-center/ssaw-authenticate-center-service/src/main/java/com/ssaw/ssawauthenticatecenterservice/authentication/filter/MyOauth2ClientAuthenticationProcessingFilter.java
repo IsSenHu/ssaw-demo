@@ -3,8 +3,11 @@ package com.ssaw.ssawauthenticatecenterservice.authentication.filter;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.security.util.SecurityUtils;
 import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
+import com.ssaw.ssawauthenticatecenterfeign.vo.SimpleUserAttributeVO;
 import com.ssaw.ssawauthenticatecenterservice.authentication.manager.MyOauth2AuthenticationManager;
+import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -116,18 +119,18 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
 
         String requestUri = request.getParameter("requestUri");
 
-        EnableResourceAutoProperties properties = ApplicationContextUtil.applicationContext.getBean(EnableResourceAutoProperties.class);
+        EnableResourceAutoProperties properties = ApplicationContextUtil.getBean(EnableResourceAutoProperties.class);
         List<String> whiteList = properties.getWhiteList();
         log.info("需要跳过的白名单:{}", whiteList);
 
         if (whiteList.contains(requestUri)) {
-            response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(CommonResult.createResult(SUCCESS, "认证成功", requestUri))));
+            response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(CommonResult.createResult(SUCCESS, "白名单无需认证", new SimpleUserAttributeVO()))));
             return;
         }
 
         try {
 
-            CommonResult<String> result;
+            CommonResult<SimpleUserAttributeVO> result;
             Authentication authentication = tokenExtractor.extract(request);
 
             if (authentication == null) {
@@ -140,7 +143,7 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
                 if (debug) {
                     logger.debug("No token in request, will continue chain.");
                 }
-                result = CommonResult.createResult(ERROR, "forbidden", "没有token信息");
+                result = CommonResult.createResult(ERROR, "没有token信息", null);
             }
             else {
                 request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_VALUE, authentication.getPrincipal());
@@ -159,7 +162,8 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
 
                 SecurityContextHolder.getContext().setAuthentication(authResult);
 
-                result = CommonResult.createResult(SUCCESS, "access", "认证成功");
+                UserVo userVo = SecurityUtils.getUserDetails(UserVo.class);
+                result = CommonResult.createResult(SUCCESS, "access", new SimpleUserAttributeVO(userVo.getId(), userVo.getUsername()));
             }
             response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(result)));
         }

@@ -3,17 +3,17 @@ package com.ssaw.ssawauthenticatecenterservice.service.impl;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.EditRoleDto;
-import com.ssaw.ssawauthenticatecenterfeign.dto.RoleDto;
-import com.ssaw.ssawauthenticatecenterfeign.dto.TreeDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.ResourceEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.RoleEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.RolePermissionEntity;
-import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.resource.ResourceRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.role.RoleRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.role.permission.RolePermissionRepository;
+import com.ssaw.ssawauthenticatecenterfeign.vo.EditRoleDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.TreeDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RolePermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.permission.PermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.RoleRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.permission.RolePermissionRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
 import com.ssaw.ssawauthenticatecenterservice.specification.RoleSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.RoleTransfer;
@@ -62,6 +62,11 @@ public class RoleServiceImpl extends BaseService implements RoleService {
         this.resourceRepository = resourceRepository;
     }
 
+    /**
+     * 新增角色
+     * @param roleDto 新增角色请求对象
+     * @return 新增结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<RoleDto> add(RoleDto roleDto) {
@@ -74,6 +79,11 @@ public class RoleServiceImpl extends BaseService implements RoleService {
         return CommonResult.createResult(SUCCESS, "成功!", roleDto);
     }
 
+    /**
+     * 根据ID查询角色
+     * @param id ID
+     * @return 角色
+     */
     @Override
     public CommonResult<EditRoleDto> findById(Long id) {
         RoleDto roleDto = roleRepository.findById(id)
@@ -122,6 +132,11 @@ public class RoleServiceImpl extends BaseService implements RoleService {
         return CommonResult.createResult(SUCCESS, "成功!", editRoleDto);
     }
 
+    /**
+     * 分页查询角色
+     * @param pageReqDto 分页查询参数
+     * @return 分页结果
+     */
     @Override
     public TableData<RoleDto> page(PageReqDto<RoleDto> pageReqDto) {
         Pageable pageable = getPageRequest(pageReqDto);
@@ -132,6 +147,11 @@ public class RoleServiceImpl extends BaseService implements RoleService {
         return tableData;
     }
 
+    /**
+     * 修改角色
+     * @param roleDto 修改角色请求对象
+     * @return 修改结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<RoleDto> update(RoleDto roleDto) {
@@ -170,17 +190,28 @@ public class RoleServiceImpl extends BaseService implements RoleService {
             .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", roleDto));
     }
 
+    /**
+     * 根据ID删除角色
+     * @param id ID
+     * @return 删除结果
+     */
     @Override
     public CommonResult<Long> delete(Long id) {
         roleRepository.deleteById(id);
         return CommonResult.createResult(SUCCESS, "成功!", id);
     }
 
+    /**
+     * 根据角色名搜索角色
+     * @param role 角色名称
+     * @return 角色数据
+     */
     @Override
     public CommonResult<List<RoleDto>> search(String role) {
         Pageable pageable = PageRequest.of(0, 20);
         Page<RoleEntity> page;
-        if("none".equals(role)) {
+        final String none = "none";
+        if(none.equals(role)) {
             page = roleRepository.findAll(pageable);
         } else {
             page = roleRepository.findAllByNameLike("%".concat(role).concat("%"), pageable);

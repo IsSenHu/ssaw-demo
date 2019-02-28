@@ -1,0 +1,108 @@
+package com.ssaw.ssawauthenticatecenterservice.controller.role;
+
+import com.ssaw.commons.annotations.RequestLog;
+import com.ssaw.commons.annotations.Validating;
+import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
+import com.ssaw.ssawauthenticatecenterfeign.vo.EditRoleDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
+import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
+import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+/**
+ * @author HuSen.
+ * @date 2018/12/14 17:53.
+ */
+@RestController
+@RequestMapping("/api/role")
+@SecurityApi(index = "2", group = "用户管理", menu = @Menu(index = "2-2", title = "角色", scope = "ROLE_MANAGE", to = "/authenticate/center/role"))
+public class RoleController extends BaseController {
+
+    private final RoleService roleService;
+
+    @Autowired
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    /**
+     * 新增角色
+     * @param roleDto 新增角色请求对象
+     * @return 新增结果
+     */
+    @Validating
+    @PostMapping("/add")
+    @RequestLog(desc = "新增角色")
+    @SecurityMethod(antMatcher = "/api/role/add", scope = "ROLE_CREATE", button = "ROLE_CREATE", buttonName = "添加")
+    public CommonResult<RoleDto> add(@RequestBody RoleDto roleDto) {
+        return roleService.add(roleDto);
+    }
+
+    /**
+     * 根据ID查询角色
+     * @param id ID
+     * @return 角色
+     */
+    @GetMapping("/findById/{id}")
+    @RequestLog(desc = "根据ID查询角色")
+    @SecurityMethod(antMatcher = "/api/role/findById/*", scope = "ROLE_READ")
+    public CommonResult<EditRoleDto> findById(@PathVariable(name = "id") Long id) {
+        return roleService.findById(id);
+    }
+
+    /**
+     * 分页查询角色
+     * @param pageReqDto 分页查询参数
+     * @return 分页结果
+     */
+    @PostMapping("/page")
+    @RequestLog(desc = "分页查询角色")
+    @SecurityMethod(antMatcher = "/api/role/page", scope = "ROLE_READ", button = "ROLE_READ", buttonName = "搜索")
+    public TableData<RoleDto> page(@RequestBody PageReqDto<RoleDto> pageReqDto) {
+        return roleService.page(pageReqDto);
+    }
+
+    /**
+     * 修改角色
+     * @param roleDto 修改角色请求对象
+     * @return 修改结果
+     */
+    @Validating
+    @PostMapping("/update")
+    @RequestLog(desc = "修改角色")
+    @SecurityMethod(antMatcher = "/api/role/update", scope = "ROLE_UPDATE", button = "ROLE_UPDATE", buttonName = "编辑")
+    public CommonResult<RoleDto> update(@RequestBody RoleDto roleDto) {
+        return roleService.update(roleDto);
+    }
+
+    /**
+     * 根据ID删除角色
+     * @param id ID
+     * @return 删除结果
+     */
+    @PostMapping("/delete/{id}")
+    @RequestLog(desc = "根据ID删除角色")
+    @SecurityMethod(antMatcher = "/api/role/delete/*", scope = "ROLE_DELETE", button = "ROLE_DELETE", buttonName = "删除")
+    public CommonResult<Long> delete(@PathVariable(value = "id") Long id) {
+        return roleService.delete(id);
+    }
+
+    /**
+     * 根据角色名搜索角色
+     * @param role 角色名称
+     * @return 角色数据
+     */
+    @GetMapping("/search/{role}")
+    @RequestLog(desc = "根据角色名搜索角色")
+    @SecurityMethod(antMatcher = "/api/role/search/*", scope = "ROLE_READ")
+    public CommonResult<List<RoleDto>> search(@PathVariable(name = "role") String role) {
+        return roleService.search(role);
+    }
+}

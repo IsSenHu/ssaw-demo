@@ -1,8 +1,8 @@
 package com.ssaw.ssawauthenticatecenterservice.service;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.ssawauthenticatecenterfeign.dto.Button;
-import com.ssaw.ssawauthenticatecenterfeign.dto.Menu;
+import com.ssaw.ssawauthenticatecenterfeign.vo.Button;
+import com.ssaw.ssawauthenticatecenterfeign.vo.Menu;
 
 import java.util.List;
 import java.util.Set;

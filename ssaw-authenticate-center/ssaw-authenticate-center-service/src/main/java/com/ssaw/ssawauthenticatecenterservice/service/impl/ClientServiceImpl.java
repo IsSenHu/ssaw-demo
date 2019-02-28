@@ -1,15 +1,15 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
-import com.ssaw.commons.security.SecurityUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDetailsInfoDto;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.ResourceEntity;
-import com.ssaw.ssawauthenticatecenterservice.repository.client.ClientRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.resource.ResourceRepository;
+import com.ssaw.security.util.SecurityUtils;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDetailsInfoDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.client.ClientRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.ClientService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ClientSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ClientTransfer;
@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.*;
-import static com.ssaw.ssawauthenticatecenterservice.constants.ClientConstant.AuthorizedGrantTypes.*;
+import static com.ssaw.ssawauthenticatecenterservice.constants.client.ClientConstant.AuthorizedGrantTypes.*;
 
 /**
  * @author HuSen.
@@ -70,6 +70,11 @@ public class ClientServiceImpl extends BaseService implements ClientService {
         return clientDetailsEntity;
     }
 
+    /**
+     * 根据clientId查询客户端
+     * @param clientId clientId
+     * @return 客户端
+     */
     @Override
     public CommonResult<ClientDetailsInfoDto> findById(String clientId) {
         return clientRepository.findById(clientId)
@@ -77,6 +82,11 @@ public class ClientServiceImpl extends BaseService implements ClientService {
                 .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "客户端不存在!", null));
     }
 
+    /**
+     * 新增客户端
+     * @param clientDto 新增客户端请求对象
+     * @return 新增结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<ClientDto> save(ClientDto clientDto) {
@@ -116,6 +126,11 @@ public class ClientServiceImpl extends BaseService implements ClientService {
         return CommonResult.createResult(PARAM_ERROR, "参数错误!", null);
     }
 
+    /**
+     * 分页查询客户端
+     * @param pageReq 分页请求参数
+     * @return 查询结果
+     */
     @Override
     public TableData<ClientDto> page(PageReqDto<ClientDto> pageReq) {
         Pageable pageable = getPageRequest(pageReq);
@@ -126,6 +141,11 @@ public class ClientServiceImpl extends BaseService implements ClientService {
         return tableData;
     }
 
+    /**
+     * 根据Id删除客户端
+     * @param id ID
+     * @return 删除结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<String> delete(String id) {

@@ -3,11 +3,11 @@ package com.ssaw.ssawauthenticatecenterservice.service.impl;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.PermissionDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.PermissionEntity;
-import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
-import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
+import com.ssaw.ssawauthenticatecenterfeign.vo.PermissionDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.permission.PermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
 import com.ssaw.ssawauthenticatecenterservice.specification.PermissionSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
@@ -43,6 +43,11 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         this.scopeRepository = scopeRepository;
     }
 
+    /**
+     * 新增权限
+     * @param permissionDto 新增权限请求对象
+     * @return 新增结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<PermissionDto> add(PermissionDto permissionDto) {
@@ -64,6 +69,11 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         return CommonResult.createResult(SUCCESS, "成功!", permissionDto);
     }
 
+    /**
+     * 分页查询权限
+     * @param pageReqDto 分页查询参数
+     * @return 分页结果
+     */
     @Override
     public TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
         Pageable pageable = getPageRequest(pageReqDto);
@@ -74,6 +84,11 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         return tableData;
     }
 
+    /**
+     * 根据ID删除权限
+     * @param id ID
+     * @return 删除结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<Long> delete(Long id) {
@@ -81,6 +96,11 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         return CommonResult.createResult(SUCCESS, "成功!", id);
     }
 
+    /**
+     * 修改权限
+     * @param permissionDto 修改请求对象
+     * @return 修改结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<PermissionDto> update(PermissionDto permissionDto) {
@@ -111,6 +131,11 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", permissionDto));
     }
 
+    /**
+     * 根据ID查询权限
+     * @param id ID
+     * @return 权限
+     */
     @Override
     public CommonResult<PermissionDto> findById(Long id) {
         return permissionRepository.findById(id)

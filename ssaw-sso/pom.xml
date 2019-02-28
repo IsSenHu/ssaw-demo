@@ -6,7 +6,6 @@
         <groupId>com.ssaw</groupId>
         <artifactId>base</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <artifactId>ssaw-sso</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -62,13 +61,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- user feign client -->
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>ssaw-user-resource-feign</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
-        </dependency>
-
         <!-- 公共包 -->
         <dependency>
             <groupId>com.ssaw</groupId>
@@ -81,7 +73,7 @@
             <groupId>com.ssaw</groupId>
             <artifactId>support-oauth2</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <type>pom</type>
+            <type>jar</type>
         </dependency>
 
         <!-- support redis -->

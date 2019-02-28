@@ -3,9 +3,9 @@ package com.ssaw.ssawauthenticatecenterservice.util;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.ssaw.commons.util.json.jack.JsonUtils;
-import com.ssaw.ssawauthenticatecenterfeign.dto.Button;
-import com.ssaw.ssawauthenticatecenterfeign.dto.Menu;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.Button;
+import com.ssaw.ssawauthenticatecenterfeign.vo.Menu;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

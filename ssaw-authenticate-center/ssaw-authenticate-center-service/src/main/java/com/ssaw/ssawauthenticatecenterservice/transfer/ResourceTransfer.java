@@ -1,7 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.ResourceDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ResourceEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ResourceDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import org.springframework.stereotype.Component;
 
 /**

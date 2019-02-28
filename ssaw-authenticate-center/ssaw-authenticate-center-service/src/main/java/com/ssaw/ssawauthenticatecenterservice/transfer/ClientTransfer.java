@@ -1,10 +1,10 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDetailsInfoDto;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
-import com.ssaw.ssawauthenticatecenterfeign.dto.UserDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDetailsInfoDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.UserDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

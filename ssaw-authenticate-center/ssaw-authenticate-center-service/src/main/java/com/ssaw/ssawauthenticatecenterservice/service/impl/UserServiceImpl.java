@@ -6,15 +6,19 @@ import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqDto;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.dto.*;
-import com.ssaw.ssawauthenticatecenterservice.constants.ClientConstant;
-import com.ssaw.ssawauthenticatecenterservice.entity.*;
-import com.ssaw.ssawauthenticatecenterservice.repository.client.ClientRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.permission.PermissionRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.role.RoleRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.role.permission.RolePermissionRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.user.UserRepository;
-import com.ssaw.ssawauthenticatecenterservice.repository.user.UserRoleRepository;
+import com.ssaw.ssawauthenticatecenterfeign.vo.*;
+import com.ssaw.ssawauthenticatecenterservice.constants.client.ClientConstant;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RolePermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.user.UserEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.user.UserRoleEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.client.ClientRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.permission.PermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.RoleRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.permission.RolePermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.user.UserRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.user.UserRoleRepository;
 import com.ssaw.ssawauthenticatecenterservice.service.MenuService;
 import com.ssaw.ssawauthenticatecenterservice.specification.UserSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
@@ -26,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -88,6 +91,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         this.menuService = menuService;
     }
 
+    /**
+     * 根据ID查询用户
+     * @param userId 用户ID
+     * @return 用户
+     */
     @Override
     public CommonResult<UserDto> findById(Long userId) {
         if (null == userId) {
@@ -126,6 +134,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         return userVo;
     }
 
+    /**
+     * 分页查询用户
+     * @param pageReq 分页查询请求参数
+     * @return 分页结果
+     */
     @Override
     public TableData<UserDto> page(PageReqDto<UserDto> pageReq) {
         Sort.Order order = Sort.Order.asc("username");
@@ -142,12 +155,17 @@ public class UserServiceImpl extends BaseService implements UserService {
         return tableData;
     }
 
+    /**
+     * 新增用户
+     * @param userDto 新增用户请求对象
+     * @return 新增结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<UserDto> add(UserDto userDto) {
         UserEntity userEntity = userDtoToUserEntity.apply(userDto);
         // 密码加密
-        userEntity.setPassword(ApplicationContextUtil.applicationContext.getBean(PasswordEncoder.class).encode(userEntity.getPassword()));
+        userEntity.setPassword(ApplicationContextUtil.getBean(PasswordEncoder.class).encode(userEntity.getPassword()));
         // 默认启用
         userEntity.setIsEnable(Boolean.TRUE);
         userEntity.setCreateTime(LocalDateTime.now());
@@ -157,6 +175,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         return createResult(SUCCESS, "成功", userDto);
     }
 
+    /**
+     * 通过用户名查询用户
+     * @param username 用户名
+     * @return 用户
+     */
     @Override
     public CommonResult<UpdateUserDto> findByUsername(String username) {
         UserEntity byUsername = userRepository.findByUsername(username);
@@ -186,6 +209,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         return result;
     }
 
+    /**
+     * 根据ID删除用户
+     * @param id ID
+     * @return 删除结果
+     */
     @Override
     public CommonResult<Long> delete(Long id) {
         if(Objects.isNull(id)) {
@@ -196,6 +224,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         return createResult(SUCCESS, "成功!", id);
     }
 
+    /**
+     * 修改用户
+     * @param updateUserDto 修改用户请求对象
+     * @return 修改结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<UserDto> update(UpdateUserDto updateUserDto) {
@@ -267,11 +300,15 @@ public class UserServiceImpl extends BaseService implements UserService {
         return createResult(SUCCESS, "成功!", userDto);
     }
 
+    /**
+     * 用户登录
+     * @param userLoginDto 用户登录请求对象
+     * @return 登录结果
+     */
     @Override
     public CommonResult<UserInfoDto> login(UserLoginDto userLoginDto) {
         UserVo userDetails = (UserVo) loadUserByUsername(userLoginDto.getUsername());
-        ConfigurableApplicationContext applicationContext = ApplicationContextUtil.applicationContext;
-        if (!applicationContext.getBean(PasswordEncoder.class).matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+        if (!ApplicationContextUtil.getBean(PasswordEncoder.class).matches(userLoginDto.getPassword(), userDetails.getPassword())) {
             return createResult(ERROR, "失败", null);
         }
         // 获取客户端信息
@@ -281,7 +318,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         ClientDetailsEntity clientDetailsEntity = byId.get();
 
-        JwtAccessTokenConverter jwtAccessTokenConverter = applicationContext.getBean(JwtAccessTokenConverter.class);
+        JwtAccessTokenConverter jwtAccessTokenConverter = ApplicationContextUtil.getBean(JwtAccessTokenConverter.class);
 
         // DefaultOauth2AccessToken
         DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(UUID.randomUUID().toString());
@@ -327,7 +364,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         OAuth2AccessToken enhance = jwtAccessTokenConverter.enhance(token, oAuth2Authentication);
 
         // 移除旧Token
-        RedisTokenStore redisTokenStore = applicationContext.getBean(RedisTokenStore.class);
+        RedisTokenStore redisTokenStore = ApplicationContextUtil.getBean(RedisTokenStore.class);
         Collection<OAuth2AccessToken> oldTokens = redisTokenStore.findTokensByClientId(clientDetailsEntity.getClientId());
         oldTokens.forEach(redisTokenStore::removeAccessToken);
 
@@ -336,6 +373,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         return createResult(SUCCESS, "成功", new UserInfoDto(userDetails.getId(), userDetails.getUsername(), scope, menuService.getMenus(scope, resourceIds), enhance.getValue(), null, menuService.getButtons(scope, resourceIds)));
     }
 
+    /**
+     * 用户登出
+     * @param request HttpServletRequest
+     * @return 登出结果
+     */
     @Override
     public CommonResult<String> logout(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
@@ -343,12 +385,17 @@ public class UserServiceImpl extends BaseService implements UserService {
             return CommonResult.createResult(ERROR, "失败", "没有token信息");
         } else {
             String token = StringUtils.substringBetween(authorization, "Bearer ");
-            RedisTokenStore redisTokenStore = ApplicationContextUtil.applicationContext.getBean(RedisTokenStore.class);
+            RedisTokenStore redisTokenStore = ApplicationContextUtil.getBean(RedisTokenStore.class);
             redisTokenStore.removeAccessToken(token);
             return CommonResult.createResult(SUCCESS, "成功", "登出成功");
         }
     }
 
+    /**
+     * 注册系统内部后台用户接口
+     * @param userDto 用户注册请求对象
+     * @return 注册结果
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public CommonResult<String> register(UserDto userDto) {
@@ -359,7 +406,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         ClientDetailsEntity clientDetailsEntity = new ClientDetailsEntity();
         clientDetailsEntity.setUserId(result.getData().getId());
         clientDetailsEntity.setClientId(ClientConstant.CLIENT_PREFIX.concat(userDto.getUsername()));
-        clientDetailsEntity.setClientSecret(ApplicationContextUtil.applicationContext.getBean(PasswordEncoder.class).encode(userDto.getPassword()));
+        clientDetailsEntity.setClientSecret(ApplicationContextUtil.getBean(PasswordEncoder.class).encode(userDto.getPassword()));
         clientDetailsEntity.setCreateTime(LocalDateTime.now());
         clientDetailsEntity.setAuthorizedGrantTypes(ClientConstant.AuthorizedGrantTypes.AUTHORIZATION_CODE.getValue());
         clientDetailsEntity.setAccessTokenValiditySeconds(ClientConstant.LOGIN_TIME);

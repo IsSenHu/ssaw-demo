@@ -1,7 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.manager;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
 import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
 import lombok.Setter;

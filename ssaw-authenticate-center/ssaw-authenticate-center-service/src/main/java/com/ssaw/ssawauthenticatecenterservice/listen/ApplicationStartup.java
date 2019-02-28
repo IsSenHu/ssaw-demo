@@ -1,9 +1,9 @@
 package com.ssaw.ssawauthenticatecenterservice.listen;
 
 import com.ssaw.commons.util.json.jack.JsonUtils;
-import com.ssaw.ssawauthenticatecenterfeign.dto.ScopeDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ScopeEntity;
-import com.ssaw.ssawauthenticatecenterservice.repository.scope.ScopeRepository;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
 import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
 import lombok.extern.slf4j.Slf4j;

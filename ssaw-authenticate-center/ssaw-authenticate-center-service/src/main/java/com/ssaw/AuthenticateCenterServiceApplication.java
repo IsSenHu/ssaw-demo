@@ -34,6 +34,6 @@ public class AuthenticateCenterServiceApplication {
 	}
 
 	public static void main(String[] args) {
-		ApplicationContextUtil.applicationContext = SpringApplication.run(AuthenticateCenterServiceApplication.class, args);
+		ApplicationContextUtil.setContext(SpringApplication.run(AuthenticateCenterServiceApplication.class, args));
 	}
 }

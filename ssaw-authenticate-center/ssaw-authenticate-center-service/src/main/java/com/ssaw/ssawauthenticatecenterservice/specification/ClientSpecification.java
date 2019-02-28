@@ -1,7 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.specification;
 
-import com.ssaw.ssawauthenticatecenterfeign.dto.ClientDto;
-import com.ssaw.ssawauthenticatecenterservice.entity.ClientDetailsEntity;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDto;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
