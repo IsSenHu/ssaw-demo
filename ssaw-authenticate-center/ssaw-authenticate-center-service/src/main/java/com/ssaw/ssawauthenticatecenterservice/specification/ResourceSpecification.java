@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.specification;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.ResourceDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.resource.QueryResourceVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,19 +17,20 @@ import java.util.Objects;
  * @date 2018/12/12 17:00.
  */
 public class ResourceSpecification implements Specification<ResourceEntity> {
+    private static final long serialVersionUID = -4649167713085017155L;
 
-    private ResourceDto resourceDto;
+    private QueryResourceVO queryResourceVO;
 
-    public ResourceSpecification(ResourceDto resourceDto) {
-        this.resourceDto = resourceDto;
+    public ResourceSpecification(QueryResourceVO queryResourceVO) {
+        this.queryResourceVO = queryResourceVO;
     }
 
     @Override
     public Predicate toPredicate(Root<ResourceEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
-        if(!Objects.isNull(resourceDto) && StringUtils.isNotBlank(resourceDto.getResourceId())) {
+        if(!Objects.isNull(queryResourceVO) && StringUtils.isNotBlank(queryResourceVO.getResourceId())) {
             // 资源ID
-            predicates.add(criteriaBuilder.like(root.get("resourceId").as(String.class), "%" + resourceDto.getResourceId() + "%"));
+            predicates.add(criteriaBuilder.like(root.get("resourceId").as(String.class), queryResourceVO.getResourceId() + "%"));
         }
         return criteriaQuery.where(predicates.toArray(new Predicate[0])).getRestriction();
     }

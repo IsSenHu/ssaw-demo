@@ -3,15 +3,19 @@ package com.ssaw.ssawauthenticatecenterservice.controller.scope;
 import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.QueryScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.CreateScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.UpdateScopeVO;
 import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
 import com.ssaw.ssawauthenticatecenterservice.service.ScopeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,44 +32,45 @@ public class ScopeController extends BaseController {
     private final ScopeService scopeService;
 
     @Autowired
-    public ScopeController(ScopeService scopeService) {
+    public ScopeController(ApplicationContext context, ScopeService scopeService) {
+        super(context);
         this.scopeService = scopeService;
     }
 
     /**
      * 新增作用域
-     * @param scopeDto 新增作用域请求对象
+     * @param createScopeVO 新增作用域请求对象
      * @return 新增结果
      */
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增作用域")
     @SecurityMethod(antMatcher = "/api/scope/add", scope = "SCOPE_CREATE", button = "SCOPE_CREATE", buttonName = "添加")
-    public CommonResult<ScopeDto> add(@RequestBody ScopeDto scopeDto) {
-        return scopeService.add(scopeDto);
+    public CommonResult<CreateScopeVO> add(@RequestBody CreateScopeVO createScopeVO) {
+        return scopeService.add(createScopeVO);
     }
 
     /**
      * 上传作用域
-     * @param scopeDtoList 作用域集合
+     * @param scopeVOList 作用域集合
      * @return 上传结果
      */
     @PostMapping("/uploadScopes")
-    public CommonResult<String> uploadScopes(@RequestBody List<ScopeDto> scopeDtoList) {
+    public CommonResult<String> uploadScopes(@RequestBody List<ScopeVO> scopeVOList) {
         // TODO 安全策略
-        return scopeService.uploadScopes(scopeDtoList);
+        return scopeService.uploadScopes(scopeVOList);
     }
 
     /**
      * 分页查询作用域
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询作用域")
     @SecurityMethod(antMatcher = "/api/scope/page", scope = "SCOPE_READ", button = "SCOPE_READ", buttonName = "搜索")
-    public TableData<ScopeDto> page(@RequestBody PageReqDto<ScopeDto> pageReqDto) {
-        return scopeService.page(pageReqDto);
+    public TableData<ScopeVO> page(@RequestBody PageReqVO<QueryScopeVO> pageReqVO) {
+        return scopeService.page(pageReqVO);
     }
 
     /**
@@ -88,21 +93,21 @@ public class ScopeController extends BaseController {
     @GetMapping("/findById/{id}")
     @RequestLog(desc = "根据ID查询作用域")
     @SecurityMethod(antMatcher = "/api/scope/findById/*", scope = "SCOPE_READ")
-    public CommonResult<ScopeDto> findById(@PathVariable(name = "id") Long id) {
+    public CommonResult<ScopeVO> findById(@PathVariable(name = "id") Long id) {
         return scopeService.findById(id);
     }
 
     /**
      * 修改作用域
-     * @param scopeDto 修改作用域请求对象
+     * @param updateScopeVO 修改作用域请求对象
      * @return 修改结果
      */
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改作用域请求对象")
     @SecurityMethod(antMatcher = "/api/scope/update", scope = "SCOPE_UPDATE", button = "SCOPE_UPDATE", buttonName = "编辑")
-    public CommonResult<ScopeDto> update(@RequestBody ScopeDto scopeDto) {
-        return scopeService.update(scopeDto);
+    public CommonResult<UpdateScopeVO> update(@RequestBody UpdateScopeVO updateScopeVO) {
+        return scopeService.update(updateScopeVO);
     }
 
     /**
@@ -113,7 +118,7 @@ public class ScopeController extends BaseController {
     @GetMapping("/search/{scope}")
     @RequestLog(desc = "根据作用域名称搜索作用域")
     @SecurityMethod(antMatcher = "/api/scope/search/*", scope = "SCOPE_READ")
-    public CommonResult<List<ScopeDto>> search(@PathVariable(name = "scope") String scope) {
+    public CommonResult<List<ScopeVO>> search(@PathVariable(name = "scope") String scope) {
         return scopeService.search(scope);
     }
 
@@ -125,7 +130,7 @@ public class ScopeController extends BaseController {
     @GetMapping("/searchForUpdate/{scope}")
     @RequestLog(desc = "ScopeController.searchForUpdate(Long scopeId)")
     @SecurityMethod(antMatcher = "/api/scope/searchForUpdate/*", scope = "SCOPE_READ")
-    public CommonResult<List<ScopeDto>> searchForUpdate(@PathVariable(name = "scope") String scope) {
+    public CommonResult<List<ScopeVO>> searchForUpdate(@PathVariable(name = "scope") String scope) {
         return scopeService.searchForUpdate(scope);
     }
 }

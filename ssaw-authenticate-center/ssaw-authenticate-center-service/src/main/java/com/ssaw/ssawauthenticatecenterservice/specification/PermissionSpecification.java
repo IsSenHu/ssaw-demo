@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.specification;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.PermissionDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.permission.QueryPermissionVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,21 +17,22 @@ import java.util.Objects;
  * @date 2018/12/12 17:00.
  */
 public class PermissionSpecification implements Specification<PermissionEntity> {
+    private static final long serialVersionUID = -8184562005093817578L;
 
-    private PermissionDto permissionDto;
+    private QueryPermissionVO queryPermissionVO;
 
-    public PermissionSpecification(PermissionDto permissionDto) {
-        this.permissionDto = permissionDto;
+    public PermissionSpecification(QueryPermissionVO queryPermissionVO) {
+        this.queryPermissionVO = queryPermissionVO;
     }
 
     @Override
     public Predicate toPredicate(Root<PermissionEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
-        if(StringUtils.isNotBlank(permissionDto.getName())) {
-            predicates.add(criteriaBuilder.like(root.get("name").as(String.class), "%" + permissionDto.getName() + "%"));
+        if(StringUtils.isNotBlank(queryPermissionVO.getName())) {
+            predicates.add(criteriaBuilder.like(root.get("name").as(String.class), queryPermissionVO.getName() + "%"));
         }
-        if(!Objects.isNull(permissionDto.getResourceId())) {
-            predicates.add(criteriaBuilder.equal(root.get("resourceId").as(Long.class), permissionDto.getResourceId()));
+        if(!Objects.isNull(queryPermissionVO.getResourceId())) {
+            predicates.add(criteriaBuilder.equal(root.get("resourceId").as(Long.class), queryPermissionVO.getResourceId()));
         }
         return criteriaQuery.where(predicates.toArray(new Predicate[0])).getRestriction();
     }

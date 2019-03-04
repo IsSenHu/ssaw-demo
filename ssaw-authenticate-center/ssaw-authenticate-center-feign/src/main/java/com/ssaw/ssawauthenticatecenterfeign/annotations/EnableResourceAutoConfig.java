@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterfeign.annotations;
 
-import com.ssaw.ssawauthenticatecenterfeign.config.ResourceAutoConfig;
+import com.ssaw.ssawauthenticatecenterfeign.config.ResourceScopeWhiteListAutoUploadConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -13,5 +13,5 @@ import java.lang.annotation.*;
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(ResourceAutoConfig.class)
+@Import(ResourceScopeWhiteListAutoUploadConfiguration.class)
 public @interface EnableResourceAutoConfig {}

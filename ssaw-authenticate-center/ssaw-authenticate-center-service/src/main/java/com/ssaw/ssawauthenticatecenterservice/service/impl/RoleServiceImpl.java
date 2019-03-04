@@ -1,11 +1,11 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.vo.EditRoleDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.TreeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.role.*;
+import com.ssaw.ssawauthenticatecenterfeign.vo.TreeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
@@ -17,6 +17,7 @@ import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.permission.Rol
 import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
 import com.ssaw.ssawauthenticatecenterservice.specification.RoleSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.RoleTransfer;
+import com.ssaw.ssawauthenticatecenterservice.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,19 +65,20 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
     /**
      * 新增角色
-     * @param roleDto 新增角色请求对象
+     * @param createRoleVO 新增角色请求对象
      * @return 新增结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<RoleDto> add(RoleDto roleDto) {
-        if(roleRepository.countByName(roleDto.getName()) > 0) {
-            return CommonResult.createResult(DATA_EXIST, "该权限名称已存在!", roleDto);
+    public CommonResult<CreateRoleVO> add(CreateRoleVO createRoleVO) {
+        if(roleRepository.countByName(createRoleVO.getName()) > 0) {
+            return CommonResult.createResult(DATA_EXIST, "该权限名称已存在!", createRoleVO);
         }
-        RoleEntity entity = roleTransfer.dto2Entity(roleDto);
+        RoleEntity entity = CopyUtil.copyProperties(createRoleVO, new RoleEntity());
         entity.setCreateTime(LocalDateTime.now());
+        entity.setCreateMan(UserUtils.getUser().getUsername());
         roleRepository.save(entity);
-        return CommonResult.createResult(SUCCESS, "成功!", roleDto);
+        return CommonResult.createResult(SUCCESS, "成功!", createRoleVO);
     }
 
     /**
@@ -85,41 +87,39 @@ public class RoleServiceImpl extends BaseService implements RoleService {
      * @return 角色
      */
     @Override
-    public CommonResult<EditRoleDto> findById(Long id) {
-        RoleDto roleDto = roleRepository.findById(id)
-                .map(roleTransfer::entity2Dto)
-                .orElse(null);
-        if(roleDto == null) {
+    public CommonResult<EditRoleVO> findById(Long id) {
+        RoleVO roleVO = roleRepository.findById(id).map(roleTransfer::entity2Dto).orElse(null);
+        if(roleVO == null) {
             return CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", null);
         }
-        EditRoleDto editRoleDto = new EditRoleDto();
-        editRoleDto.setRoleDto(roleDto);
+        EditRoleVO editRoleVO = new EditRoleVO();
+        editRoleVO.setRoleVO(roleVO);
 
         // 查询出所有的资源
         List<ResourceEntity> resourceRepositoryAll = resourceRepository.findAll();
-        List<TreeDto> treeDtos = new ArrayList<>(resourceRepositoryAll.size());
+        List<TreeVO> treeVOS = new ArrayList<>(resourceRepositoryAll.size());
         if(CollectionUtils.isNotEmpty(resourceRepositoryAll)) {
             for(ResourceEntity resourceEntity : resourceRepositoryAll) {
-                TreeDto resource = new TreeDto();
+                TreeVO resource = new TreeVO();
                 resource.setId(resourceEntity.getId());
                 resource.setLabel(resourceEntity.getResourceId());
                 // 获取该资源的所有权限
                 List<PermissionEntity> permissionRepositoryAllByResourceId = permissionRepository.findAllByResourceId(resourceEntity.getId());
-                List<TreeDto> children = new ArrayList<>(permissionRepositoryAllByResourceId.size());
+                List<TreeVO> children = new ArrayList<>(permissionRepositoryAllByResourceId.size());
                 if(CollectionUtils.isNotEmpty(permissionRepositoryAllByResourceId)) {
                     for(PermissionEntity permissionEntity : permissionRepositoryAllByResourceId) {
-                        TreeDto treeDto = new TreeDto();
-                        treeDto.setId(Long.valueOf(permissionEntity.getResourceId().toString() + permissionEntity.getId().toString()));
-                        treeDto.setLabel(permissionEntity.getName());
-                        children.add(treeDto);
+                        TreeVO treeVO = new TreeVO();
+                        treeVO.setId(Long.valueOf(permissionEntity.getResourceId().toString() + permissionEntity.getId().toString()));
+                        treeVO.setLabel(permissionEntity.getName());
+                        children.add(treeVO);
                     }
                 }
                 resource.setChildren(children);
-                treeDtos.add(resource);
+                treeVOS.add(resource);
             }
         }
         // 设置树数据
-        editRoleDto.setTreeDtos(treeDtos);
+        editRoleVO.setTreeVOS(treeVOS);
         // 设置用户已拥有的权限为选中
         List<Long> defaultCheckedKeys = new ArrayList<>();
         List<RolePermissionEntity> allByRoleId = rolePermissionRepository.findAllByRoleId(id);
@@ -128,20 +128,20 @@ public class RoleServiceImpl extends BaseService implements RoleService {
             List<PermissionEntity> allById = permissionRepository.findAllById(collectPermissionId);
             defaultCheckedKeys = allById.stream().map(x -> Long.valueOf(x.getResourceId().toString() + x.getId().toString())).collect(Collectors.toList());
         }
-        editRoleDto.setDefaultCheckedKeys(defaultCheckedKeys);
-        return CommonResult.createResult(SUCCESS, "成功!", editRoleDto);
+        editRoleVO.setDefaultCheckedKeys(defaultCheckedKeys);
+        return CommonResult.createResult(SUCCESS, "成功!", editRoleVO);
     }
 
     /**
      * 分页查询角色
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
     @Override
-    public TableData<RoleDto> page(PageReqDto<RoleDto> pageReqDto) {
-        Pageable pageable = getPageRequest(pageReqDto);
-        Page<RoleEntity> page = roleRepository.findAll(new RoleSpecification(pageReqDto.getData()), pageable);
-        TableData<RoleDto> tableData = new TableData<>();
+    public TableData<RoleVO> page(PageReqVO<QueryRoleVO> pageReqVO) {
+        Pageable pageable = getPageRequest(pageReqVO);
+        Page<RoleEntity> page = roleRepository.findAll(new RoleSpecification(pageReqVO.getData()), pageable);
+        TableData<RoleVO> tableData = new TableData<>();
         setTableData(page, tableData);
         tableData.setContent(page.getContent().stream().map(roleTransfer::entity2Dto).collect(Collectors.toList()));
         return tableData;
@@ -149,32 +149,32 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
     /**
      * 修改角色
-     * @param roleDto 修改角色请求对象
+     * @param updateRoleVO 修改角色请求对象
      * @return 修改结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<RoleDto> update(RoleDto roleDto) {
-        return roleRepository.findById(roleDto.getId())
+    public CommonResult<UpdateRoleVO> update(UpdateRoleVO updateRoleVO) {
+        return roleRepository.findById(updateRoleVO.getId())
             .map(entity -> {
-                if(!StringUtils.equals(entity.getName(), roleDto.getName()) && roleRepository.countByName(roleDto.getName()) > 0) {
-                    return CommonResult.createResult(DATA_EXIST, "该角色名称已存在!", roleDto);
+                if(!StringUtils.equals(entity.getName(), updateRoleVO.getName()) && roleRepository.countByName(updateRoleVO.getName()) > 0) {
+                    return CommonResult.createResult(DATA_EXIST, "该角色名称已存在!", updateRoleVO);
                 }
-                entity.setName(roleDto.getName());
-                entity.setDescription(roleDto.getDescription());
+                entity.setName(updateRoleVO.getName());
+                entity.setDescription(updateRoleVO.getDescription());
                 entity.setModifyTime(LocalDateTime.now());
-                List<TreeDto> permissions = roleDto.getPermissions();
+                List<TreeVO> permissions = updateRoleVO.getPermissions();
                 // 删除现有的角色权限关系
-                rolePermissionRepository.deleteAllByRoleId(roleDto.getId());
+                rolePermissionRepository.deleteAllByRoleId(updateRoleVO.getId());
                 // 重新新增角色权限关系
                 List<RolePermissionEntity> rolePermissionEntities = new ArrayList<>();
-                for(TreeDto treeDto : permissions) {
-                    List<TreeDto> children = treeDto.getChildren();
+                for(TreeVO treeVO : permissions) {
+                    List<TreeVO> children = treeVO.getChildren();
                     if(CollectionUtils.isNotEmpty(children)) {
                         List<RolePermissionEntity> collect = children.stream().map(x -> {
-                            String realId = StringUtils.substring(x.getId().toString(), treeDto.getId().toString().length());
+                            String realId = StringUtils.substring(x.getId().toString(), treeVO.getId().toString().length());
                             RolePermissionEntity rolePermissionEntity = new RolePermissionEntity();
-                            rolePermissionEntity.setRoleId(roleDto.getId());
+                            rolePermissionEntity.setRoleId(updateRoleVO.getId());
                             rolePermissionEntity.setPermissionId(Long.valueOf(realId));
                             rolePermissionEntity.setCreateTime(LocalDateTime.now());
                             rolePermissionEntity.setModifyTime(LocalDateTime.now());
@@ -184,10 +184,11 @@ public class RoleServiceImpl extends BaseService implements RoleService {
                     }
                 }
                 rolePermissionRepository.saveAll(rolePermissionEntities);
+                entity.setModifyMan(UserUtils.getUser().getUsername());
                 roleRepository.save(entity);
-                return CommonResult.createResult(SUCCESS, "成功!", roleDto);
+                return CommonResult.createResult(SUCCESS, "成功!", updateRoleVO);
             })
-            .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", roleDto));
+            .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该角色不存在!", updateRoleVO));
     }
 
     /**
@@ -207,7 +208,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
      * @return 角色数据
      */
     @Override
-    public CommonResult<List<RoleDto>> search(String role) {
+    public CommonResult<List<RoleVO>> search(String role) {
         Pageable pageable = PageRequest.of(0, 20);
         Page<RoleEntity> page;
         final String none = "none";

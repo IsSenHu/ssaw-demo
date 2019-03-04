@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
@@ -22,22 +22,22 @@ public class ScopeTransfer {
         this.resourceRepository = resourceRepository;
     }
 
-    public ScopeEntity dto2Entity(ScopeDto scopeDto) {
+    public ScopeEntity dto2Entity(ScopeVO scopeVO) {
         ScopeEntity entity = null;
-        if (scopeDto != null) {
+        if (scopeVO != null) {
             entity = new ScopeEntity();
-            entity.setId(scopeDto.getId());
-            entity.setUri(scopeDto.getUri());
-            entity.setScope(scopeDto.getScope());
-            entity.setResourceId(scopeDto.getResourceId());
+            entity.setId(scopeVO.getId());
+            entity.setUri(scopeVO.getUri());
+            entity.setScope(scopeVO.getScope());
+            entity.setResourceId(scopeVO.getResourceId());
         }
         return entity;
     }
 
-    public ScopeDto entity2Dto(ScopeEntity scopeEntity) {
-        ScopeDto dto = new ScopeDto();
+    public ScopeVO entity2Dto(ScopeEntity scopeEntity) {
+        ScopeVO dto = new ScopeVO();
         if(scopeEntity != null) {
-            dto = new ScopeDto();
+            dto = new ScopeVO();
             Optional<ResourceEntity> optional = resourceRepository.findById(scopeEntity.getResourceId());
             if(optional.isPresent()) {
                 dto.setResourceName(optional.get().getResourceId());
@@ -54,10 +54,10 @@ public class ScopeTransfer {
         return dto;
     }
 
-    public ScopeDto entity2DtoNotGetResourceName(ScopeEntity scopeEntity) {
-        ScopeDto dto = new ScopeDto();
+    public ScopeVO entity2DtoNotGetResourceName(ScopeEntity scopeEntity) {
+        ScopeVO dto = new ScopeVO();
         if(scopeEntity != null) {
-            dto = new ScopeDto();
+            dto = new ScopeVO();
             dto.setId(scopeEntity.getId());
             dto.setScope(scopeEntity.getScope());
             dto.setUri(scopeEntity.getUri());

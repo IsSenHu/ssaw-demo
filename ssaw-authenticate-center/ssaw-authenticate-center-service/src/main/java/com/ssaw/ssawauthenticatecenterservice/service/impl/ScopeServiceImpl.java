@@ -1,9 +1,13 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.QueryScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.CreateScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.UpdateScopeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
@@ -13,7 +17,8 @@ import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeReposito
 import com.ssaw.ssawauthenticatecenterservice.service.ScopeService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ScopeSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
-import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
+import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
+import com.ssaw.ssawauthenticatecenterservice.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,34 +57,35 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
 
     /**
      * 新增作用域
-     * @param scopeDto 新增作用域请求对象
+     * @param createScopeVO 新增作用域请求对象
      * @return 新增结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<ScopeDto> add(ScopeDto scopeDto) {
-        ScopeEntity entity = scopeTransfer.dto2Entity(scopeDto);
+    public CommonResult<CreateScopeVO> add(CreateScopeVO createScopeVO) {
+        ScopeEntity entity = CopyUtil.copyProperties(createScopeVO, new ScopeEntity());
         if(null == entity) {
             return CommonResult.createResult(PARAM_ERROR, "参数为空!", null);
         }
-        if(scopeRepository.countByScopeOrUri(scopeDto.getScope(), scopeDto.getUri()) > 0) {
-            return CommonResult.createResult(DATA_EXIST, "该scope或uri已存在!", scopeDto);
+        if(scopeRepository.countByScopeOrUri(createScopeVO.getScope(), createScopeVO.getUri()) > 0) {
+            return CommonResult.createResult(DATA_EXIST, "该scope或uri已存在!", createScopeVO);
         }
         entity.setCreateTime(LocalDateTime.now());
+        entity.setCreateMan(UserUtils.getUser().getUsername());
         scopeRepository.save(entity);
-        return CommonResult.createResult(SUCCESS, "成功!", scopeDto);
+        return CommonResult.createResult(SUCCESS, "成功!", createScopeVO);
     }
 
     /**
      * 分页查询作用域
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
     @Override
-    public TableData<ScopeDto> page(PageReqDto<ScopeDto> pageReqDto) {
-        Pageable pageable = getPageRequest(pageReqDto);
-        Page<ScopeEntity> page = scopeRepository.findAll(new ScopeSpecification(pageReqDto.getData()), pageable);
-        TableData<ScopeDto> tableData = new TableData<>();
+    public TableData<ScopeVO> page(PageReqVO<QueryScopeVO> pageReqVO) {
+        Pageable pageable = getPageRequest(pageReqVO);
+        Page<ScopeEntity> page = scopeRepository.findAll(new ScopeSpecification(pageReqVO.getData()), pageable);
+        TableData<ScopeVO> tableData = new TableData<>();
         setTableData(page, tableData);
         tableData.setContent(page.getContent().stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList()));
         return tableData;
@@ -106,7 +112,7 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
      * @return 作用域
      */
     @Override
-    public CommonResult<ScopeDto> findById(Long id) {
+    public CommonResult<ScopeVO> findById(Long id) {
         if(Objects.isNull(id)) {
             return CommonResult.createResult(PARAM_ERROR, "作用域ID为空!", null);
         }
@@ -117,27 +123,28 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
 
     /**
      * 修改作用域
-     * @param scopeDto 修改作用域请求对象
+     * @param updateScopeVO 修改作用域请求对象
      * @return 修改结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<ScopeDto> update(ScopeDto scopeDto) {
-        return scopeRepository.findById(scopeDto.getId())
+    public CommonResult<UpdateScopeVO> update(UpdateScopeVO updateScopeVO) {
+        return scopeRepository.findById(updateScopeVO.getId())
                 .map(entity -> {
-                    if(!StringUtils.equals(scopeDto.getScope(), entity.getScope()) && scopeRepository.countByScope(scopeDto.getScope()) > 1) {
-                        return CommonResult.createResult(DATA_EXIST, "该Scope已存在!", scopeDto);
+                    if(!StringUtils.equals(updateScopeVO.getScope(), entity.getScope()) && scopeRepository.countByScope(updateScopeVO.getScope()) > 1) {
+                        return CommonResult.createResult(DATA_EXIST, "该Scope已存在!", updateScopeVO);
                     }
-                    if(!StringUtils.equals(scopeDto.getUri(), entity.getUri()) && scopeRepository.countByUri(scopeDto.getUri()) > 1) {
-                        return CommonResult.createResult(DATA_EXIST, "该Uri已存在!", scopeDto);
+                    if(!StringUtils.equals(updateScopeVO.getUri(), entity.getUri()) && scopeRepository.countByUri(updateScopeVO.getUri()) > 1) {
+                        return CommonResult.createResult(DATA_EXIST, "该Uri已存在!", updateScopeVO);
                     }
-                    entity.setScope(scopeDto.getScope());
-                    entity.setUri(scopeDto.getUri());
-                    entity.setResourceId(scopeDto.getResourceId());
+                    entity.setScope(updateScopeVO.getScope());
+                    entity.setUri(updateScopeVO.getUri());
+                    entity.setResourceId(updateScopeVO.getResourceId());
                     entity.setModifyTime(LocalDateTime.now());
+                    entity.setModifyMan(UserUtils.getUser().getUsername());
                     scopeRepository.save(entity);
-                    return CommonResult.createResult(SUCCESS, "成功!", scopeDto);
-                }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该作用域不存在!", scopeDto));
+                    return CommonResult.createResult(SUCCESS, "成功!", updateScopeVO);
+                }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该作用域不存在!", updateScopeVO));
     }
 
     /**
@@ -146,7 +153,7 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
      * @return 作用域
      */
     @Override
-    public CommonResult<List<ScopeDto>> search(String scope) {
+    public CommonResult<List<ScopeVO>> search(String scope) {
         PageRequest pageRequest = PageRequest.of(0, 20);
         Page<ScopeEntity> page;
         final String none = "none";
@@ -165,7 +172,7 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
      * @return 作用域
      */
     @Override
-    public CommonResult<List<ScopeDto>> searchForUpdate(String scope) {
+    public CommonResult<List<ScopeVO>> searchForUpdate(String scope) {
         PageRequest pageRequest = PageRequest.of(0, 20);
         Page<ScopeEntity> page;
         final String none = "none";
@@ -180,13 +187,13 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
 
     /**
      * 上传作用域
-     * @param scopeDtoList 作用域集合
+     * @param scopeVOList 作用域集合
      * @return 上传结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<String> uploadScopes(List<ScopeDto> scopeDtoList) {
-        List<String> scopes = scopeDtoList.stream().map(ScopeDto::getScope).collect(Collectors.toList());
+    public CommonResult<String> uploadScopes(List<ScopeVO> scopeVOList) {
+        List<String> scopes = scopeVOList.stream().map(ScopeVO::getScope).collect(Collectors.toList());
         // 先删除不要的作用域
         scopeRepository.deleteAllByScopeNotIn(scopes);
         // 得到还存在的权限
@@ -195,21 +202,21 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         // 再删除不要的权限
         permissionRepository.deleteAllByScopeIdNotIn(allScopeId);
         Set<String> scopeSet = allByScopeIn.stream().map(ScopeEntity::getScope).collect(Collectors.toSet());
-        Map<String, ScopeDto> updateScopeMap = new HashMap<>(scopeDtoList.size());
-        List<ScopeDto> newScopeList = new ArrayList<>();
-        for (ScopeDto scopeDto : scopeDtoList) {
-            if (scopeSet.contains(scopeDto.getScope())) {
-                updateScopeMap.put(scopeDto.getScope(), scopeDto);
+        Map<String, ScopeVO> updateScopeMap = new HashMap<>(scopeVOList.size());
+        List<ScopeVO> newScopeList = new ArrayList<>();
+        for (ScopeVO scopeVO : scopeVOList) {
+            if (scopeSet.contains(scopeVO.getScope())) {
+                updateScopeMap.put(scopeVO.getScope(), scopeVO);
             } else {
-                newScopeList.add(scopeDto);
+                newScopeList.add(scopeVO);
             }
         }
 
         allByScopeIn.forEach(entity -> {
-            ScopeDto scopeDto = updateScopeMap.get(entity.getScope());
-            entity.setUri(scopeDto.getUri());
-            entity.setScope(scopeDto.getScope());
-            entity.setResourceId(scopeDto.getResourceId());
+            ScopeVO scopeVO = updateScopeMap.get(entity.getScope());
+            entity.setUri(scopeVO.getUri());
+            entity.setScope(scopeVO.getScope());
+            entity.setResourceId(scopeVO.getResourceId());
             Optional<PermissionEntity> byId = permissionRepository.findById(entity.getPermissionId());
             byId.ifPresent(permissionEntity -> {
                 permissionEntity.setScopeId(entity.getId());
@@ -252,6 +259,6 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
         ResourceEntity resourceEntity = resourceRepository.findByResourceId(source);
         Assert.notNull(resourceEntity, "找不到资源服务");
         List<ScopeEntity> scopeEntities = scopeRepository.findAllByResourceId(resourceEntity.getId());
-        CacheUtils.refreshScopes(source, scopeEntities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList()));
+        CacheManager.refreshScopes(source, scopeEntities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.toList()));
     }
 }

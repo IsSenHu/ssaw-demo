@@ -1,9 +1,11 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.manager;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.commons.util.app.ApplicationContextUtil;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
-import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
-import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
+import com.ssaw.ssawauthenticatecenterservice.properties.SpringSummerAutumnWinterManageProperties;
+import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
+import com.ssaw.ssawauthenticatecenterservice.details.UserDetailsImpl;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -92,9 +94,9 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
             throw new OAuth2AccessDeniedException("requestUri are required");
         }
 
-        List<ScopeDto> scopes = CacheUtils.getScopes();
-        ScopeDto areRequiredScope = null;
-        first : for(ScopeDto scope : scopes) {
+        List<ScopeVO> scopes = CacheManager.getScopes();
+        ScopeVO areRequiredScope = null;
+        first : for(ScopeVO scope : scopes) {
             String[] split = scope.getUri().split(",");
             for (String u : split) {
                 if(antPathMatcher.match(u, requestUri)) {
@@ -103,7 +105,6 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
                 }
             }
         }
-
         String needToValidatingScope = null;
 
         // 没有找到该请求uri所匹配的scope 说明该uri不被拦截，只有当areRequiredScope不为空的时候才需要校验
@@ -121,7 +122,7 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         // 设置用户上下文
         String token = (String) authentication.getPrincipal();
         OAuth2AccessToken oAuth2AccessToken = tokenServices.readAccessToken(token);
-        UserVo user = (UserVo) oAuth2AccessToken.getAdditionalInformation().get("user_info");
+        UserDetailsImpl user = (UserDetailsImpl) oAuth2AccessToken.getAdditionalInformation().get("user_info");
         // 如果token所带的用户信息为空，则不合法
         if(Objects.isNull(user)) {
             throw new OAuth2AccessDeniedException("Invalid token (" + token  + ")");
@@ -135,8 +136,10 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         ClientDetailsEntity client;
+        SpringSummerAutumnWinterManageProperties springSummerAutumnWinterManageProperties = ApplicationContextUtil.getBean(SpringSummerAutumnWinterManageProperties.class);
+        String clientId = user.getInner() ? springSummerAutumnWinterManageProperties.getClientId() : auth.getOAuth2Request().getClientId();
         try {
-            client = (ClientDetailsEntity) clientDetailsService.loadClientByClientId(auth.getOAuth2Request().getClientId());
+            client = (ClientDetailsEntity) clientDetailsService.loadClientByClientId(clientId);
         } catch (ClientRegistrationException e) {
             throw new OAuth2AccessDeniedException("Invalid token contains invalid client id");
         }
@@ -149,7 +152,6 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         if(accessed) {
             throw new OAuth2AccessDeniedException("Uri (" + requestUri + ") is not permit this token to reach");
         }
-
         // 校验token的scope权限和客户端的scope权限是否合法
         for(String tokenScope : tokenScopes) {
             if(!allowed.contains(tokenScope)) {

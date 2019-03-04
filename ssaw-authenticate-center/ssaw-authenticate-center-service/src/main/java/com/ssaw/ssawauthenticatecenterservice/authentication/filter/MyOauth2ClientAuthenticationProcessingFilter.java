@@ -1,13 +1,14 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.security.util.SecurityUtils;
 import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
-import com.ssaw.ssawauthenticatecenterfeign.vo.SimpleUserAttributeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.SimpleUserAttributeVO;
 import com.ssaw.ssawauthenticatecenterservice.authentication.manager.MyOauth2AuthenticationManager;
-import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
+import com.ssaw.ssawauthenticatecenterservice.details.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
@@ -162,8 +164,10 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
 
                 SecurityContextHolder.getContext().setAuthentication(authResult);
 
-                UserVo userVo = SecurityUtils.getUserDetails(UserVo.class);
-                result = CommonResult.createResult(SUCCESS, "access", new SimpleUserAttributeVO(userVo.getId(), userVo.getUsername()));
+                UserDetailsImpl userDetailsImpl = SecurityUtils.getUserDetails(UserDetailsImpl.class);
+                result = CommonResult.createResult(SUCCESS, "access",
+                        new SimpleUserAttributeVO(userDetailsImpl.getId(), userDetailsImpl.getUsername(), userDetailsImpl.getRealName(), userDetailsImpl.getDescription(),
+                                userDetailsImpl.getIsEnable(), JSON.parseObject(userDetailsImpl.getOtherInfo(), Map.class)));
             }
             response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(result)));
         }

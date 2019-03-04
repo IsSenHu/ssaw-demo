@@ -1,9 +1,12 @@
 package com.ssaw.ssawauthenticatecenterservice.service;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.QueryScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.CreateScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.UpdateScopeVO;
 
 import java.util.List;
 
@@ -15,17 +18,17 @@ public interface ScopeService {
 
     /**
      * 新增作用域
-     * @param scopeDto 新增作用域请求对象
+     * @param createScopeVO 新增作用域请求对象
      * @return 新增结果
      */
-    CommonResult<ScopeDto> add(ScopeDto scopeDto);
+    CommonResult<CreateScopeVO> add(CreateScopeVO createScopeVO);
 
     /**
      * 分页查询作用域
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
-    TableData<ScopeDto> page(PageReqDto<ScopeDto> pageReqDto);
+    TableData<ScopeVO> page(PageReqVO<QueryScopeVO> pageReqVO);
 
     /**
      * 根据ID删除作用域
@@ -39,35 +42,35 @@ public interface ScopeService {
      * @param id ID
      * @return 作用域
      */
-    CommonResult<ScopeDto> findById(Long id);
+    CommonResult<ScopeVO> findById(Long id);
 
     /**
      * 修改作用域
-     * @param scopeDto 修改作用域请求对象
+     * @param updateScopeVO 修改作用域请求对象
      * @return 修改结果
      */
-    CommonResult<ScopeDto> update(ScopeDto scopeDto);
+    CommonResult<UpdateScopeVO> update(UpdateScopeVO updateScopeVO);
 
     /**
      * 根据作用域名称搜索作用域
      * @param scope 作用域名称
      * @return 作用域
      */
-    CommonResult<List<ScopeDto>> search(String scope);
+    CommonResult<List<ScopeVO>> search(String scope);
 
     /**
      * 根据作用域名称搜索作用域
      * @param scope 作用域名称
      * @return 作用域
      */
-    CommonResult<List<ScopeDto>> searchForUpdate(String scope);
+    CommonResult<List<ScopeVO>> searchForUpdate(String scope);
 
     /**
      * 上传作用域
-     * @param scopeDtoList 作用域集合
+     * @param scopeVOList 作用域集合
      * @return 上传结果
      */
-    CommonResult<String> uploadScopes(List<ScopeDto> scopeDtoList);
+    CommonResult<String> uploadScopes(List<ScopeVO> scopeVOList);
 
     /**
      * 刷新作用域缓存

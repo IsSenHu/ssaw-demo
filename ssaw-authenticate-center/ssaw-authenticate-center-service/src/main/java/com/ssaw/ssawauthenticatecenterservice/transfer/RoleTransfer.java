@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.role.RoleVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleTransfer {
 
-    public RoleEntity dto2Entity(RoleDto dto) {
+    public RoleEntity dto2Entity(RoleVO dto) {
         RoleEntity entity = null;
         if(null != dto) {
             entity = new RoleEntity();
@@ -22,10 +22,10 @@ public class RoleTransfer {
         return entity;
     }
 
-    public RoleDto entity2Dto(RoleEntity entity) {
-        RoleDto dto = null;
+    public RoleVO entity2Dto(RoleEntity entity) {
+        RoleVO dto = null;
         if(null != entity) {
-            dto = new RoleDto();
+            dto = new RoleVO();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setDescription(entity.getDescription());

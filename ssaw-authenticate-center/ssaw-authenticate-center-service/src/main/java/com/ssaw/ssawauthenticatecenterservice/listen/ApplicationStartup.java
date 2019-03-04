@@ -1,11 +1,11 @@
 package com.ssaw.ssawauthenticatecenterservice.listen;
 
 import com.ssaw.commons.util.json.jack.JsonUtils;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
-import com.ssaw.ssawauthenticatecenterservice.util.CacheUtils;
+import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +38,8 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
         log.info("init scope cache...");
         List<ScopeEntity> entities = scopeRepository.findAll();
         if(CollectionUtils.isNotEmpty(entities)) {
-            entities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.groupingBy(ScopeDto::getResourceName))
-                    .forEach(CacheUtils::refreshScopes);
+            entities.stream().map(scopeTransfer::entity2Dto).collect(Collectors.groupingBy(ScopeVO::getResourceName))
+                    .forEach(CacheManager::refreshScopes);
             log.info("init scope caches:{}", JsonUtils.object2JsonString(entities));
         }
     }

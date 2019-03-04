@@ -1,12 +1,15 @@
 package com.ssaw.ssawauthenticatecenterservice.service;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UpdateUserDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserInfoDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserLoginDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.ShowUpdateUserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserInfoVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserLoginVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.CreateUserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.QueryUserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UpdateUserVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,21 +24,21 @@ public interface UserService extends UserDetailsService {
      * @param pageReq 分页查询请求参数
      * @return 分页结果
      */
-    TableData<UserDto> page(PageReqDto<UserDto> pageReq);
+    TableData<UserVO> page(PageReqVO<QueryUserVO> pageReq);
 
     /**
      * 新增用户
-     * @param userDto 新增用户请求对象
+     * @param createUserVO 新增用户请求对象
      * @return 新增结果
      */
-    CommonResult<UserDto> add(UserDto userDto);
+    CommonResult<CreateUserVO> add(CreateUserVO createUserVO);
 
     /**
      * 通过用户名查询用户
      * @param username 用户名
      * @return 用户
      */
-    CommonResult<UpdateUserDto> findByUsername(String username);
+    CommonResult<ShowUpdateUserVO> findByUsername(String username);
 
     /**
      * 根据ID删除用户
@@ -46,24 +49,24 @@ public interface UserService extends UserDetailsService {
 
     /**
      * 修改用户
-     * @param updateUserDto 修改用户请求对象
+     * @param updateUserVO 修改用户请求对象
      * @return 修改结果
      */
-    CommonResult<UserDto> update(UpdateUserDto updateUserDto);
+    CommonResult<UpdateUserVO> update(UpdateUserVO updateUserVO);
 
     /**
      * 用户登录
-     * @param userLoginDto 用户登录请求对象
+     * @param userLoginVO 用户登录请求对象
      * @return 登录结果
      */
-    CommonResult<UserInfoDto> login(UserLoginDto userLoginDto);
+    CommonResult<UserInfoVO> login(UserLoginVO userLoginVO);
 
     /**
      * 注册系统内部后台用户接口
-     * @param userDto 用户注册请求对象
+     * @param createUserVO 用户注册请求对象
      * @return 注册结果
      */
-    CommonResult<String> register(UserDto userDto);
+    CommonResult<String> register(CreateUserVO createUserVO);
 
 
     /**
@@ -71,7 +74,7 @@ public interface UserService extends UserDetailsService {
      * @param userId 用户ID
      * @return 用户
      */
-    CommonResult<UserDto> findById(Long userId);
+    CommonResult<UserVO> findById(Long userId);
 
     /**
      * 用户登出

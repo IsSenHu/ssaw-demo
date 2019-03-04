@@ -3,17 +3,17 @@ package com.ssaw.ssawauthenticatecenterservice.controller.resource;
 import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.vo.EditClientScopeDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ResourceDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.resource.*;
 import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
 import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.service.impl.ResourceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -29,44 +29,45 @@ public class ResourceController extends BaseController {
     private final ResourceService resourceService;
 
     @Autowired
-    public ResourceController(ResourceServiceImpl resourceService) {
+    public ResourceController(ApplicationContext context, ResourceServiceImpl resourceService) {
+        super(context);
         this.resourceService = resourceService;
     }
 
     /**
      * 新增资源服务
-     * @param resourceDto 新增资源服务请求对象
+     * @param createResourceVO 新增资源服务请求对象
      * @return 新增结果
      */
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增资源服务")
     @SecurityMethod(antMatcher = "/api/resource/add", scope = "RESOURCE_CREATE", button = "RESOURCE_CREATE", buttonName = "添加")
-    public CommonResult<ResourceDto> add(@RequestBody ResourceDto resourceDto) {
-        return resourceService.add(resourceDto);
+    public CommonResult<CreateResourceVO> add(@RequestBody CreateResourceVO createResourceVO) {
+        return resourceService.add(createResourceVO);
     }
 
     /**
      * 上传资源服务
-     * @param resourceDto 上传资源服务请求对象
+     * @param uploadResourceVO 上传资源服务请求对象
      * @return 上传结果
      */
     @PostMapping("/uploadResource")
-    public CommonResult<ResourceDto> uploadResource(@RequestBody ResourceDto resourceDto) {
+    public CommonResult<UploadResourceVO> uploadResource(@RequestBody UploadResourceVO uploadResourceVO) {
         // TODO 这里的安全策略
-        return resourceService.uploadResource(resourceDto);
+        return resourceService.uploadResource(uploadResourceVO);
     }
 
     /**
      * 分页查询资源服务
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询资源服务")
     @SecurityMethod(antMatcher = "/api/resource/page", scope = "RESOURCE_READ", button = "RESOURCE_READ", buttonName = "搜索")
-    public TableData<ResourceDto> page(@RequestBody PageReqDto<ResourceDto> pageReqDto) {
-        return resourceService.page(pageReqDto);
+    public TableData<ResourceVO> page(@RequestBody PageReqVO<QueryResourceVO> pageReqVO) {
+        return resourceService.page(pageReqVO);
     }
 
     /**
@@ -77,21 +78,21 @@ public class ResourceController extends BaseController {
     @GetMapping("/findById/{id}")
     @RequestLog(desc = "根据ID查询资源服务")
     @SecurityMethod(antMatcher = "/api/resource/findById/*", scope = "RESOURCE_READ")
-    public CommonResult<ResourceDto> findById(@PathVariable(name = "id") Long id) {
+    public CommonResult<ResourceVO> findById(@PathVariable(name = "id") Long id) {
         return resourceService.findById(id);
     }
 
     /**
      * 修改资源服务
-     * @param resourceDto 修改资源请求对象
+     * @param updateResourceVO 修改资源请求对象
      * @return 修改结果
      */
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改资源服务")
     @SecurityMethod(antMatcher = "/api/resource/update", scope = "RESOURCE_UPDATE", button = "RESOURCE_UPDATE", buttonName = "编辑")
-    public CommonResult<ResourceDto> update(@RequestBody ResourceDto resourceDto) {
-        return resourceService.update(resourceDto);
+    public CommonResult<UpdateResourceVO> update(@RequestBody UpdateResourceVO updateResourceVO) {
+        return resourceService.update(updateResourceVO);
     }
 
     /**
@@ -114,7 +115,7 @@ public class ResourceController extends BaseController {
     @GetMapping("/search/{resourceId}")
     @RequestLog(desc = "根据资源ID查询资源")
     @SecurityMethod(antMatcher = "/api/resource/search/*", scope = "RESOURCE_READ")
-    public CommonResult<List<ResourceDto>> search(@PathVariable(name = "resourceId") String resourceId) {
+    public CommonResult<List<ResourceVO>> search(@PathVariable(name = "resourceId") String resourceId) {
         return resourceService.search(resourceId);
     }
 
@@ -125,7 +126,7 @@ public class ResourceController extends BaseController {
     @GetMapping("/findAll")
     @RequestLog(desc = "查询所有的资源服务")
     @SecurityMethod(antMatcher = "/api/resource/findAll", scope = "RESOURCE_READ")
-    public CommonResult<List<ResourceDto>> findAll() {
+    public CommonResult<List<ResourceVO>> findAll() {
         return resourceService.findAll();
     }
 
@@ -137,7 +138,7 @@ public class ResourceController extends BaseController {
     @GetMapping("/findAllScopeByResourceIds")
     @RequestLog(desc = "根据资源ID查询出树结构作用域")
     @SecurityMethod(antMatcher = "/api/resource/findAllScopeByResourceIds", scope = "RESOURCE_READ")
-    public CommonResult<EditClientScopeDto> findAllScopeByResourceIds(String ids) {
+    public CommonResult<EditClientScopeVO> findAllScopeByResourceIds(String ids) {
         return resourceService.findAllScopeByResourceIds(ids);
     }
 }

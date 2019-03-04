@@ -3,11 +3,13 @@ package com.ssaw.ssawauthenticatecenterservice.controller;
 import com.ssaw.commons.exceptions.ParamException;
 import com.ssaw.commons.vo.CommonResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
-import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
-import static com.ssaw.commons.constant.Constants.ResultCodes.PARAM_ERROR;
+
+import static com.ssaw.commons.constant.Constants.ResultCodes.*;
 
 /**
  * @author HuSen.
@@ -16,6 +18,12 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.PARAM_ERROR;
 @Slf4j
 @RestController
 public class BaseController {
+
+    private final ApplicationContext context;
+
+    public BaseController(ApplicationContext context) {
+        this.context = context;
+    }
 
     /**
      * 全局统一异常处理
@@ -40,5 +48,14 @@ public class BaseController {
             commonResult.setData(e.getMessage());
             return commonResult;
         }
+    }
+
+    /**
+     * 获取认证中心服名称
+     * @return 服务名称
+     */
+    @GetMapping("/api/base/getApplicationName")
+    public CommonResult<String> getApplicationName() {
+        return CommonResult.createResult(SUCCESS, "成功", context.getApplicationName());
     }
 }

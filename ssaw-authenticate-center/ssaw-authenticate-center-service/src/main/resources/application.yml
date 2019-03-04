@@ -34,6 +34,13 @@ spring:
     sampler:
       probability: 1.0
 
+  cloud:
+    stream:
+      bindings:
+        uploadToOutput:
+          destination: remoteEvent
+          group: event
+
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/ssaw_authenticate_center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: root
@@ -107,3 +114,8 @@ ssaw:
     self: true
     icon: el-icon-location
     white-list: /api/user/login,/api/user/logout
+  manage:
+    client-id: INNER_MANAGE
+    client-secret: 521428Slyp
+    client-registered-redirect-uris: localhost:8080
+    client-expire: 7200

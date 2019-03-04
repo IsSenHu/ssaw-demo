@@ -3,16 +3,16 @@ package com.ssaw.ssawauthenticatecenterservice.controller.role;
 import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.vo.EditRoleDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.role.*;
 import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
 import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -28,21 +28,22 @@ public class RoleController extends BaseController {
     private final RoleService roleService;
 
     @Autowired
-    public RoleController(RoleService roleService) {
+    public RoleController(ApplicationContext context, RoleService roleService) {
+        super(context);
         this.roleService = roleService;
     }
 
     /**
      * 新增角色
-     * @param roleDto 新增角色请求对象
+     * @param createRoleVO 新增角色请求对象
      * @return 新增结果
      */
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增角色")
     @SecurityMethod(antMatcher = "/api/role/add", scope = "ROLE_CREATE", button = "ROLE_CREATE", buttonName = "添加")
-    public CommonResult<RoleDto> add(@RequestBody RoleDto roleDto) {
-        return roleService.add(roleDto);
+    public CommonResult<CreateRoleVO> add(@RequestBody CreateRoleVO createRoleVO) {
+        return roleService.add(createRoleVO);
     }
 
     /**
@@ -53,33 +54,33 @@ public class RoleController extends BaseController {
     @GetMapping("/findById/{id}")
     @RequestLog(desc = "根据ID查询角色")
     @SecurityMethod(antMatcher = "/api/role/findById/*", scope = "ROLE_READ")
-    public CommonResult<EditRoleDto> findById(@PathVariable(name = "id") Long id) {
+    public CommonResult<EditRoleVO> findById(@PathVariable(name = "id") Long id) {
         return roleService.findById(id);
     }
 
     /**
      * 分页查询角色
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询角色")
     @SecurityMethod(antMatcher = "/api/role/page", scope = "ROLE_READ", button = "ROLE_READ", buttonName = "搜索")
-    public TableData<RoleDto> page(@RequestBody PageReqDto<RoleDto> pageReqDto) {
-        return roleService.page(pageReqDto);
+    public TableData<RoleVO> page(@RequestBody PageReqVO<QueryRoleVO> pageReqVO) {
+        return roleService.page(pageReqVO);
     }
 
     /**
      * 修改角色
-     * @param roleDto 修改角色请求对象
+     * @param updateRoleVO 修改角色请求对象
      * @return 修改结果
      */
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改角色")
     @SecurityMethod(antMatcher = "/api/role/update", scope = "ROLE_UPDATE", button = "ROLE_UPDATE", buttonName = "编辑")
-    public CommonResult<RoleDto> update(@RequestBody RoleDto roleDto) {
-        return roleService.update(roleDto);
+    public CommonResult<UpdateRoleVO> update(@RequestBody UpdateRoleVO updateRoleVO) {
+        return roleService.update(updateRoleVO);
     }
 
     /**
@@ -102,7 +103,7 @@ public class RoleController extends BaseController {
     @GetMapping("/search/{role}")
     @RequestLog(desc = "根据角色名搜索角色")
     @SecurityMethod(antMatcher = "/api/role/search/*", scope = "ROLE_READ")
-    public CommonResult<List<RoleDto>> search(@PathVariable(name = "role") String role) {
+    public CommonResult<List<RoleVO>> search(@PathVariable(name = "role") String role) {
         return roleService.search(role);
     }
 }

@@ -4,8 +4,8 @@ import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.vo.Button;
-import com.ssaw.ssawauthenticatecenterfeign.vo.Menu;
+import com.ssaw.ssawauthenticatecenterfeign.vo.ButtonVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.MenuVO;
 import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
 import com.ssaw.ssawauthenticatecenterservice.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,19 +53,19 @@ public class MenuAutoConfig {
     @EventListener(ApplicationStartedEvent.class)
     public void init() {
         if (!initialized.getAndSet(true)) {
-            Menu menu = new Menu();
-            menu.setIndex(enableResourceAutoProperties.getCode());
-            menu.setTemplate(new Menu.Template("el-icon-location", enableResourceAutoProperties.getDescription()));
+            MenuVO menuVO = new MenuVO();
+            menuVO.setIndex(enableResourceAutoProperties.getCode());
+            menuVO.setTemplate(new MenuVO.Template("el-icon-location", enableResourceAutoProperties.getDescription()));
             Map<String, Object> beansWithAnnotation = context.getBeansWithAnnotation(SecurityApi.class);
             List<SecurityApi> securityApiList = beansWithAnnotation.values().stream().map(o -> o.getClass().getAnnotation(SecurityApi.class)).collect(Collectors.toList());
-            List<Menu> menuItems = securityApiList.stream().collect(Collectors.groupingBy(securityApi -> securityApi.index().concat("_").concat(securityApi.group()))).entrySet().stream().map(entry -> {
+            List<MenuVO> menuVOItems = securityApiList.stream().collect(Collectors.groupingBy(securityApi -> securityApi.index().concat("_").concat(securityApi.group()))).entrySet().stream().map(entry -> {
                 String[] s = entry.getKey().split("_");
-                Menu m1 = new Menu();
+                MenuVO m1 = new MenuVO();
                 m1.setIndex(enableResourceAutoProperties.getCode().concat("-").concat(s[0]));
-                m1.setTemplate(new Menu.Template("", s[1]));
-                List<Menu> items = new ArrayList<>();
+                m1.setTemplate(new MenuVO.Template("", s[1]));
+                List<MenuVO> items = new ArrayList<>();
                 entry.getValue().stream().map(SecurityApi::menu).forEach(menus -> Arrays.stream(menus).forEach(m -> {
-                    Menu m2 = new Menu();
+                    MenuVO m2 = new MenuVO();
                     m2.setTitle(m.title());
                     m2.setIndex(enableResourceAutoProperties.getCode().concat("-").concat(m.index()));
                     m2.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(m.scope()));
@@ -75,10 +75,10 @@ public class MenuAutoConfig {
                 m1.setItems(items);
                 return m1;
             }).collect(Collectors.toList());
-            menu.setItems(menuItems);
+            menuVO.setItems(menuVOItems);
 
-            log.info("开始上传菜单:{}", JsonUtils.object2JsonString(menu));
-            CommonResult<String> result = menuService.uploadMenus(menu, enableResourceAutoProperties.getResourceId());
+            log.info("开始上传菜单:{}", JsonUtils.object2JsonString(menuVO));
+            CommonResult<String> result = menuService.uploadMenus(menuVO, enableResourceAutoProperties.getResourceId());
             Assert.state(result.getCode() == SUCCESS, "上传菜单失败");
 
             List<SecurityMethod> securityMethods = new ArrayList<>();
@@ -92,16 +92,16 @@ public class MenuAutoConfig {
                 }
             }
 
-            List<Button> buttons = securityMethods.stream().map(securityMethod -> {
-                Button button = new Button();
-                button.setKey(securityMethod.button());
-                button.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(securityMethod.scope()));
-                button.setName(securityMethod.buttonName());
-                return button;
+            List<ButtonVO> buttonVOS = securityMethods.stream().map(securityMethod -> {
+                ButtonVO buttonVO = new ButtonVO();
+                buttonVO.setKey(securityMethod.button());
+                buttonVO.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(securityMethod.scope()));
+                buttonVO.setName(securityMethod.buttonName());
+                return buttonVO;
             }).collect(Collectors.toList());
 
-            log.info("开始上传按钮:{}", JsonUtils.object2JsonString(buttons));
-            CommonResult<String> commonResult = menuService.uploadButtons(buttons, enableResourceAutoProperties.getResourceId());
+            log.info("开始上传按钮:{}", JsonUtils.object2JsonString(buttonVOS));
+            CommonResult<String> commonResult = menuService.uploadButtons(buttonVOS, enableResourceAutoProperties.getResourceId());
             Assert.state(commonResult.getCode() == SUCCESS, "上传按钮失败");
         }
     }

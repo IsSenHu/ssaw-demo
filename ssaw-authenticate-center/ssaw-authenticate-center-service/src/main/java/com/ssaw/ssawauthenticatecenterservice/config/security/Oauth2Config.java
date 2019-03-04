@@ -3,7 +3,7 @@ package com.ssaw.ssawauthenticatecenterservice.config.security;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.ssawauthenticatecenterservice.service.ClientService;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
-import com.ssaw.ssawauthenticatecenterservice.vo.UserVo;
+import com.ssaw.ssawauthenticatecenterservice.details.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -136,10 +136,10 @@ public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
         public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
             DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
             // 设置额外的用户信息x9
-            UserVo userVo = (UserVo) authentication.getPrincipal();
-            userVo.setPassword(null);
+            UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+            userDetailsImpl.setPassword(null);
             // 将用户信息添加到token额外信息中
-            result.getAdditionalInformation().put("user_info", userVo);
+            result.getAdditionalInformation().put("user_info", userDetailsImpl);
             return super.enhance(result, authentication);
         }
 
@@ -168,10 +168,10 @@ public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
         /**
          * 获取用户数据
          * @param map 用户数据
-         * @return UserVo
+         * @return UserDetailsImpl
          */
-        private UserVo convertUserData(Object map) {
-            return JsonUtils.jsonString2Object(JsonUtils.object2JsonString(map), UserVo.class);
+        private UserDetailsImpl convertUserData(Object map) {
+            return JsonUtils.jsonString2Object(JsonUtils.object2JsonString(map), UserDetailsImpl.class);
         }
 
         @Override

@@ -5,10 +5,11 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ResourceDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ScopeDto;
-import com.ssaw.ssawauthenticatecenterfeign.event.UploadScopeFinishedEvent;
+import com.ssaw.ssawauthenticatecenterfeign.event.local.UploadScopeAndWhiteListFinishedEvent;
+import com.ssaw.ssawauthenticatecenterfeign.vo.resource.UploadResourceVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
+import com.ssaw.ssawauthenticatecenterservice.service.MenuService;
 import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
 import com.ssaw.ssawauthenticatecenterservice.service.ScopeService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +50,15 @@ public class ResourceAutoConfig  {
 
     private final ScopeService scopeService;
 
+    private final MenuService menuService;
+
     @Autowired
-    public ResourceAutoConfig(EnableResourceAutoProperties enableResourceAutoProperties, ApplicationContext context, ResourceService resourceService, ScopeService scopeService) {
+    public ResourceAutoConfig(EnableResourceAutoProperties enableResourceAutoProperties, ApplicationContext context, ResourceService resourceService, ScopeService scopeService, MenuService menuService) {
         this.enableResourceAutoProperties = enableResourceAutoProperties;
         this.context = context;
         this.resourceService = resourceService;
         this.scopeService = scopeService;
+        this.menuService = menuService;
     }
     
     @EventListener(ApplicationStartedEvent.class)
@@ -64,15 +68,15 @@ public class ResourceAutoConfig  {
             Assert.hasText(enableResourceAutoProperties.getDescription(), "资源描述不能为空");
             Assert.hasText(enableResourceAutoProperties.getCode(), "资源编码不能为空");
 
-            ResourceDto resource = new ResourceDto();
+            UploadResourceVO resource = new UploadResourceVO();
             resource.setResourceId(enableResourceAutoProperties.getResourceId());
             resource.setDescription(enableResourceAutoProperties.getDescription());
             log.info("上传资源服务:{}", JsonUtils.object2JsonString(resource));
-            CommonResult<ResourceDto> result = resourceService.uploadResource(resource);
+            CommonResult<UploadResourceVO> result = resourceService.uploadResource(resource);
             Assert.state(result.getCode() == SUCCESS, "上传资源服务失败");
 
             List<SecurityMethod> securityMethods = new ArrayList<>();
-            List<ScopeDto> scopeDtoList = new ArrayList<>();
+            List<ScopeVO> scopeVOList = new ArrayList<>();
             List<Menu> menus = new ArrayList<>();
             Map<String, Object> beansWithAnnotation = context.getBeansWithAnnotation(SecurityApi.class);
             for (Object bean : beansWithAnnotation.values()) {
@@ -92,28 +96,33 @@ public class ResourceAutoConfig  {
             Set<Map.Entry<String, List<SecurityMethod>>> entries = securityMethods.stream().collect(Collectors.groupingBy(SecurityMethod::scope)).entrySet();
             for (Map.Entry<String, List<SecurityMethod>> entry : entries) {
                 String antMatchers = String.join(",", entry.getValue().stream().map(SecurityMethod::antMatcher).collect(Collectors.toList()).toArray(new String[]{}));
-                ScopeDto scopeDto = new ScopeDto();
-                scopeDto.setResourceId(result.getData().getId());
-                scopeDto.setResourceName(result.getData().getResourceId());
-                scopeDto.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(entry.getKey()));
-                scopeDto.setUri(antMatchers);
-                scopeDtoList.add(scopeDto);
+                ScopeVO scopeVO = new ScopeVO();
+                scopeVO.setResourceId(result.getData().getId());
+                scopeVO.setResourceName(result.getData().getResourceId());
+                scopeVO.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(entry.getKey()));
+                scopeVO.setUri(antMatchers);
+                scopeVOList.add(scopeVO);
             }
 
             for (Menu menu : menus) {
-                ScopeDto scopeDto = new ScopeDto();
-                scopeDto.setResourceId(result.getData().getId());
-                scopeDto.setResourceName(result.getData().getResourceId());
-                scopeDto.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(menu.scope()));
-                scopeDto.setUri(UUID.randomUUID().toString());
-                scopeDtoList.add(scopeDto);
+                ScopeVO scopeVO = new ScopeVO();
+                scopeVO.setResourceId(result.getData().getId());
+                scopeVO.setResourceName(result.getData().getResourceId());
+                scopeVO.setScope(enableResourceAutoProperties.getResourceId().concat("_").concat(menu.scope()));
+                scopeVO.setUri(UUID.randomUUID().toString());
+                scopeVOList.add(scopeVO);
             }
 
-            log.info("上传作用域:{}", JsonUtils.object2JsonString(scopeDtoList));
-            CommonResult<String> commonResult = scopeService.uploadScopes(scopeDtoList);
+            log.info("上传作用域:{}", JsonUtils.object2JsonString(scopeVOList));
+            CommonResult<String> commonResult = scopeService.uploadScopes(scopeVOList);
             Assert.state(commonResult.getCode() == SUCCESS, "上传作用域失败");
 
-            context.publishEvent(new UploadScopeFinishedEvent(enableResourceAutoProperties.getResourceId()));
+            List<String> whiteList = enableResourceAutoProperties.getWhiteList();
+            log.info("上传白名单:{}", JsonUtils.object2JsonString(whiteList));
+            CommonResult<String> uploadWhiteListResult = menuService.uploadWhiteList(whiteList, enableResourceAutoProperties.getResourceId());
+            Assert.state(uploadWhiteListResult.getCode() == SUCCESS, "上传白名单失败");
+
+            context.publishEvent(new UploadScopeAndWhiteListFinishedEvent(enableResourceAutoProperties.getResourceId()));
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.PermissionDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeRepository;
@@ -25,7 +25,7 @@ public class PermissionTransfer {
         this.resourceRepository = resourceRepository;
     }
 
-    public PermissionEntity dto2Entity(PermissionDto dto) {
+    public PermissionEntity dto2Entity(PermissionVO dto) {
         PermissionEntity entity = null;
         if(null != dto) {
             entity = new PermissionEntity();
@@ -38,8 +38,8 @@ public class PermissionTransfer {
         return entity;
     }
 
-    public PermissionDto entity2Dto(PermissionEntity entity) {
-        PermissionDto dto = new PermissionDto();
+    public PermissionVO entity2Dto(PermissionEntity entity) {
+        PermissionVO dto = new PermissionVO();
         if(null != entity) {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
@@ -60,10 +60,10 @@ public class PermissionTransfer {
         return dto;
     }
 
-    public PermissionDto simpleEntity2Dto(PermissionEntity entity) {
-        PermissionDto dto = null;
+    public PermissionVO simpleEntity2Dto(PermissionEntity entity) {
+        PermissionVO dto = null;
         if(null != entity) {
-            dto = new PermissionDto();
+            dto = new PermissionVO();
             dto.setId(entity.getScopeId());
             dto.setName(entity.getName());
         }

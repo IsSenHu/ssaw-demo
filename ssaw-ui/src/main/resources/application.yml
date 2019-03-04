@@ -17,6 +17,18 @@ spring:
       password: admin
   main:
     allow-bean-definition-overriding: true
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+  cloud:
+    stream:
+      bindings:
+        uploadToOutput:
+          destination: remoteEvent
+          group: event
 
 security:
   oauth2:

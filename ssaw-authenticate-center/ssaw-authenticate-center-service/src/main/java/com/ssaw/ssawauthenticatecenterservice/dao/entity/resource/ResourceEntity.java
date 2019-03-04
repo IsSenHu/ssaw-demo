@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tb_resource")
 public class ResourceEntity extends BaseEntity {
+    private static final long serialVersionUID = 215116260012658207L;
     /**
      * 资源ID 和服务名相同
      */

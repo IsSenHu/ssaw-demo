@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,5 +32,5 @@ public class EnableResourceAutoProperties {
     private String icon;
 
     /** 白名单 */
-    private List<String> whiteList;
+    private List<String> whiteList = new ArrayList<>(0);
 }

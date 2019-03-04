@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.specification;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.QueryClientVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,18 +17,19 @@ import java.util.List;
  * @date 2019/01/27
  */
 public class ClientSpecification implements Specification<ClientDetailsEntity> {
+    private static final long serialVersionUID = 1383260135547038273L;
 
-    private ClientDto clientDto;
+    private QueryClientVO queryClientVO;
 
-    public ClientSpecification(ClientDto clientDto) {
-        this.clientDto = clientDto;
+    public ClientSpecification(QueryClientVO queryClientVO) {
+        this.queryClientVO = queryClientVO;
     }
 
     @Override
     public Predicate toPredicate(Root<ClientDetailsEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
-        if(null != clientDto && StringUtils.isNotBlank(clientDto.getClientId())) {
-            predicates.add(criteriaBuilder.like(root.get("clientId").as(String.class), "%".concat(clientDto.getClientId()).concat("%")));
+        if(null != queryClientVO && StringUtils.isNotBlank(queryClientVO.getClientId())) {
+            predicates.add(criteriaBuilder.like(root.get("clientId").as(String.class), queryClientVO.getClientId().concat("%")));
         }
         return criteriaQuery.where(predicates.toArray(new Predicate[0])).getRestriction();
     }

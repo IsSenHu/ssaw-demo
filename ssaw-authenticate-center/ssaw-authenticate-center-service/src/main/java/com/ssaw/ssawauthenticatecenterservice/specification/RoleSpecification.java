@@ -1,6 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.specification;
 
-import com.ssaw.ssawauthenticatecenterfeign.vo.RoleDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.role.QueryRoleVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,18 +17,19 @@ import java.util.Objects;
  * @date 2018/12/14 19:43.
  */
 public class RoleSpecification implements Specification<RoleEntity> {
+    private static final long serialVersionUID = 2559617638686877846L;
 
-    private RoleDto roleDto;
+    private QueryRoleVO queryRoleVO;
 
-    public RoleSpecification(RoleDto roleDto) {
-        this.roleDto = roleDto;
+    public RoleSpecification(QueryRoleVO queryRoleVO) {
+        this.queryRoleVO = queryRoleVO;
     }
 
     @Override
     public Predicate toPredicate(Root<RoleEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
-        if(!Objects.isNull(roleDto) && StringUtils.isNotBlank(roleDto.getName())) {
-            predicates.add(criteriaBuilder.like(root.get("name").as(String.class), "%".concat(roleDto.getName()).concat("%")));
+        if(!Objects.isNull(queryRoleVO) && StringUtils.isNotBlank(queryRoleVO.getName())) {
+            predicates.add(criteriaBuilder.like(root.get("name").as(String.class), queryRoleVO.getName().concat("%")));
         }
         return criteriaQuery.where(predicates.toArray(new Predicate[0])).getRestriction();
     }

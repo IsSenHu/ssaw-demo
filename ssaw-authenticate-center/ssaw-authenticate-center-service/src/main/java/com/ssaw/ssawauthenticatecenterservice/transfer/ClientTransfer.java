@@ -1,9 +1,9 @@
 package com.ssaw.ssawauthenticatecenterservice.transfer;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDetailsInfoDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.ClientDetailsInfoVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.ClientVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class ClientTransfer {
         this.userService = userService;
     }
 
-    public ClientDetailsEntity dto2Entity(ClientDto dto) {
+    public ClientDetailsEntity dto2Entity(ClientVO dto) {
         ClientDetailsEntity entity = null;
         if(null != dto) {
             entity = new ClientDetailsEntity();
@@ -47,34 +47,34 @@ public class ClientTransfer {
         return entity;
     }
 
-    public ClientDto entity2Dto(ClientDetailsEntity entity) {
-        ClientDto clientDto = null;
+    public ClientVO entity2Dto(ClientDetailsEntity entity) {
+        ClientVO clientVO = null;
         if(null != entity) {
-            clientDto = new ClientDto();
-            clientDto.setClientId(entity.getClientId());
-            clientDto.setUserId(entity.getUserId());
-            clientDto.setClientSecret(entity.getClientSecret());
-            clientDto.setResourceIds(join(entity.getResourceIds().toArray(new String[0]), ","));
-            clientDto.setScopes(join(entity.getScope().toArray(new String[0]), ","));
-            clientDto.setAuthorizedGrantTypes(join(entity.getAuthorizedGrantTypes().toArray(new String[0]), ","));
-            clientDto.setRegisteredRedirectUris(join(entity.getRegisteredRedirectUri().toArray(new String[0]), ","));
-            clientDto.setAccessTokenValiditySeconds(entity.getAccessTokenValiditySeconds());
-            clientDto.setRefreshTokenValiditySeconds(entity.getRefreshTokenValiditySeconds());
-            clientDto.setCreateTime(entity.getCreateTime());
-            clientDto.setUpdateTime(entity.getUpdateTime());
-            clientDto.setCreateMan(entity.getCreateMan());
-            clientDto.setUpdateMan(entity.getUpdateMan());
+            clientVO = new ClientVO();
+            clientVO.setClientId(entity.getClientId());
+            clientVO.setUserId(entity.getUserId());
+            clientVO.setClientSecret(entity.getClientSecret());
+            clientVO.setResourceIds(join(entity.getResourceIds().toArray(new String[0]), ","));
+            clientVO.setScopes(join(entity.getScope().toArray(new String[0]), ","));
+            clientVO.setAuthorizedGrantTypes(join(entity.getAuthorizedGrantTypes().toArray(new String[0]), ","));
+            clientVO.setRegisteredRedirectUris(join(entity.getRegisteredRedirectUri().toArray(new String[0]), ","));
+            clientVO.setAccessTokenValiditySeconds(entity.getAccessTokenValiditySeconds());
+            clientVO.setRefreshTokenValiditySeconds(entity.getRefreshTokenValiditySeconds());
+            clientVO.setCreateTime(entity.getCreateTime());
+            clientVO.setUpdateTime(entity.getUpdateTime());
+            clientVO.setCreateMan(entity.getCreateMan());
+            clientVO.setUpdateMan(entity.getUpdateMan());
         }
-        return clientDto;
+        return clientVO;
     }
 
-    public ClientDetailsInfoDto entity2DetailsInfoDto(ClientDetailsEntity entity) {
-        ClientDetailsInfoDto infoDto = null;
+    public ClientDetailsInfoVO entity2DetailsInfoDto(ClientDetailsEntity entity) {
+        ClientDetailsInfoVO infoDto = null;
         if(null != entity) {
-            infoDto = new ClientDetailsInfoDto();
+            infoDto = new ClientDetailsInfoVO();
             infoDto.setClientId(entity.getClientId());
             infoDto.setUserId(entity.getUserId());
-            CommonResult<UserDto> byId = userService.findById(entity.getUserId());
+            CommonResult<UserVO> byId = userService.findById(entity.getUserId());
             if(byId.getCode() == SUCCESS) {
                 infoDto.setUsername(byId.getData().getUsername());
             }

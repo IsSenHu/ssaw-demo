@@ -1,10 +1,12 @@
 package com.ssaw.ssawauthenticatecenterservice.service;
 
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDetailsInfoDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.ClientDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.ClientDetailsInfoVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.ClientVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.CreateClientVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.client.QueryClientVO;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 
 /**
@@ -18,21 +20,21 @@ public interface ClientService extends ClientDetailsService {
      * @param clientId clientId
      * @return 客户端
      */
-    CommonResult<ClientDetailsInfoDto> findById(String clientId);
+    CommonResult<ClientDetailsInfoVO> findById(String clientId);
 
     /**
      * 新增客户端
-     * @param clientDto 新增客户端请求对象
+     * @param createClientVO 新增客户端请求对象
      * @return 新增结果
      */
-    CommonResult<ClientDto> save(ClientDto clientDto);
+    CommonResult<CreateClientVO> save(CreateClientVO createClientVO);
 
     /**
      * 分页查询客户端
      * @param pageReq 分页请求参数
      * @return 查询结果
      */
-    TableData<ClientDto> page(PageReqDto<ClientDto> pageReq);
+    TableData<ClientVO> page(PageReqVO<QueryClientVO> pageReq);
 
     /**
      * 根据Id删除客户端

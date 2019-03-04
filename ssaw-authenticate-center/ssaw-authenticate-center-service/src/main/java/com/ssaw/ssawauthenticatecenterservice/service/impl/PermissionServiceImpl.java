@@ -1,9 +1,13 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
+import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.vo.PermissionDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.permission.CreatePermissionVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.permission.QueryPermissionVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.permission.UpdatePermissionVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.permission.PermissionRepository;
@@ -11,6 +15,7 @@ import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeReposito
 import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
 import com.ssaw.ssawauthenticatecenterservice.specification.PermissionSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
+import com.ssaw.ssawauthenticatecenterservice.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,40 +50,41 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
 
     /**
      * 新增权限
-     * @param permissionDto 新增权限请求对象
+     * @param createPermissionVO 新增权限请求对象
      * @return 新增结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<PermissionDto> add(PermissionDto permissionDto) {
-        PermissionEntity entity = permissionTransfer.dto2Entity(permissionDto);
+    public CommonResult<CreatePermissionVO> add(CreatePermissionVO createPermissionVO) {
+        PermissionEntity entity = CopyUtil.copyProperties(createPermissionVO, new PermissionEntity());
         if(null == entity) {
             return CommonResult.createResult(PARAM_ERROR, "参数不能为空!", null);
         }
-        if(permissionRepository.countByName(permissionDto.getName()) > 0) {
-            return CommonResult.createResult(DATA_EXIST, "权限名称已存在!", permissionDto);
+        if(permissionRepository.countByName(createPermissionVO.getName()) > 0) {
+            return CommonResult.createResult(DATA_EXIST, "权限名称已存在!", createPermissionVO);
         }
-        Optional<ScopeEntity> optionalScopeEntity = scopeRepository.findById(permissionDto.getScopeId());
+        Optional<ScopeEntity> optionalScopeEntity = scopeRepository.findById(createPermissionVO.getScopeId());
         optionalScopeEntity.ifPresent(scope -> entity.setResourceId(scope.getResourceId()));
         entity.setCreateTime(LocalDateTime.now());
+        entity.setCreateMan(UserUtils.getUser().getUsername());
         PermissionEntity save = permissionRepository.save(entity);
         optionalScopeEntity.ifPresent(scope -> {
             scope.setPermissionId(save.getId());
             scopeRepository.save(scope);
         });
-        return CommonResult.createResult(SUCCESS, "成功!", permissionDto);
+        return CommonResult.createResult(SUCCESS, "成功!", createPermissionVO);
     }
 
     /**
      * 分页查询权限
-     * @param pageReqDto 分页查询参数
+     * @param pageReqVO 分页查询参数
      * @return 分页结果
      */
     @Override
-    public TableData<PermissionDto> page(PageReqDto<PermissionDto> pageReqDto) {
-        Pageable pageable = getPageRequest(pageReqDto);
-        Page<PermissionEntity> page = permissionRepository.findAll(new PermissionSpecification(pageReqDto.getData()), pageable);
-        TableData<PermissionDto> tableData = new TableData<>();
+    public TableData<PermissionVO> page(PageReqVO<QueryPermissionVO> pageReqVO) {
+        Pageable pageable = getPageRequest(pageReqVO);
+        Page<PermissionEntity> page = permissionRepository.findAll(new PermissionSpecification(pageReqVO.getData()), pageable);
+        TableData<PermissionVO> tableData = new TableData<>();
         setTableData(page, tableData);
         tableData.setContent(page.getContent().stream().map(permissionTransfer::entity2Dto).collect(Collectors.toList()));
         return tableData;
@@ -98,27 +104,27 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
 
     /**
      * 修改权限
-     * @param permissionDto 修改请求对象
+     * @param updatePermissionVO 修改请求对象
      * @return 修改结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<PermissionDto> update(PermissionDto permissionDto) {
-        Optional<PermissionEntity> optional = permissionRepository.findById(permissionDto.getId());
+    public CommonResult<UpdatePermissionVO> update(UpdatePermissionVO updatePermissionVO) {
+        Optional<PermissionEntity> optional = permissionRepository.findById(updatePermissionVO.getId());
         return optional.map(entity -> {
-            if(!StringUtils.equals(entity.getName(), permissionDto.getName()) && permissionRepository.countByName(permissionDto.getName()) > 0) {
-                return CommonResult.createResult(DATA_EXIST, "该权限名称已存在!", permissionDto);
+            if(!StringUtils.equals(entity.getName(), updatePermissionVO.getName()) && permissionRepository.countByName(updatePermissionVO.getName()) > 0) {
+                return CommonResult.createResult(DATA_EXIST, "该权限名称已存在!", updatePermissionVO);
             }
-            entity.setName(permissionDto.getName());
-            entity.setDescription(permissionDto.getDescription());
-            if(!Objects.isNull(permissionDto.getScopeId()) && !Objects.equals(permissionDto.getScopeId(), entity.getScopeId())) {
-                entity.setScopeId(permissionDto.getScopeId());
+            entity.setName(updatePermissionVO.getName());
+            entity.setDescription(updatePermissionVO.getDescription());
+            if(!Objects.isNull(updatePermissionVO.getScopeId()) && !Objects.equals(updatePermissionVO.getScopeId(), entity.getScopeId())) {
+                entity.setScopeId(updatePermissionVO.getScopeId());
                 scopeRepository.findById(entity.getScopeId())
                         .ifPresent(scope -> {
                             scope.setPermissionId(null);
                             scopeRepository.save(scope);
                         });
-                scopeRepository.findById(permissionDto.getScopeId())
+                scopeRepository.findById(updatePermissionVO.getScopeId())
                         .ifPresent(scope -> {
                             entity.setResourceId(scope.getResourceId());
                             scope.setPermissionId(entity.getId());
@@ -126,9 +132,10 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
                         });
             }
             entity.setModifyTime(LocalDateTime.now());
+            entity.setModifyMan(UserUtils.getUser().getUsername());
             permissionRepository.save(entity);
-            return CommonResult.createResult(SUCCESS, "成功!", permissionDto);
-        }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", permissionDto));
+            return CommonResult.createResult(SUCCESS, "成功!", updatePermissionVO);
+        }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", updatePermissionVO));
     }
 
     /**
@@ -137,7 +144,7 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
      * @return 权限
      */
     @Override
-    public CommonResult<PermissionDto> findById(Long id) {
+    public CommonResult<PermissionVO> findById(Long id) {
         return permissionRepository.findById(id)
                 .map(entity -> CommonResult.createResult(SUCCESS, "成功!", permissionTransfer.entity2Dto(entity)))
                 .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", null));

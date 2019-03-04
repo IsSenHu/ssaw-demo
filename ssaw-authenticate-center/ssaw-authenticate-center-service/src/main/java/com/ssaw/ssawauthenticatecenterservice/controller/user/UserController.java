@@ -3,18 +3,22 @@ package com.ssaw.ssawauthenticatecenterservice.controller.user;
 import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.commons.vo.PageReqDto;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UpdateUserDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserInfoDto;
-import com.ssaw.ssawauthenticatecenterfeign.vo.UserLoginDto;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.ShowUpdateUserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserInfoVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserLoginVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.CreateUserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.QueryUserVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UpdateUserVO;
 import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +35,8 @@ public class UserController extends BaseController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(ApplicationContext context, UserService userService) {
+        super(context);
         this.userService = userService;
     }
 
@@ -43,21 +48,21 @@ public class UserController extends BaseController {
     @RequestLog(desc = "分页查询用户")
     @PostMapping("/page")
     @SecurityMethod(antMatcher = "/api/user/page", scope = "USER_READ", button = "USER_READ", buttonName = "搜索")
-    public TableData<UserDto> page(@RequestBody PageReqDto<UserDto> pageReq) {
+    public TableData<UserVO> page(@RequestBody PageReqVO<QueryUserVO> pageReq) {
         return userService.page(pageReq);
     }
 
     /**
      * 新增用户
-     * @param userDto 新增用户请求对象
+     * @param createUserVO 新增用户请求对象
      * @return 新增结果
      */
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增用户")
     @SecurityMethod(antMatcher = "/api/user/add", scope = "USER_CREATE", button = "USER_CREATE", buttonName = "编辑")
-    public CommonResult<UserDto> add(@RequestBody UserDto userDto) {
-        return userService.add(userDto);
+    public CommonResult<CreateUserVO> add(@RequestBody CreateUserVO createUserVO) {
+        return userService.add(createUserVO);
     }
 
     /**
@@ -68,7 +73,7 @@ public class UserController extends BaseController {
     @PostMapping("/findByUsername/{username}")
     @RequestLog(desc = "通过用户名查询用户")
     @SecurityMethod(antMatcher = "/api/user/findByUsername/*", scope = "USER_READ")
-    public CommonResult<UpdateUserDto> findByUsername(@PathVariable(value = "username") String username) {
+    public CommonResult<ShowUpdateUserVO> findByUsername(@PathVariable(value = "username") String username) {
         return userService.findByUsername(username);
     }
 
@@ -86,38 +91,38 @@ public class UserController extends BaseController {
 
     /**
      * 修改用户
-     * @param updateUserDto 修改用户请求对象
+     * @param updateUserVO 修改用户请求对象
      * @return 修改结果
      */
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改用户")
     @SecurityMethod(antMatcher = "/api/user/update", scope = "USER_UPDATE", button = "USER_UPDATE", buttonName = "编辑")
-    public CommonResult<UserDto> update(@RequestBody UpdateUserDto updateUserDto) {
-        return userService.update(updateUserDto);
+    public CommonResult<UpdateUserVO> update(@RequestBody UpdateUserVO updateUserVO) {
+        return userService.update(updateUserVO);
     }
 
     /**
      * 用户登录
-     * @param userLoginDto 用户登录请求对象
+     * @param userLoginVO 用户登录请求对象
      * @return 登录结果
      */
     @PostMapping("/login")
     @RequestLog(desc = "用户登录")
-    public CommonResult<UserInfoDto> login(@RequestBody UserLoginDto userLoginDto) {
-        return userService.login(userLoginDto);
+    public CommonResult<UserInfoVO> login(@RequestBody UserLoginVO userLoginVO) {
+        return userService.login(userLoginVO);
     }
 
     /**
      * 注册系统内部后台用户接口
-     * @param userDto 用户注册请求对象
+     * @param createUserVO 用户注册请求对象
      * @return 注册结果
      */
     @PostMapping("/register")
     @RequestLog(desc = "注册系统内部后台用户接口")
     @SecurityMethod(antMatcher = "/api/user/register", scope = "USER_REGISTER")
-    public CommonResult<String> register(@RequestBody UserDto userDto) {
-        return userService.register(userDto);
+    public CommonResult<String> register(@RequestBody CreateUserVO createUserVO) {
+        return userService.register(createUserVO);
     }
 
     /**

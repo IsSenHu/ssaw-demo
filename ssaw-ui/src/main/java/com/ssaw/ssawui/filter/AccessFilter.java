@@ -6,7 +6,7 @@ import com.netflix.zuul.context.RequestContext;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.feign.AuthenticateFeign;
-import com.ssaw.ssawauthenticatecenterfeign.vo.SimpleUserAttributeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.SimpleUserAttributeVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ public class AccessFilter extends ZuulFilter {
                 e.printStackTrace();
             }
         }
-        request.setAttribute("", "");
+        ctx.addZuulRequestHeader("userInfo", JsonUtils.object2JsonString(result.getData()));
         return null;
     }
 }
