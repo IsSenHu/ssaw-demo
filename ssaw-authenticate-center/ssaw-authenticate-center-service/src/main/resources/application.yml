@@ -80,6 +80,21 @@ spring:
     password: 521428Slyt
     database: 10
 
+  kafka:
+    bootstrap-servers: 118.24.38.46:9092
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      retries: 3
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      batch-size: 65536
+      buffer-memory: 524288
+      bootstrap-servers: 118.24.38.46:9092
+
 ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
   eager-load:
     enabled: true                   #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
@@ -119,3 +134,17 @@ ssaw:
     client-secret: 521428Slyp
     client-registered-redirect-uris: localhost:8080
     client-expire: 7200
+  log:
+    kafka:
+      producer:
+        app-name: ${spring.application.name}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+

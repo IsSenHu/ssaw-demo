@@ -51,4 +51,13 @@ eureka:
   instance:
     prefer-ip-address: true   #注册服务时使用ip而非计算机名
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 

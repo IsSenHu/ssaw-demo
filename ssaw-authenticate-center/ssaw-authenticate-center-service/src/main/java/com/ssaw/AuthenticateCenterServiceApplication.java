@@ -4,6 +4,7 @@ import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServl
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.commons.enable.EnableFeignHeader;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
+import com.ssaw.log.collect.annotations.EnableLogCollect;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 @EnableAutoRequestResolve
 @EnableFeignHeader
 @EnableFeignClients(basePackages = "com.ssaw")
+@EnableLogCollect
 public class AuthenticateCenterServiceApplication {
 
 	@Bean

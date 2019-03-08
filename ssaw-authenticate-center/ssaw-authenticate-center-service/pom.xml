@@ -118,19 +118,26 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-		<!-- support-oauth2 -->
+		<!-- oauth2 支持 -->
 		<dependency>
 			<groupId>com.ssaw</groupId>
 			<artifactId>support-oauth2</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- support redis -->
+		<!-- redis支持 -->
 		<dependency>
 			<groupId>com.ssaw</groupId>
 			<artifactId>support-redis</artifactId>
 			<version>${support-redis.version}</version>
 			<type>pom</type>
+		</dependency>
+
+		<!-- 日志收集支持 -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>support-log-collect</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
