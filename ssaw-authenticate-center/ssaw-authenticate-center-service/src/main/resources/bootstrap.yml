@@ -1,0 +1,161 @@
+spring:
+  application:
+    name: ssaw-authenticate-center
+  cloud:
+    nacos:
+      config:
+        endpoint: acm.aliyun.com
+        namespace: b8c49fc7-d73c-47ca-996c-48c367c9f3da
+        file-extension: yml
+        accessKey: LTAINQW8uP6a77PR
+        secretKey: uF4J9cYvHPLy7BkIf75XNa14NF9Iuo
+        group: DEFAULT_GROUP
+#server:
+#  tomcat:
+#    remote-ip-header: x-forwarded-for
+#    protocol-header: x-forwarded-proto
+#  port: 20008
+#  max-http-header-size: 4048576
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
+#  instance:
+#    prefer-ip-address: true
+#
+#spring:
+#  main:
+#    allow-bean-definition-overriding: true
+#  application:
+#    name: ssaw-authenticate-center
+#  rabbitmq:
+#    host: 118.24.38.46
+#    port: 5672
+#    username: husen
+#    password: 521428
+#    virtual-host: /
+#  zipkin:
+#    sender:
+#      type: rabbit
+#
+#  sleuth:
+#    web:
+#      client:
+#        enabled: true
+#    sampler:
+#      probability: 1.0
+#
+#  cloud:
+#    stream:
+#      bindings:
+#        uploadToOutput:
+#          destination: remoteEvent
+#          group: event
+#
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/ssaw_authenticate_center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+#    username: root
+#    password: 521428Slyp
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    druid:
+#      filters: mergeStat,config,slf4j
+#      max-active: 10000
+#      initial-size: 2
+#      max-wait: 60000
+#      min-idle: 3
+#      time-between-eviction-runs-millis: 18000000
+#      min-evictable-idle-time-millis: 1000000
+#      validation-query: SELECT1FROMDUAL
+#      test-while-idle: true
+#      test-on-borrow: false
+#      test-on-return: false
+#      pool-prepared-statements: true
+#      max-open-prepared-statements: 100
+#      max-pool-prepared-statement-per-connection-size: 50
+#      remove-abandoned: true
+#      remove-abandoned-timeout: 1800
+#      log-abandoned: false
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      naming:
+#        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#    show-sql: false
+#    open-in-view: false
+#    database-platform: org.hibernate.dialect.MySQL57Dialect
+#
+#  redis:
+#    host: 118.24.38.46
+#    port: 6379
+#    password: 521428Slyt
+#    database: 10
+#
+#  kafka:
+#    bootstrap-servers: 118.24.38.46:9092
+#    consumer:
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#    producer:
+#      retries: 3
+#      acks: all
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      batch-size: 65536
+#      buffer-memory: 524288
+#      bootstrap-servers: 118.24.38.46:9092
+#
+#ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
+#  eager-load:
+#    enabled: true                   #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
+#  OkToRetryOnAllOperations: false   #对所有操作请求都进行重试,默认false
+#  ReadTimeout: 12000                #负载均衡超时时间，默认值5000
+#  ConnectTimeout: 12000             #ribbon请求连接的超时时间，默认值2000
+#  MaxAutoRetries: 0                 #对当前实例的重试次数，默认0
+#  MaxAutoRetriesNextServer: 1       #对切换实例的重试次数，默认1
+#
+#hystrix:
+#  command:
+#    default:  #default全局有效，service id指定应用有效
+#      execution:
+#        timeout:
+#          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+#          enabled: true
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 12000 #断路器超时时间，默认1000ms
+#
+#feign:
+#  hystrix:
+#    enabled: true
+#  header:
+#    bearer-token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiU1NBVy1VU0VSLVJFU09VUkNFIl0sInVzZXJfbmFtZSI6Imh1c2VuIiwic2NvcGUiOlsiVVNFUl9XUklURSIsIlVTRVJfUk9MRV9XUklURSIsIlVTRVJfUkVBRCIsIlJPTEVfUkVBRCIsIlJPTEVfV1JJVEUiXSwiZXhwIjoxNTUyNzA4MzI2LCJhdXRob3JpdGllcyI6WyJVU0VSIl0sImp0aSI6ImM3NzAyYjI3LWJhODEtNGIzMC1hMTQ0LTFhN2ZkMWFiMWM4YSIsImNsaWVudF9pZCI6IlN0YXRpc3RpY2FsQ2VydGlmaWNhdGlvbkNlbnRlciJ9.GKl1Lw-l69mHSultsjowLR1iEl9mdhuXUxgoeRw3cxI_FM8G9Co2TH53403sciz0XA7jkK9XrusQWw0kp3aWw5rnqJjTiPP3YNX7lGdsltK3j1SkPVJyEnamz3mZjY8dgMyqZKPclHsvn_B_HPurhhrugYAx7NwSxOG9i5Wa-eBXaf4ezEKkJMsuk5dvkvHnC6xKTrUM07ZOmGDU4R1mJuOR16LollifhYyf6eK22u4_irwzoJmOB6RUptq_2gtTNVK6b6ZJe4Smw4_QlRnZQlFuhaX4jhtxABpNNxbIa2WT8fCaAwtiF5ZruCxlqv_nt_Gze4YiP74OodiRhnu2RQ
+#
+#ssaw:
+#  resource:
+#    code: 1
+#    resource-id: SSAW_AUTHENTICATE_CENTER
+#    description: 认证中心
+#    self: true
+#    icon: el-icon-location
+#    white-list: /api/user/login,/api/user/logout
+#  manage:
+#    client-id: INNER_MANAGE
+#    client-secret: 521428Slyp
+#    client-registered-redirect-uris: localhost:8080
+#    client-expire: 7200
+#  log:
+#    kafka:
+#      producer:
+#        app-name: ${spring.application.name}
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#  endpoint:
+#    health:
+#      show-details: ALWAYS

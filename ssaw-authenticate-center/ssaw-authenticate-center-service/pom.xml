@@ -99,6 +99,13 @@
 			<!--<artifactId>spring-cloud-config-client</artifactId>-->
 		<!--</dependency>-->
 
+		<!-- acm -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+			<version>0.2.1.RELEASE</version>
+		</dependency>
+
 		<!-- 消息总线 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
