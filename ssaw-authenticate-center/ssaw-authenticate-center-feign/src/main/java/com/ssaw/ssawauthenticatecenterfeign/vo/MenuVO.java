@@ -1,6 +1,5 @@
 package com.ssaw.ssawauthenticatecenterfeign.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +20,6 @@ import java.util.List;
 public class MenuVO implements Serializable {
     private static final long serialVersionUID = 7208951230047304571L;
 
-    @JsonIgnore
     private String scope;
 
     private String index;

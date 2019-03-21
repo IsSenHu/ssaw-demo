@@ -31,6 +31,7 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity, Lo
     /**
      * 删除不包括的权限
      * @param scopeIds 作用域ID集合
+     * @param resourceId 资源主键
      */
-    void deleteAllByScopeIdNotIn(List<Long> scopeIds);
+    void deleteAllByResourceIdAndScopeIdNotIn(Long resourceId, List<Long> scopeIds);
 }

@@ -33,5 +33,5 @@ public class SimpleUserAttributeVO implements Serializable {
     /** 是否可用 */
     private Boolean isEnable;
     /** 其它信息 */
-    private Map otherInfo;
+    private String otherInfo;
 }

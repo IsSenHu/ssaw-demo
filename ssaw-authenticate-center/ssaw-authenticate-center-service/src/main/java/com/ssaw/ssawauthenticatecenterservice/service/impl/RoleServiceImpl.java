@@ -4,6 +4,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.role.*;
 import com.ssaw.ssawauthenticatecenterfeign.vo.TreeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
@@ -17,7 +18,6 @@ import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.permission.Rol
 import com.ssaw.ssawauthenticatecenterservice.service.RoleService;
 import com.ssaw.ssawauthenticatecenterservice.specification.RoleSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.RoleTransfer;
-import com.ssaw.ssawauthenticatecenterservice.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

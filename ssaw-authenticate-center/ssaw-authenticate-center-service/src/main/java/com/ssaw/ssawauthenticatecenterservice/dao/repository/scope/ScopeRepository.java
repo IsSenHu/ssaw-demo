@@ -71,14 +71,16 @@ public interface ScopeRepository extends JpaRepository<ScopeEntity, Long>, JpaSp
 
     /**
      * 删除不再指定scopes里面的作用域
+     * @param resourceId 资源主键
      * @param scopes scopes
      */
-    void deleteAllByScopeNotIn(List<String> scopes);
+    void deleteAllByResourceIdAndScopeNotIn(Long resourceId, List<String> scopes);
 
     /**
      * 根据Scopes查询作用域
+     * @param resourceId 资源主键
      * @param scopes scopes
      * @return 作用域
      */
-    List<ScopeEntity> findAllByScopeIn(List<String> scopes);
+    List<ScopeEntity> findAllByResourceIdAndScopeIn(Long resourceId, List<String> scopes);
 }

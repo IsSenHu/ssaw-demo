@@ -15,6 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_role_permission")
 public class RolePermissionEntity extends BaseEntity {
+    private static final long serialVersionUID = 7633446768363045816L;
     private Long roleId;
     private Long permissionId;
 }

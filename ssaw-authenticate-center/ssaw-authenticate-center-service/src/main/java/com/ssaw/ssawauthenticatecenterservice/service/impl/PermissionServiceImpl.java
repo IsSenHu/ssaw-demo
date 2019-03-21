@@ -4,6 +4,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.CreatePermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.QueryPermissionVO;
@@ -15,7 +16,6 @@ import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeReposito
 import com.ssaw.ssawauthenticatecenterservice.service.PermissionService;
 import com.ssaw.ssawauthenticatecenterservice.specification.PermissionSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
-import com.ssaw.ssawauthenticatecenterservice.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

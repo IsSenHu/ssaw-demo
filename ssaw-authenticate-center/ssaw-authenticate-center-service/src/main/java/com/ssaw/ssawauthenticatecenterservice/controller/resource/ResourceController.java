@@ -8,6 +8,7 @@ import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
+import com.ssaw.ssawauthenticatecenterfeign.vo.UploadVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.resource.*;
 import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
 import com.ssaw.ssawauthenticatecenterservice.service.ResourceService;
@@ -45,17 +46,6 @@ public class ResourceController extends BaseController {
     @SecurityMethod(antMatcher = "/api/resource/add", scope = "RESOURCE_CREATE", button = "RESOURCE_CREATE", buttonName = "添加")
     public CommonResult<CreateResourceVO> add(@RequestBody CreateResourceVO createResourceVO) {
         return resourceService.add(createResourceVO);
-    }
-
-    /**
-     * 上传资源服务
-     * @param uploadResourceVO 上传资源服务请求对象
-     * @return 上传结果
-     */
-    @PostMapping("/uploadResource")
-    public CommonResult<UploadResourceVO> uploadResource(@RequestBody UploadResourceVO uploadResourceVO) {
-        // TODO 这里的安全策略
-        return resourceService.uploadResource(uploadResourceVO);
     }
 
     /**
@@ -140,5 +130,16 @@ public class ResourceController extends BaseController {
     @SecurityMethod(antMatcher = "/api/resource/findAllScopeByResourceIds", scope = "RESOURCE_READ")
     public CommonResult<EditClientScopeVO> findAllScopeByResourceIds(String ids) {
         return resourceService.findAllScopeByResourceIds(ids);
+    }
+
+    /**
+     * 上传资源, 作用域, 白名单, 按钮, 菜单
+     * @param uploadVO 认证信息
+     * @return 上传结果
+     */
+    @PostMapping("/uploadAuthenticateInfo")
+    @RequestLog(desc = "上传资源, 作用域, 白名单, 按钮, 菜单")
+    public CommonResult<UploadVO> uploadAuthenticateInfo(@RequestBody UploadVO uploadVO) {
+        return resourceService.uploadAuthenticateInfo(uploadVO);
     }
 }

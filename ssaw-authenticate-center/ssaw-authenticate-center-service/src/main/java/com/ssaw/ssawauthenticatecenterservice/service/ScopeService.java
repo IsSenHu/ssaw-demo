@@ -68,9 +68,10 @@ public interface ScopeService {
     /**
      * 上传作用域
      * @param scopeVOList 作用域集合
+     * @param resourceId 资源主键
      * @return 上传结果
      */
-    CommonResult<String> uploadScopes(List<ScopeVO> scopeVOList);
+    CommonResult<String> uploadScopes(Long resourceId, List<ScopeVO> scopeVOList);
 
     /**
      * 刷新作用域缓存

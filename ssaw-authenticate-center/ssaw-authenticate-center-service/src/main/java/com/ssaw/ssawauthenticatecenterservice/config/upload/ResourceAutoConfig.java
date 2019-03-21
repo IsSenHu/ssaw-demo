@@ -5,6 +5,7 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
+import com.ssaw.ssawauthenticatecenterfeign.event.local.AppFinishedEvent;
 import com.ssaw.ssawauthenticatecenterfeign.event.local.UploadScopeAndWhiteListFinishedEvent;
 import com.ssaw.ssawauthenticatecenterfeign.vo.resource.UploadResourceVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
@@ -114,7 +115,7 @@ public class ResourceAutoConfig  {
             }
 
             log.info("上传作用域:{}", JsonUtils.object2JsonString(scopeVOList));
-            CommonResult<String> commonResult = scopeService.uploadScopes(scopeVOList);
+            CommonResult<String> commonResult = scopeService.uploadScopes(result.getData().getId(), scopeVOList);
             Assert.state(commonResult.getCode() == SUCCESS, "上传作用域失败");
 
             List<String> whiteList = enableResourceAutoProperties.getWhiteList();
@@ -124,5 +125,13 @@ public class ResourceAutoConfig  {
 
             context.publishEvent(new UploadScopeAndWhiteListFinishedEvent(enableResourceAutoProperties.getResourceId()));
         }
+    }
+
+    @EventListener(UploadScopeAndWhiteListFinishedEvent.class)
+    public void refreshScopes(UploadScopeAndWhiteListFinishedEvent event) {
+        String resourceId = (String) event.getSource();
+        log.info("因为:{} 完成认证信息上传, 重新刷新作用域", resourceId);
+        scopeService.refreshScope(resourceId);
+        context.publishEvent(new AppFinishedEvent(resourceId));
     }
 }

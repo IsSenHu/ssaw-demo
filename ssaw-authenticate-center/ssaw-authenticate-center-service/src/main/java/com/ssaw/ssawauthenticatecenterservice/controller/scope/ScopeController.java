@@ -51,17 +51,6 @@ public class ScopeController extends BaseController {
     }
 
     /**
-     * 上传作用域
-     * @param scopeVOList 作用域集合
-     * @return 上传结果
-     */
-    @PostMapping("/uploadScopes")
-    public CommonResult<String> uploadScopes(@RequestBody List<ScopeVO> scopeVOList) {
-        // TODO 安全策略
-        return scopeService.uploadScopes(scopeVOList);
-    }
-
-    /**
      * 分页查询作用域
      * @param pageReqVO 分页查询参数
      * @return 分页结果

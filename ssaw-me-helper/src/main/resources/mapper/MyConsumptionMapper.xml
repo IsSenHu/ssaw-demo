@@ -4,6 +4,61 @@
 <!--suppress ALL -->
 <mapper namespace="com.ssaw.ssawmehelper.dao.mapper.consumption.MyConsumptionMapper">
 
+    <!-- 批量保存我的收入 -->
+    <insert useGeneratedKeys="true" id="saveAll" parameterType="java.util.List" keyProperty="id">
+        INSERT INTO
+            tb_my_consumption
+            (
+                cost_date,
+                expenditure,
+                income,
+                net_expenditure,
+                username
+            )
+            VALUES
+            <foreach collection="list" item="obj" index="index" separator=",">
+                (
+                    #{obj.costDate},
+                    #{obj.expenditure},
+                    #{obj.income},
+                    #{obj.netExpenditure},
+                    #{obj.username}
+                )
+            </foreach>
+    </insert>
 
+    <!-- 根据消费日期查询我的消费记录 -->
+    <select id="findByCostDateAndUsername" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+        SELECT
+            ID AS id,
+            COST_DATE AS costDate,
+            EXPENDITURE AS expenditure,
+            INCOME AS income,
+            NET_EXPENDITURE as netExpenditure,
+            USERNAME AS username
+        FROM
+            TB_MY_CONSUMPTION
+        WHERE
+            COST_DATE = #{costDate} AND USERNAME = #{username}
+    </select>
 
+    <!-- 分页查询我的消费 -->
+    <select id="findAll" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+        SELECT
+            ID AS id,
+            COST_DATE AS costDate,
+            EXPENDITURE AS expenditure,
+            INCOME AS income,
+            NET_EXPENDITURE as netExpenditure,
+            USERNAME AS username
+        FROM
+            TB_MY_CONSUMPTION
+        WHERE USERNAME = #{username}
+        <if test="query.start != null and query.start != ''">
+            AND COST_DATE >= #{query.start}
+        </if>
+        <if test="query.end != null and query.end != ''">
+            AND COST_DATE &lt;= #{query.end}
+        </if>
+    </select>
 </mapper>

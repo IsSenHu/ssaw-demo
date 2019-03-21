@@ -1,12 +1,10 @@
 package com.ssaw.ssawui.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.feign.AuthenticateFeign;
-import com.ssaw.ssawauthenticatecenterfeign.vo.user.SimpleUserAttributeVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +55,8 @@ public class AccessFilter extends ZuulFilter {
         String url = StringUtils.substring(requestURI, "/".concat(serviceId).length());
         log.info("send [{}] request to serviceId [{}] url [{}]", request.getMethod(), serviceId, url);
 
-        CommonResult<SimpleUserAttributeVO> result = authenticateFeign.authenticate(url);
-        log.info("认证结果:{}", JSON.toJSONString(result));
+        CommonResult<String> result = authenticateFeign.authenticate(url);
+        log.info("认证结果:{},{},{}", result.getCode(), result.getMessage(), result.getData());
         if(result.getCode() != SUCCESS) {
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(401);
@@ -71,7 +69,7 @@ public class AccessFilter extends ZuulFilter {
                 e.printStackTrace();
             }
         }
-        ctx.addZuulRequestHeader("userInfo", JsonUtils.object2JsonString(result.getData()));
+        ctx.addZuulRequestHeader("userInfo", result.getData());
         return null;
     }
 }

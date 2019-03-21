@@ -3,6 +3,7 @@ package com.ssaw.ssawauthenticatecenterservice.service;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.vo.UploadVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.resource.*;
 
 import java.util.List;
@@ -74,4 +75,11 @@ public interface ResourceService {
      * @return 上传结果
      */
     CommonResult<UploadResourceVO> uploadResource(UploadResourceVO uploadResourceVO);
+
+    /**
+     * 上传资源, 作用域, 白名单, 按钮, 菜单
+     * @param uploadVO 认证信息
+     * @return 上传结果
+     */
+    CommonResult<UploadVO> uploadAuthenticateInfo(UploadVO uploadVO);
 }

@@ -4,6 +4,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.QueryScopeVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.CreateScopeVO;
@@ -18,7 +19,6 @@ import com.ssaw.ssawauthenticatecenterservice.service.ScopeService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ScopeSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ScopeTransfer;
 import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
-import com.ssaw.ssawauthenticatecenterservice.util.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,20 +187,22 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
 
     /**
      * 上传作用域
+     * @param resourceId 资源主键
      * @param scopeVOList 作用域集合
      * @return 上传结果
      */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<String> uploadScopes(List<ScopeVO> scopeVOList) {
+    public CommonResult<String> uploadScopes(Long resourceId, List<ScopeVO> scopeVOList) {
         List<String> scopes = scopeVOList.stream().map(ScopeVO::getScope).collect(Collectors.toList());
+
         // 先删除不要的作用域
-        scopeRepository.deleteAllByScopeNotIn(scopes);
+        scopeRepository.deleteAllByResourceIdAndScopeNotIn(resourceId, scopes);
         // 得到还存在的权限
-        List<ScopeEntity> allByScopeIn = scopeRepository.findAllByScopeIn(scopes);
+        List<ScopeEntity> allByScopeIn = scopeRepository.findAllByResourceIdAndScopeIn(resourceId, scopes);
         List<Long> allScopeId = allByScopeIn.stream().map(ScopeEntity::getId).collect(Collectors.toList());
         // 再删除不要的权限
-        permissionRepository.deleteAllByScopeIdNotIn(allScopeId);
+        permissionRepository.deleteAllByResourceIdAndScopeIdNotIn(resourceId, allScopeId);
         Set<String> scopeSet = allByScopeIn.stream().map(ScopeEntity::getScope).collect(Collectors.toSet());
         Map<String, ScopeVO> updateScopeMap = new HashMap<>(scopeVOList.size());
         List<ScopeVO> newScopeList = new ArrayList<>();

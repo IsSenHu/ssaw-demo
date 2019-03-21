@@ -3,6 +3,7 @@ package com.ssaw.ssawauthenticatecenterservice.controller;
 import com.ssaw.commons.exceptions.ParamException;
 import com.ssaw.commons.vo.CommonResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,10 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.*;
 @RestController
 public class BaseController {
 
-    private final ApplicationContext context;
+    public BaseController(ApplicationContext context) {}
 
-    public BaseController(ApplicationContext context) {
-        this.context = context;
-    }
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     /**
      * 全局统一异常处理
@@ -56,6 +56,6 @@ public class BaseController {
      */
     @GetMapping("/api/base/getApplicationName")
     public CommonResult<String> getApplicationName() {
-        return CommonResult.createResult(SUCCESS, "成功", context.getApplicationName());
+        return CommonResult.createResult(SUCCESS, "成功", applicationName);
     }
 }

@@ -1,6 +1,5 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
@@ -126,13 +124,13 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
         log.info("需要跳过的白名单:{}", whiteList);
 
         if (whiteList.contains(requestUri)) {
-            response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(CommonResult.createResult(SUCCESS, "白名单无需认证", new SimpleUserAttributeVO()))));
+            response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(CommonResult.createResult(SUCCESS, "白名单无需认证", null))));
             return;
         }
 
         try {
 
-            CommonResult<SimpleUserAttributeVO> result;
+            CommonResult<String> result;
             Authentication authentication = tokenExtractor.extract(request);
 
             if (authentication == null) {
@@ -165,9 +163,9 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
                 SecurityContextHolder.getContext().setAuthentication(authResult);
 
                 UserDetailsImpl userDetailsImpl = SecurityUtils.getUserDetails(UserDetailsImpl.class);
-                result = CommonResult.createResult(SUCCESS, "access",
-                        new SimpleUserAttributeVO(userDetailsImpl.getId(), userDetailsImpl.getUsername(), userDetailsImpl.getRealName(), userDetailsImpl.getDescription(),
-                                userDetailsImpl.getIsEnable(), JSON.parseObject(userDetailsImpl.getOtherInfo(), Map.class)));
+                SimpleUserAttributeVO simpleUserAttributeVO = new SimpleUserAttributeVO(userDetailsImpl.getId(), userDetailsImpl.getUsername(), userDetailsImpl.getRealName(), userDetailsImpl.getDescription(),
+                        userDetailsImpl.getIsEnable(), userDetailsImpl.getOtherInfo());
+                result = CommonResult.createResult(SUCCESS, "access", JsonUtils.object2JsonString(simpleUserAttributeVO));
             }
             response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(result)));
         }

@@ -52,30 +52,45 @@ public class SystemConfig {
     public void init() {
         if (!initialized.getAndSet(true)) {
             Optional<ClientDetailsEntity> optional = clientRepository.findById(properties.getClientId());
-            if (!optional.isPresent()) {
-                List<ResourceEntity> allResource = resourceRepository.findAll();
-                List<ScopeEntity> allScope = scopeRepository.findAll();
-                String resourceIds = allResource.stream().map(ResourceEntity::getResourceId).collect(Collectors.joining(","));
-                String scopes = allScope.stream().map(ScopeEntity::getScope).collect(Collectors.joining(","));
+            ClientDetailsEntity clientDetailsEntity;
+            clientDetailsEntity = optional.orElseGet(ClientDetailsEntity::new);
+            List<ResourceEntity> allResource = resourceRepository.findAll();
+            List<ScopeEntity> allScope = scopeRepository.findAll();
+            String resourceIds = allResource.stream().map(ResourceEntity::getResourceId).collect(Collectors.joining(","));
+            String scopes = allScope.stream().map(ScopeEntity::getScope).collect(Collectors.joining(","));
 
-                ClientDetailsEntity clientDetailsEntity = new ClientDetailsEntity();
-                clientDetailsEntity.setClientId(properties.getClientId());
-                clientDetailsEntity.setClientSecret(applicationContext.getBean(PasswordEncoder.class).encode(properties.getClientSecret()));
-                clientDetailsEntity.setAuthorizedGrantTypes(ClientConstant.AuthorizedGrantTypes.AUTHORIZATION_CODE.getValue());
-                clientDetailsEntity.setAccessTokenValiditySeconds(properties.getClientExpire());
-                clientDetailsEntity.setRegisteredRedirectUris(properties.getClientRegisteredRedirectUris());
-                clientDetailsEntity.setResourceIds(resourceIds);
-                clientDetailsEntity.setScopes(scopes);
-                clientDetailsEntity.setCreateTime(LocalDateTime.now());
-                clientDetailsEntity.setUpdateTime(LocalDateTime.now());
-
-                clientRepository.save(clientDetailsEntity);
-            }
+            clientDetailsEntity.setClientId(properties.getClientId());
+            clientDetailsEntity.setClientSecret(applicationContext.getBean(PasswordEncoder.class).encode(properties.getClientSecret()));
+            clientDetailsEntity.setAuthorizedGrantTypes(ClientConstant.AuthorizedGrantTypes.AUTHORIZATION_CODE.getValue());
+            clientDetailsEntity.setAccessTokenValiditySeconds(properties.getClientExpire());
+            clientDetailsEntity.setRegisteredRedirectUris(properties.getClientRegisteredRedirectUris());
+            clientDetailsEntity.setResourceIds(resourceIds);
+            clientDetailsEntity.setScopes(scopes);
+            clientDetailsEntity.setCreateTime(LocalDateTime.now());
+            clientDetailsEntity.setUpdateTime(LocalDateTime.now());
+            clientRepository.save(clientDetailsEntity);
         }
     }
 
     @EventListener(AppFinishedEvent.class)
     public void refreshClient(AppFinishedEvent appFinishedEvent) {
+        Optional<ClientDetailsEntity> optional = clientRepository.findById(properties.getClientId());
+        optional.ifPresent(clientDetailsEntity -> {
+            List<ResourceEntity> allResource = resourceRepository.findAll();
+            List<ScopeEntity> allScope = scopeRepository.findAll();
+            String resourceIds = allResource.stream().map(ResourceEntity::getResourceId).collect(Collectors.joining(","));
+            String scopes = allScope.stream().map(ScopeEntity::getScope).collect(Collectors.joining(","));
 
+            clientDetailsEntity.setClientId(properties.getClientId());
+            clientDetailsEntity.setClientSecret(applicationContext.getBean(PasswordEncoder.class).encode(properties.getClientSecret()));
+            clientDetailsEntity.setAuthorizedGrantTypes(ClientConstant.AuthorizedGrantTypes.AUTHORIZATION_CODE.getValue());
+            clientDetailsEntity.setAccessTokenValiditySeconds(properties.getClientExpire());
+            clientDetailsEntity.setRegisteredRedirectUris(properties.getClientRegisteredRedirectUris());
+            clientDetailsEntity.setResourceIds(resourceIds);
+            clientDetailsEntity.setScopes(scopes);
+            clientDetailsEntity.setCreateTime(LocalDateTime.now());
+            clientDetailsEntity.setUpdateTime(LocalDateTime.now());
+            clientRepository.save(clientDetailsEntity);
+        });
     }
 }
