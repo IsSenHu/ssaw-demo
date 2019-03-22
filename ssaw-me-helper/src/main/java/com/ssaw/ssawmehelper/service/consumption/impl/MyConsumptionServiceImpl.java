@@ -10,18 +10,22 @@ import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawmehelper.dao.mapper.consumption.MyConsumptionMapper;
 import com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO;
+import com.ssaw.ssawmehelper.model.constant.consumption.ConsumptionConstant;
+import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionStatisticsVO;
 import com.ssaw.ssawmehelper.service.consumption.BaseService;
 import com.ssaw.ssawmehelper.service.consumption.MyConsumptionService;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionQueryVO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionVO;
+import com.ssaw.ssawmehelper.util.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 
 /**
  * @author HuSen
@@ -48,18 +52,23 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         if (CollectionUtils.isEmpty(myConsumptionPOS)) {
             return CommonResult.createResult(Constants.ResultCodes.PARAM_ERROR, "导入数据为空", null);
         }
+        String username = UserUtils.getUser().getUsername();
+        List<MyConsumptionPO> newPos = new ArrayList<>();
         for (MyConsumptionPO myConsumptionPO : myConsumptionPOS) {
-            MyConsumptionPO po = myConsumptionMapper.findByCostDateAndUsername(myConsumptionPO.getCostDate(), UserUtils.getUser().getUsername());
+            MyConsumptionPO po = myConsumptionMapper.findByCostDateAndUsername(myConsumptionPO.getCostDate(), username);
             if (Objects.nonNull(po)) {
-                myConsumptionPOS.remove(myConsumptionPO);
                 po.setExpenditure(myConsumptionPO.getExpenditure());
                 po.setIncome(myConsumptionPO.getIncome());
                 po.setNetExpenditure(myConsumptionPO.getNetExpenditure());
                 myConsumptionMapper.updateById(po);
+            } else {
+                newPos.add(myConsumptionPO);
             }
         }
-        myConsumptionMapper.saveAll(myConsumptionPOS);
-        return CommonResult.createResult(Constants.ResultCodes.SUCCESS, "导入成功", null);
+        if (!CollectionUtils.isEmpty(newPos)) {
+            myConsumptionMapper.saveAll(newPos);
+        }
+        return CommonResult.createResult(SUCCESS, "导入成功", null);
     }
 
     /**
@@ -81,5 +90,56 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         List<MyConsumptionVO> data = iPage.getRecords().stream().map(input -> CopyUtil.copyProperties(input, new MyConsumptionVO())).collect(Collectors.toList());
         tableData.setContent(data);
         return tableData;
+    }
+
+    /**
+     * 获取我的消费折线图所需数据
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 折线图所需数据
+     */
+    @Override
+    public CommonResult<List<MyConsumptionStatisticsVO>> getMyConsumptionLineData(String start, String end) {
+        String username = UserUtils.getUser().getUsername();
+        List<MyConsumptionPO> pos = myConsumptionMapper.findAllByUsernameAndStartAndEnd(username, start, end);
+        List<MyConsumptionStatisticsVO> result = new ArrayList<>();
+        // 我的消费每日折线
+        List<List<Object>> dailyLineData = new ArrayList<>();
+        MyConsumptionStatisticsVO dailyLineDataStatisticsVO = new MyConsumptionStatisticsVO();
+        dailyLineDataStatisticsVO.setName(ConsumptionConstant.MY_CONSUMPTION_DAILY_EXPENDITURE_LINE);
+        // 我的收入每日折线
+        List<List<Object>> dailyInComeLineData = new ArrayList<>();
+        MyConsumptionStatisticsVO dailyIncomeLineDataStatisticsVO = new MyConsumptionStatisticsVO();
+        dailyIncomeLineDataStatisticsVO.setName(ConsumptionConstant.MY_CONSUMPTION_DAILY_INCOME_LINE);
+        // 我的净消费每日折线
+        List<List<Object>> dailyNetExpenditureLineData = new ArrayList<>();
+        MyConsumptionStatisticsVO dailyNetExpenditureLineDataStatisticsVO = new MyConsumptionStatisticsVO();
+        dailyNetExpenditureLineDataStatisticsVO.setName(ConsumptionConstant.MY_CONSUMPTION_DAILY_NET_EXPENDITURE_LINE);
+        for (MyConsumptionPO po : pos) {
+            List<Object> dailyLinePointData = new ArrayList<>();
+            dailyLinePointData.add(DateFormatUtil.localDateFormat(po.getCostDate()));
+            dailyLinePointData.add(po.getExpenditure());
+            dailyLinePointData.add(1);
+            dailyLineData.add(dailyLinePointData);
+
+            List<Object> dailyIncomeLinePointData = new ArrayList<>();
+            dailyIncomeLinePointData.add(DateFormatUtil.localDateFormat(po.getCostDate()));
+            dailyIncomeLinePointData.add(po.getIncome());
+            dailyIncomeLinePointData.add(1);
+            dailyInComeLineData.add(dailyIncomeLinePointData);
+
+            List<Object> dailyNetExpenditureLinePointData = new ArrayList<>();
+            dailyNetExpenditureLinePointData.add(DateFormatUtil.localDateFormat(po.getCostDate()));
+            dailyNetExpenditureLinePointData.add(po.getNetExpenditure());
+            dailyNetExpenditureLinePointData.add(1);
+            dailyNetExpenditureLineData.add(dailyNetExpenditureLinePointData);
+        }
+        dailyLineDataStatisticsVO.setData(dailyLineData);
+        dailyIncomeLineDataStatisticsVO.setData(dailyInComeLineData);
+        dailyNetExpenditureLineDataStatisticsVO.setData(dailyNetExpenditureLineData);
+        result.add(dailyLineDataStatisticsVO);
+        result.add(dailyIncomeLineDataStatisticsVO);
+        result.add(dailyNetExpenditureLineDataStatisticsVO);
+        return CommonResult.createResult(SUCCESS, "成功", result);
     }
 }

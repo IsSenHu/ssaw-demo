@@ -12,6 +12,7 @@ import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawmehelper.api.BaseController;
 import com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionQueryVO;
+import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionStatisticsVO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionVO;
 import com.ssaw.ssawmehelper.service.consumption.MyConsumptionService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,10 +33,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author HuSen
@@ -128,6 +123,19 @@ public class MyConsumptionController extends BaseController {
     @SecurityMethod(antMatcher = "/api/consumption/page", scope = "MY_CONSUMPTION_READ")
     public TableData<MyConsumptionVO> page(@RequestBody PageReqVO<MyConsumptionQueryVO> pageReqVO) {
         return myConsumptionService.page(pageReqVO);
+    }
+
+    /**
+     * 获取我的消费折线图所需数据
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 折线图所需数据
+     */
+    @RequestLog(desc = "获取我的消费折线图所需数据")
+    @GetMapping("/getMyConsumptionLineData/{start}/{end}")
+    @SecurityMethod(antMatcher = "/api/consumption/getMyConsumptionLineData/*/*", scope = "MY_CONSUMPTION_LINE_DATA")
+    public CommonResult<List<MyConsumptionStatisticsVO>> getMyConsumptionLineData(@PathVariable(name = "start") String start, @PathVariable(name = "end") String end) {
+        return myConsumptionService.getMyConsumptionLineData(start, end);
     }
 
     /**

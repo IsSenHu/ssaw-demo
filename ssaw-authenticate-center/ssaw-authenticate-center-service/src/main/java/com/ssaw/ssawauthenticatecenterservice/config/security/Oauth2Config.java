@@ -135,7 +135,7 @@ public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
         @Override
         public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
             DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
-            // 设置额外的用户信息x9
+            // 设置额外的用户信息
             UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
             userDetailsImpl.setPassword(null);
             // 将用户信息添加到token额外信息中

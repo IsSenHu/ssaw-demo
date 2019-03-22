@@ -72,7 +72,7 @@ public class AuthenticateInfoAutoUploadConfiguration {
             setWhiteList(uploadVO);
             log.info("开始上传认证信息:{}", JSON.toJSONString(uploadVO));
             CommonResult<UploadVO> commonResult = authenticateFeign.uploadAuthenticateInfo(uploadVO);
-            Assert.state(commonResult.getCode() == SUCCESS, "上传认证信息失败");
+            log.info("上传认证信息结果:{}", JSON.toJSONString(commonResult));
         }
     }
 

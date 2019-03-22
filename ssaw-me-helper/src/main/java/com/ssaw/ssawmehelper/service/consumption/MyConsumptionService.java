@@ -5,6 +5,7 @@ import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionQueryVO;
+import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionStatisticsVO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionVO;
 
 import java.util.List;
@@ -28,4 +29,12 @@ public interface MyConsumptionService {
      * @return 分页结果
      */
     TableData<MyConsumptionVO> page(PageReqVO<MyConsumptionQueryVO> pageReqVO);
+
+    /**
+     * 获取我的消费折线图所需数据
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 折线图所需数据
+     */
+    CommonResult<List<MyConsumptionStatisticsVO>> getMyConsumptionLineData(String start, String end);
 }

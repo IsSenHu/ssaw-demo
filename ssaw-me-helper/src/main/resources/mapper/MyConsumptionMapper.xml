@@ -61,4 +61,18 @@
             AND COST_DATE &lt;= #{query.end}
         </if>
     </select>
+
+    <!-- 根据用户名，开始时间，结束时间查询我的消费 -->
+    <select id="findAllByUsernameAndStartAndEnd" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+        SELECT
+            ID AS id,
+            COST_DATE AS costDate,
+            EXPENDITURE AS expenditure,
+            INCOME AS income,
+            NET_EXPENDITURE as netExpenditure,
+            USERNAME AS username
+        FROM
+            TB_MY_CONSUMPTION
+        WHERE USERNAME = #{username} AND COST_DATE >= #{start} AND COST_DATE &lt;= #{end}
+    </select>
 </mapper>

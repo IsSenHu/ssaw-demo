@@ -2,7 +2,6 @@ package com.ssaw;
 
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
-import com.ssaw.commons.enable.EnableFeignHeader;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.log.collect.annotations.EnableLogCollect;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableSetUserInfo;
@@ -27,7 +26,6 @@ import org.springframework.context.annotation.Bean;
 @EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoRequestResolve
-@EnableFeignHeader
 @EnableFeignClients(basePackages = "com.ssaw")
 @EnableLogCollect
 @RemoteApplicationEventScan(basePackageClasses = AuthenticateCenterEventBasicPackage.class)
