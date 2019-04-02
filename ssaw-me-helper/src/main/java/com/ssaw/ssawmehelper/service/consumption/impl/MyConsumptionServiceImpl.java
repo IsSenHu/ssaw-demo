@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ssaw.commons.constant.Constants;
 import com.ssaw.commons.util.bean.CopyUtil;
+import com.ssaw.commons.util.time.DateUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
@@ -16,7 +17,6 @@ import com.ssaw.ssawmehelper.service.consumption.BaseService;
 import com.ssaw.ssawmehelper.service.consumption.MyConsumptionService;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionQueryVO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionVO;
-import com.ssaw.ssawmehelper.util.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,10 +52,10 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         if (CollectionUtils.isEmpty(myConsumptionPOS)) {
             return CommonResult.createResult(Constants.ResultCodes.PARAM_ERROR, "导入数据为空", null);
         }
-        String username = UserUtils.getUser().getUsername();
+        Long userId = UserUtils.getUser().getId();
         List<MyConsumptionPO> newPos = new ArrayList<>();
         for (MyConsumptionPO myConsumptionPO : myConsumptionPOS) {
-            MyConsumptionPO po = myConsumptionMapper.findByCostDateAndUsername(myConsumptionPO.getCostDate(), username);
+            MyConsumptionPO po = myConsumptionMapper.findByCostDateAndUserId(myConsumptionPO.getCostDate(), userId);
             if (Objects.nonNull(po)) {
                 po.setExpenditure(myConsumptionPO.getExpenditure());
                 po.setIncome(myConsumptionPO.getIncome());
@@ -81,7 +81,7 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         pageReqVO = getPage(pageReqVO);
         IPage<MyConsumptionPO> iPage = new Page<MyConsumptionPO>()
                 .setCurrent(pageReqVO.getPage()).setSize(pageReqVO.getSize()).setDesc("cost_date");
-        iPage = myConsumptionMapper.findAll(iPage, pageReqVO.getData(), UserUtils.getUser().getUsername());
+        iPage = myConsumptionMapper.findAll(iPage, pageReqVO.getData(), UserUtils.getUser().getId());
         TableData<MyConsumptionVO> tableData = new TableData<>();
         tableData.setPage(pageReqVO.getPage());
         tableData.setSize(pageReqVO.getSize());
@@ -100,8 +100,8 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
      */
     @Override
     public CommonResult<List<MyConsumptionStatisticsVO>> getMyConsumptionLineData(String start, String end) {
-        String username = UserUtils.getUser().getUsername();
-        List<MyConsumptionPO> pos = myConsumptionMapper.findAllByUsernameAndStartAndEnd(username, start, end);
+        Long id = UserUtils.getUser().getId();
+        List<MyConsumptionPO> pos = myConsumptionMapper.findAllByUserIdAndStartAndEnd(id, start, end);
         List<MyConsumptionStatisticsVO> result = new ArrayList<>();
         // 我的消费每日折线
         List<List<Object>> dailyLineData = new ArrayList<>();
@@ -117,19 +117,19 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         dailyNetExpenditureLineDataStatisticsVO.setName(ConsumptionConstant.MY_CONSUMPTION_DAILY_NET_EXPENDITURE_LINE);
         for (MyConsumptionPO po : pos) {
             List<Object> dailyLinePointData = new ArrayList<>();
-            dailyLinePointData.add(DateFormatUtil.localDateFormat(po.getCostDate()));
+            dailyLinePointData.add(DateUtil.localDateFormat(po.getCostDate()));
             dailyLinePointData.add(po.getExpenditure());
             dailyLinePointData.add(1);
             dailyLineData.add(dailyLinePointData);
 
             List<Object> dailyIncomeLinePointData = new ArrayList<>();
-            dailyIncomeLinePointData.add(DateFormatUtil.localDateFormat(po.getCostDate()));
+            dailyIncomeLinePointData.add(DateUtil.localDateFormat(po.getCostDate()));
             dailyIncomeLinePointData.add(po.getIncome());
             dailyIncomeLinePointData.add(1);
             dailyInComeLineData.add(dailyIncomeLinePointData);
 
             List<Object> dailyNetExpenditureLinePointData = new ArrayList<>();
-            dailyNetExpenditureLinePointData.add(DateFormatUtil.localDateFormat(po.getCostDate()));
+            dailyNetExpenditureLinePointData.add(DateUtil.localDateFormat(po.getCostDate()));
             dailyNetExpenditureLinePointData.add(po.getNetExpenditure());
             dailyNetExpenditureLinePointData.add(1);
             dailyNetExpenditureLineData.add(dailyNetExpenditureLinePointData);

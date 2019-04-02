@@ -107,7 +107,7 @@ public class MyConsumptionController extends BaseController {
             po.setExpenditure(BigDecimal.valueOf(expenditure));
             po.setIncome(BigDecimal.valueOf(income));
             po.setNetExpenditure(BigDecimal.valueOf(netExpenditure));
-            po.setUsername(UserUtils.getUser().getUsername());
+            po.setUserId(UserUtils.getUser().getId());
             myConsumptionPOS.add(po);
         }
         return myConsumptionService.saveAll(myConsumptionPOS);

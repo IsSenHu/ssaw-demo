@@ -49,6 +49,12 @@
             <artifactId>ssaw-interface</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ssaw</groupId>
+            <artifactId>support-rocketmq</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <!-- 这部分 可以提出到base pom文件里 -->

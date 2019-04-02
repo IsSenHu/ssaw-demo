@@ -53,10 +53,10 @@ public class AccessFilter extends ZuulFilter {
         String requestURI = request.getRequestURI();
         String serviceId = StringUtils.substringBetween(requestURI, "/", "/");
         String url = StringUtils.substring(requestURI, "/".concat(serviceId).length());
-        log.info("send [{}] request to serviceId [{}] url [{}]", request.getMethod(), serviceId, url);
-
+        String prefix = request.getMethod() + "send [" + requestURI + "] request to serviceId [" + serviceId + "] url [" + url + "]";
         CommonResult<String> result = authenticateFeign.authenticate(url);
-        log.info("认证结果:{},{},{}", result.getCode(), result.getMessage(), result.getData());
+        String suffix = "认证结果:" + result.getCode() + ",{" + result.getMessage() + "},{" + result.getData() + "}";
+        log.info(prefix + suffix);
         if(result.getCode() != SUCCESS) {
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(401);

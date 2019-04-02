@@ -139,13 +139,6 @@
 			<version>${support-redis.version}</version>
 			<type>pom</type>
 		</dependency>
-
-		<!-- 日志收集支持 -->
-		<dependency>
-			<groupId>com.ssaw</groupId>
-			<artifactId>support-log-collect</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

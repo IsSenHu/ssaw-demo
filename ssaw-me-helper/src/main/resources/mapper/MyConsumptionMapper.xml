@@ -13,7 +13,7 @@
                 expenditure,
                 income,
                 net_expenditure,
-                username
+                user_id
             )
             VALUES
             <foreach collection="list" item="obj" index="index" separator=",">
@@ -22,24 +22,24 @@
                     #{obj.expenditure},
                     #{obj.income},
                     #{obj.netExpenditure},
-                    #{obj.username}
+                    #{obj.userId}
                 )
             </foreach>
     </insert>
 
     <!-- 根据消费日期查询我的消费记录 -->
-    <select id="findByCostDateAndUsername" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+    <select id="findByCostDateAndUserId" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
         SELECT
             ID AS id,
             COST_DATE AS costDate,
             EXPENDITURE AS expenditure,
             INCOME AS income,
             NET_EXPENDITURE as netExpenditure,
-            USERNAME AS username
+            USER_ID AS userId
         FROM
             TB_MY_CONSUMPTION
         WHERE
-            COST_DATE = #{costDate} AND USERNAME = #{username}
+            COST_DATE = #{costDate} AND USER_ID = #{userId}
     </select>
 
     <!-- 分页查询我的消费 -->
@@ -50,10 +50,10 @@
             EXPENDITURE AS expenditure,
             INCOME AS income,
             NET_EXPENDITURE as netExpenditure,
-            USERNAME AS username
+            USER_ID AS userId
         FROM
             TB_MY_CONSUMPTION
-        WHERE USERNAME = #{username}
+        WHERE USER_ID = #{userId}
         <if test="query.start != null and query.start != ''">
             AND COST_DATE >= #{query.start}
         </if>
@@ -63,16 +63,16 @@
     </select>
 
     <!-- 根据用户名，开始时间，结束时间查询我的消费 -->
-    <select id="findAllByUsernameAndStartAndEnd" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+    <select id="findAllByUserIdAndStartAndEnd" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
         SELECT
             ID AS id,
             COST_DATE AS costDate,
             EXPENDITURE AS expenditure,
             INCOME AS income,
             NET_EXPENDITURE as netExpenditure,
-            USERNAME AS username
+            USER_ID AS userId
         FROM
             TB_MY_CONSUMPTION
-        WHERE USERNAME = #{username} AND COST_DATE >= #{start} AND COST_DATE &lt;= #{end}
+        WHERE USER_ID = #{userId} AND COST_DATE >= #{start} AND COST_DATE &lt;= #{end}
     </select>
 </mapper>

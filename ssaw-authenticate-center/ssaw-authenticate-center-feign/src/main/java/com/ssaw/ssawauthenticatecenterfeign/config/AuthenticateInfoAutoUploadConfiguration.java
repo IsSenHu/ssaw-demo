@@ -1,7 +1,6 @@
 package com.ssaw.ssawauthenticatecenterfeign.config;
 
 import com.alibaba.fastjson.JSON;
-import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
@@ -29,8 +28,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-
-import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 
 /**
  * @author HuSen

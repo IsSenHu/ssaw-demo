@@ -38,6 +38,6 @@ public class MyConsumptionPO {
     private BigDecimal netExpenditure;
 
     /** 消费记录的用户 */
-    @TableField("username")
-    private String username;
+    @TableField("user_id")
+    private Long userId;
 }

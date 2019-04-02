@@ -14,7 +14,6 @@ import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEnt
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.client.ClientRepository;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
-import com.ssaw.ssawauthenticatecenterservice.handler.ClientLogHandler;
 import com.ssaw.ssawauthenticatecenterservice.service.ClientService;
 import com.ssaw.ssawauthenticatecenterservice.specification.ClientSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.ClientTransfer;
@@ -51,15 +50,13 @@ public class ClientServiceImpl extends BaseService implements ClientService {
     private final ClientTransfer clientTransfer;
     private final ResourceRepository resourceRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ClientLogHandler clientLogHandler;
 
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository, ClientTransfer clientTransfer, PasswordEncoder passwordEncoder, ResourceRepository resourceRepository, ClientLogHandler clientLogHandler) {
+    public ClientServiceImpl(ClientRepository clientRepository, ClientTransfer clientTransfer, PasswordEncoder passwordEncoder, ResourceRepository resourceRepository) {
         this.clientRepository = clientRepository;
         this.clientTransfer = clientTransfer;
         this.passwordEncoder = passwordEncoder;
         this.resourceRepository = resourceRepository;
-        this.clientLogHandler = clientLogHandler;
     }
 
     @Override
@@ -129,7 +126,6 @@ public class ClientServiceImpl extends BaseService implements ClientService {
             ClientDetailsEntity entity = CopyUtil.copyProperties(createClientVO, new ClientDetailsEntity());
             entity.setCreateMan(UserUtils.getUser().getUsername());
             clientRepository.save(entity);
-            clientLogHandler.log(entity, "新增客户端", "新增成功");
             return CommonResult.createResult(SUCCESS, "成功!", createClientVO);
         }
         return CommonResult.createResult(PARAM_ERROR, "参数错误!", null);
