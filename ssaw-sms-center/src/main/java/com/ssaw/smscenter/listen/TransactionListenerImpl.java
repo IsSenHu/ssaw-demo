@@ -1,7 +1,7 @@
 package com.ssaw.smscenter.listen;
 
 import com.alibaba.fastjson.JSON;
-import com.ssaw.smscenter.message.MessageVO;
+import com.ssaw.smscenter.model.message.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.LocalTransactionState;

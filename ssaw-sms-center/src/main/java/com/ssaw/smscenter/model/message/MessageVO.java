@@ -1,4 +1,4 @@
-package com.ssaw.smscenter.message;
+package com.ssaw.smscenter.model.message;
 
 import com.ssaw.rocketmq.annotation.MessageKey;
 import com.ssaw.rocketmq.annotation.RocketMqMessage;

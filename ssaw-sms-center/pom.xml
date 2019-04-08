@@ -55,6 +55,12 @@
             <artifactId>support-rocketmq</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- spring boot starter data mongodb 支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
     </dependencies>
 
     <!-- 这部分 可以提出到base pom文件里 -->

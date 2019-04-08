@@ -2,7 +2,7 @@ package com.ssaw.smscenter.producer;
 
 import com.ssaw.rocketmq.annotation.RocketMqProducer;
 import com.ssaw.rocketmq.interfaces.BaseProducer;
-import com.ssaw.smscenter.message.MessageVO;
+import com.ssaw.smscenter.model.message.MessageVO;
 
 /**
  * @author HuSen
