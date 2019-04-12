@@ -42,16 +42,16 @@
 		</dependency>
 
 		<!-- bus stream 必须引该依赖 -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-netflix-hystrix-stream</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-netflix-hystrix-stream</artifactId>-->
+		<!--</dependency>-->
 
 		<!-- stream rabbit -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
+		<!--</dependency>-->
 
 		<!-- 单元测试 -->
 		<dependency>
@@ -107,16 +107,16 @@
 		<!--</dependency>-->
 
 		<!-- 消息总线 -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+		<!--</dependency>-->
 
 		<!-- zipkin 服务跟踪 -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-zipkin</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-zipkin</artifactId>-->
+		<!--</dependency>-->
 
 		<!-- self feign -->
         <dependency>

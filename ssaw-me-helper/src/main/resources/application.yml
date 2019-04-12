@@ -42,22 +42,22 @@ spring:
       log-abandoned: false
   main:
     allow-bean-definition-overriding: true
-  rabbitmq:
-    host: 118.24.38.46
-    port: 5672
-    username: husen
-    password: 521428
-    virtual-host: /
-  zipkin:
-    sender:
-      type: rabbit
-
-  sleuth:
-    web:
-      client:
-        enabled: true
-    sampler:
-      probability: 1.0
+#  rabbitmq:
+#    host: 118.24.38.46
+#    port: 5672
+#    username: husen
+#    password: 521428
+#    virtual-host: /
+#  zipkin:
+#    sender:
+#      type: rabbit
+#
+#  sleuth:
+#    web:
+#      client:
+#        enabled: true
+#    sampler:
+#      probability: 1.0
 
 ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
   eager-load:

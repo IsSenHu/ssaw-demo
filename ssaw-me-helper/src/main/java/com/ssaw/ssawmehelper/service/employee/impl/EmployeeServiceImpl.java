@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
 import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 
 /**
@@ -42,15 +41,8 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
                 .eq("bn", employeePO.getBn()).eq("username", username);
         EmployeePO po = employeeMapper.selectOne(queryWrapper);
         if (Objects.isNull(po)) {
-            QueryWrapper<EmployeePO> qBn = new QueryWrapper<EmployeePO>()
-                    .eq("bn", employeePO.getBn());
-            EmployeePO qBnPo = employeeMapper.selectOne(qBn);
-            if (Objects.isNull(qBnPo)) {
-                employeePO.setUsername(username);
-                employeeMapper.insert(employeePO);
-            } else {
-                return CommonResult.createResult(ERROR, "ehr系统的账号已被其他账号绑定", null);
-            }
+            employeePO.setUsername(username);
+            employeeMapper.insert(employeePO);
         } else {
             employeePO.setId(po.getId());
             employeePO.setUsername(username);

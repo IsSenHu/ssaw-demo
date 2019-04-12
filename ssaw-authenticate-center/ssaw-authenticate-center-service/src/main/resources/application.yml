@@ -29,33 +29,34 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: ssaw-authenticate-center
-  rabbitmq:
-    host: 118.24.38.46
-    port: 5672
-    username: husen
-    password: 521428
-    virtual-host: /
-  zipkin:
-    sender:
-      type: rabbit
+#  rabbitmq:
+#    host: 118.24.38.46
+#    port: 5672
+#    username: husen
+#    password: 521428
+#    virtual-host: /
 
-  sleuth:
-    web:
-      client:
-        enabled: true
-    sampler:
-      probability: 1.0
+#  zipkin:
+#    sender:
+#      type: rabbit
+#
+#  sleuth:
+#    web:
+#      client:
+#        enabled: true
+#    sampler:
+#      probability: 1.0
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/ssaw_authenticate_center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://cdb-h2cg63zg.cd.tencentcdb.com:10020/ssaw_authenticate_center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: root
-    password: 521428Slyp
+    password: 19960621Sly
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       filters: mergeStat,config,slf4j
-      max-active: 10000
-      initial-size: 2
+      max-active: 100
+      initial-size: 10
       max-wait: 60000
       min-idle: 3
       time-between-eviction-runs-millis: 18000000

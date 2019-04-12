@@ -104,6 +104,7 @@ public class KaoqinController extends BaseController {
             calendar.set(Calendar.SECOND, 0);
             // 调休开始时间
             Date beginTime = calendar.getTime();
+
             calendar.setTime(simpleDateFormat.parse(reqVO.getBeginTime()));
             reqVO.setBeginTime(simpleDateFormat.format(beginTime));
             if (calendar.get(Calendar.MINUTE) > half) {
