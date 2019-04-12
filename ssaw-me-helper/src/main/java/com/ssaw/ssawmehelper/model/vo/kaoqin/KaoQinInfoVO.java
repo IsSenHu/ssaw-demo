@@ -144,4 +144,10 @@ public class KaoQinInfoVO implements Serializable {
 
     @JSONField(name = "K_DAY_LEAVE_TIME2")
     private String leaveTime2;
+
+    /** 是否上线 */
+    private Boolean online;
+
+    /** 是否忘记打卡 */
+    private Boolean forget;
 }

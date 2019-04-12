@@ -89,6 +89,13 @@
             <artifactId>ssaw-authenticate-center-feign</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- redis支持 -->
+        <dependency>
+            <groupId>com.ssaw</groupId>
+            <artifactId>support-redis</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

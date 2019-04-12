@@ -14,10 +14,8 @@ import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawmehelper.api.constants.KaoqinConstants;
 import com.ssaw.ssawmehelper.dao.mapper.employee.EmployeeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
-import com.ssaw.ssawmehelper.model.vo.kaoqin.CommitLeaveReqVO;
-import com.ssaw.ssawmehelper.model.vo.kaoqin.CommitOverTimeInfoReqVO;
-import com.ssaw.ssawmehelper.model.vo.kaoqin.KaoQinInfoQueryVO;
-import com.ssaw.ssawmehelper.model.vo.kaoqin.KaoQinInfoVO;
+import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
+import com.ssaw.ssawmehelper.model.vo.kaoqin.*;
 import com.ssaw.ssawmehelper.service.consumption.BaseService;
 import com.ssaw.ssawmehelper.service.kaoqin.KaoQinService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,13 +47,17 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
 
     private final EmployeeMapper employeeMapper;
 
+    private final KaoQinDao kaoQinDao;
+
     @Autowired
-    public KaoQinServiceImpl(EmployeeMapper employeeMapper) {
+    public KaoQinServiceImpl(EmployeeMapper employeeMapper, KaoQinDao kaoQinDao) {
         this.employeeMapper = employeeMapper;
+        this.kaoQinDao = kaoQinDao;
     }
 
     /**
      * 分页查询考勤信息
+     *
      * @param pageReqVO 查询数据模型
      * @return 分页结果
      */
@@ -75,6 +77,15 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             tableData.setContent(Lists.newArrayList());
         } else {
             List<KaoQinInfoVO> kaoQinInfoVOList = getKaoQinInfoVOList(data.getYear(), data.getMonth(), employeePO);
+            Set<String> allOnlineTime = kaoQinDao.allOnlineTime(employeePO.getBn());
+            Set<String> allForgetTime = kaoQinDao.allForgetTime(employeePO.getBn());
+
+            kaoQinInfoVOList.forEach(k -> {
+                String dutyDate = k.getDutyDate();
+                k.setOnline(allOnlineTime.contains(dutyDate));
+                k.setForget(allForgetTime.contains(dutyDate));
+            });
+
             tableData.setContent(kaoQinInfoVOList);
             tableData.setTotalPages(1);
             tableData.setTotals((long) kaoQinInfoVOList.size());
@@ -84,6 +95,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
 
     /**
      * 提交加班申请单
+     *
      * @param reqVO 提交加班申请单数据模型
      * @return 申请结果
      */
@@ -171,6 +183,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
 
     /**
      * 提交调休申请单
+     *
      * @param reqVO 提交调休申请单数据模型
      * @return 申请结果
      */
@@ -244,6 +257,38 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         } catch (Exception e) {
             log.error("执行失败:", e);
             return CommonResult.createResult(ERROR, "执行失败", reqVO);
+        }
+    }
+
+    /**
+     * 我上线了
+     *
+     * @param reqVO 确认我上线了
+     * @return 确认结果
+     */
+    @Override
+    public CommonResult<IOnlineReqVO> iOnline(IOnlineReqVO reqVO) {
+        boolean success = kaoQinDao.insertOnlineTime(reqVO);
+        if (success) {
+            return CommonResult.createResult(SUCCESS, "确认我上线了", reqVO);
+        } else {
+            return CommonResult.createResult(ERROR, "确认我上线失败", reqVO);
+        }
+    }
+
+    /**
+     * 我忘记打卡了
+     *
+     * @param reqVO 确认我忘记打卡了
+     * @return 确认结果
+     */
+    @Override
+    public CommonResult<IForgetPlayCardReqVO> iForgetPlayCard(IForgetPlayCardReqVO reqVO) {
+        boolean success = kaoQinDao.insertForgetTime(reqVO);
+        if (success) {
+            return CommonResult.createResult(SUCCESS, "确认我忘记打卡了", reqVO);
+        } else {
+            return CommonResult.createResult(ERROR, "确认我忘记打卡失败", reqVO);
         }
     }
 

@@ -42,6 +42,12 @@ spring:
       log-abandoned: false
   main:
     allow-bean-definition-overriding: true
+
+  redis:
+    host: 118.24.38.46
+    port: 6379
+    password: 521428Slyt
+    database: 2
 #  rabbitmq:
 #    host: 118.24.38.46
 #    port: 5672

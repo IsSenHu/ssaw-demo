@@ -59,6 +59,7 @@ public class KaoqinController extends BaseController {
 
     /**
      * 分页查询考勤信息
+     *
      * @param pageReqVO 查询数据模型
      * @return 分页结果
      */
@@ -71,6 +72,7 @@ public class KaoqinController extends BaseController {
 
     /**
      * 提交加班申请单
+     *
      * @param reqVO 提交加班申请单数据模型
      * @return 申请结果
      */
@@ -83,6 +85,7 @@ public class KaoqinController extends BaseController {
 
     /**
      * 提交迟到调休申请单
+     *
      * @param reqVO 提交调休申请单数据模型
      * @return 申请结果
      * @throws ParseException ParseException
@@ -131,6 +134,7 @@ public class KaoqinController extends BaseController {
 
     /**
      * 提交早退调休申请单
+     *
      * @param reqVO 提交早退调休申请单
      * @return 申请结果
      * @throws ParseException ParseException
@@ -174,6 +178,7 @@ public class KaoqinController extends BaseController {
 
     /**
      * 考勤系统注册员工
+     *
      * @param registerReqVO 注册数据模型
      * @return 注册结果
      */
@@ -204,10 +209,29 @@ public class KaoqinController extends BaseController {
         }
     }
 
-    public static void main(String[] args) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.roll(Calendar.HOUR_OF_DAY, 1);
-        System.out.println(calendar.getTime());
+    /**
+     * 我上线了
+     *
+     * @param reqVO 确认我上线了
+     * @return 确认结果
+     */
+    @PostMapping("/iOnline")
+    @RequestLog(desc = "确认我上线了")
+    @SecurityMethod(antMatcher = "/api/kaoqin/iOnline", scope = "MY_KAOQIN_I_ONLINE")
+    public CommonResult<IOnlineReqVO> iOnline(@RequestBody IOnlineReqVO reqVO) {
+        return kaoQinService.iOnline(reqVO);
+    }
+
+    /**
+     * 我忘记打卡了
+     *
+     * @param reqVO 确认我忘记打卡了
+     * @return 确认结果
+     */
+    @PostMapping("/iForgetPlayCard")
+    @RequestLog(desc = "确认我忘记打卡了")
+    @SecurityMethod(antMatcher = "/api/kaoqin/iForgetPlayCard", scope = "MY_KAOQIN_I_FORGET_PLAY_CARD")
+    public CommonResult<IForgetPlayCardReqVO> iForgetPlayCard(@RequestBody IForgetPlayCardReqVO reqVO) {
+        return kaoQinService.iForgetPlayCard(reqVO);
     }
 }
