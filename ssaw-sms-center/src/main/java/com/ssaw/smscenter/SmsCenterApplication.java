@@ -1,8 +1,10 @@
 package com.ssaw.smscenter;
 
+import com.ssaw.commons.annotations.EnableSpringStudy;
+import com.ssaw.smscenter.selector.DemoImportSelector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -10,10 +12,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @EnableScheduling
 @SpringBootApplication
+@EnableSpringStudy
+@Import(DemoImportSelector.class)
 public class SmsCenterApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(SmsCenterApplication.class, args);
+        SpringApplication.run(SmsCenterApplication.class, args);
     }
 }
 
