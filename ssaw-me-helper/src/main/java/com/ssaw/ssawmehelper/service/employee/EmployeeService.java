@@ -12,8 +12,17 @@ public interface EmployeeService {
 
     /**
      * 新增员工
+     *
      * @param employeePO 员工数据模型
      * @return 新增结果
      */
     CommonResult<EmployeeRegisterReqVO> insert(EmployeePO employeePO);
+
+    /**
+     * 查询员工
+     *
+     * @param bn 员工编码
+     * @return 员工
+     */
+    EmployeePO getEmployeePO(String bn);
 }

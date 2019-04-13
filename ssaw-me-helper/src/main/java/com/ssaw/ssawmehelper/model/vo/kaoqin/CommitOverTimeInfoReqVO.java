@@ -20,4 +20,5 @@ public class CommitOverTimeInfoReqVO implements Serializable {
     private String overTime;
     private String restTime;
     private String kqOverType;
+    private String dutyTime;
 }

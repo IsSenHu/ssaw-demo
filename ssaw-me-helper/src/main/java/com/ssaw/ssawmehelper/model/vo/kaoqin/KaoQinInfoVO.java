@@ -150,4 +150,7 @@ public class KaoQinInfoVO implements Serializable {
 
     /** 是否忘记打卡 */
     private Boolean forget;
+
+    /** 是否已提交加班申请 */
+    private Boolean commitOverTime;
 }

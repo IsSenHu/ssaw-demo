@@ -15,14 +15,18 @@ import com.ssaw.ssawmehelper.api.constants.KaoqinConstants;
 import com.ssaw.ssawmehelper.dao.mapper.employee.EmployeeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
+import com.ssaw.ssawmehelper.handler.CommitOverTimeHandler;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.*;
 import com.ssaw.ssawmehelper.service.consumption.BaseService;
+import com.ssaw.ssawmehelper.service.employee.EmployeeService;
 import com.ssaw.ssawmehelper.service.kaoqin.KaoQinService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,10 +34,8 @@ import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
-import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
+import static com.ssaw.commons.constant.Constants.ResultCodes.*;
 
 /**
  * @author HuSen
@@ -43,16 +45,23 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 @Service
 public class KaoQinServiceImpl extends BaseService implements KaoQinService {
 
-    private static Map<String, EmployeePO> employeeMap = new ConcurrentHashMap<>();
-
     private final EmployeeMapper employeeMapper;
 
     private final KaoQinDao kaoQinDao;
 
+    @Resource(name = "commitOverTimeExecutor")
+    private ThreadPoolTaskExecutor commitOverTimeExecutor;
+
+    private final EmployeeService employeeService;
+
+    private final CommitOverTimeHandler commitOverTimeHandler;
+
     @Autowired
-    public KaoQinServiceImpl(EmployeeMapper employeeMapper, KaoQinDao kaoQinDao) {
+    public KaoQinServiceImpl(EmployeeMapper employeeMapper, KaoQinDao kaoQinDao, CommitOverTimeHandler commitOverTimeHandler, EmployeeService employeeService) {
         this.employeeMapper = employeeMapper;
         this.kaoQinDao = kaoQinDao;
+        this.commitOverTimeHandler = commitOverTimeHandler;
+        this.employeeService = employeeService;
     }
 
     /**
@@ -79,11 +88,13 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             List<KaoQinInfoVO> kaoQinInfoVOList = getKaoQinInfoVOList(data.getYear(), data.getMonth(), employeePO);
             Set<String> allOnlineTime = kaoQinDao.allOnlineTime(employeePO.getBn());
             Set<String> allForgetTime = kaoQinDao.allForgetTime(employeePO.getBn());
+            Set<String> allCommitOverTime = kaoQinDao.allCommitOverTime(employeePO.getBn());
 
             kaoQinInfoVOList.forEach(k -> {
                 String dutyDate = k.getDutyDate();
                 k.setOnline(allOnlineTime.contains(dutyDate));
                 k.setForget(allForgetTime.contains(dutyDate));
+                k.setCommitOverTime(allCommitOverTime.contains(dutyDate));
             });
 
             tableData.setContent(kaoQinInfoVOList);
@@ -101,84 +112,10 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
      */
     @Override
     public CommonResult<CommitOverTimeInfoReqVO> commitOverTimeInfo(CommitOverTimeInfoReqVO reqVO) {
-        EmployeePO employee = employeeMap.get(reqVO.getBn());
-        JSONObject jOriginalDataXml = JSON.parseObject(KaoqinConstants.J_ORIGINAL_DATA_XML);
-        JSONObject tables = JSON.parseObject(KaoqinConstants.TABLES);
-        JSONObject reqJsonObject = new JSONObject();
-        reqJsonObject.put("updateTable", "K_OVER");
-        reqJsonObject.put("primaryKey", "K_ID");
-        reqJsonObject.put("userUpdateState", StringUtils.EMPTY);
-        reqJsonObject.put("Tables", tables);
-        JSONObject data = new JSONObject();
-        data.put("K_OVER_K_ID", StringUtils.EMPTY);
-        data.put("K_OVER_BYZJB", StringUtils.EMPTY);
-        data.put("K_OVER_ZRJB", StringUtils.EMPTY);
-        data.put("K_OVER_BSKF", StringUtils.EMPTY);
-        data.put("K_OVER_K_OVERDATE", StringUtils.EMPTY);
-        data.put("K_OVER_CONFIRM", StringUtils.EMPTY);
-        data.put("K_OVER_K_OVERTIME", reqVO.getOverTime());
-        Calendar calendar = Calendar.getInstance();
-        //noinspection MagicConstant
-        calendar.set(reqVO.getYear(), getMonth(reqVO.getMonth() - 1), reqVO.getDay(), 0, 0, 0);
-        data.put("K_OVER_K_OVERRQ", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(calendar.getTime()));
-        data.put("K_OVER_SHIFTID", StringUtils.EMPTY);
-        data.put("K_OVER_A0188", employeeMap.get(reqVO.getBn()).getEhrBn());
-        data.put("K_OVER_A0188S", StringUtils.EMPTY);
-        data.put("K_OVER_ZLOVER_CHECK", "0");
-        //
-        data.put("K_OVER_OVER_BEGIN", reqVO.getOverBegin());
-        data.put("K_OVER_BEGIN_CHECK", "0");
-        data.put("K_OVER_OVER_VALID1", StringUtils.EMPTY);
-        //
-        data.put("K_OVER_OVER_END", reqVO.getOverEnd());
-        data.put("K_OVER_END_CHECK", "0");
-        data.put("K_OVER_OVER_VALID2", StringUtils.EMPTY);
-        //
-        data.put("K_OVER_OVER_TIME", reqVO.getOverTime());
-        //
-        data.put("K_OVER_REST_TIME", reqVO.getRestTime());
-        //
-        data.put("K_OVER_OVER_TYPE", reqVO.getKqOverType());
-        data.put("K_OVER_ACTIONEMPLOYEE", employeeMap.get(reqVO.getBn()).getName());
-        data.put("K_OVER_ACTIONTIME", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        data.put("K_OVER_BC", StringUtils.EMPTY);
-        data.put("K_OVER_SIGNED", "0");
-        data.put("K_OVER_CARD_BEGIN", StringUtils.EMPTY);
-        data.put("K_OVER_CARD_END", StringUtils.EMPTY);
-        data.put("K_OVER___CHK", StringUtils.EMPTY);
-        data.put("K_OVER_JBYY", "01");
-        data.put("K_OVER_OVER_TIME_FACT", StringUtils.EMPTY);
-        data.put("K_OVER_OVER_MEMO", "加班");
-        data.put("K_OVER_OVER_SOURCE", StringUtils.EMPTY);
-        data.put("K_OVER_K_OVER01", StringUtils.EMPTY);
-        data.put("DataRightType", "0");
-        data.put("ValidateState", "1");
-        data.put("FormulaState", "1");
-        data.put("SequenceID", "0");
-        data.put("@RowState", "Added");
-        JSONObject dataSet = new JSONObject();
-        dataSet.put("DATA", data);
-        JSONObject jDataXml = new JSONObject();
-        jDataXml.put("DataSet", dataSet);
-        reqJsonObject.put("JDataXML", jDataXml);
-        reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
-        String json = JSON.toJSONString(reqJsonObject);
-        String result = null;
-        try {
-            result = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
-                    json, false);
-            final String addedID = "AddedID";
-            if (StringUtils.contains(result, addedID)) {
-                String signIds = result.split("<AddedID>")[1].split("</AddedID>")[0];
-                return CommonResult.createResult(SUCCESS, startWf("050104", signIds, employeeMap.get(reqVO.getBn())), reqVO);
-            } else {
-                String decode = URLDecoder.decode(result.split("<Message>")[1].split("</Message>")[0], "utf-8");
-                return CommonResult.createResult(SUCCESS, decode, reqVO);
-            }
-        } catch (Exception e) {
-            log.error("保存数据失败，结果：{}", result);
-            return CommonResult.createResult(ERROR, "保存数据库失败", reqVO);
-        }
+        commitOverTimeExecutor.execute(() -> commitOverTimeHandler.work(reqVO));
+        // 记录redis 该加班申请已提交过了
+        kaoQinDao.insertCommitOverTime(reqVO);
+        return CommonResult.createResult(SUCCESS, "提交成功，请等待执行结果", reqVO);
     }
 
     /**
@@ -190,15 +127,19 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
     @Override
     public CommonResult<CommitLeaveReqVO> commitLeave(CommitLeaveReqVO reqVO) {
         JSONObject calLeaveTimeObj = new JSONObject();
-        calLeaveTimeObj.put("A0188", employeeMap.get(reqVO.getBn()).getEhrBn());
-        calLeaveTimeObj.put("A0188s", employeeMap.get(reqVO.getBn()).getEhrBn());
+        EmployeePO employeePO = employeeService.getEmployeePO(reqVO.getBn());
+        if (Objects.isNull(employeePO)) {
+            return CommonResult.createResult(DATA_NOT_EXIST, "该工作人员未录入该系统", reqVO);
+        }
+        calLeaveTimeObj.put("A0188", employeePO.getEhrBn());
+        calLeaveTimeObj.put("A0188s", employeePO.getEhrBn());
         calLeaveTimeObj.put("LEAVE_BEGIN", reqVO.getBeginTime());
         calLeaveTimeObj.put("LEAVE_END", reqVO.getEndTime());
         calLeaveTimeObj.put("LEAVE_TYPE", "19");
         calLeaveTimeObj.put("ID", 0);
         calLeaveTimeObj.put("flag", 0);
         try {
-            String leaveTime = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeeMap.get(reqVO.getBn()).getEhrAp(),
+            String leaveTime = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
                     calLeaveTimeObj.toJSONString(), false);
             assert leaveTime != null;
             String errorMsg = ((JSONObject) JSON.parseArray(leaveTime).get(0)).getString("ErrorMsg");
@@ -209,7 +150,6 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
                 return CommonResult.createResult(ERROR, "可调休时间剩余: " + last.add(over).subtract(leave) +
                         " 小时, 需要: " + reqVO.getLeaveTime().setScale(2, RoundingMode.HALF_DOWN) + " 小时", reqVO);
             }
-            EmployeePO employee = employeeMap.get(reqVO.getBn());
             JSONObject jOriginalDataXml = JSON.parseObject(KaoqinConstants.TIAO_XIU_J_ORIGINAL_DATA_XML);
             JSONObject tables = JSON.parseObject(KaoqinConstants.TIAO_XIU_TABLES);
             JSONObject reqJsonObject = new JSONObject();
@@ -220,7 +160,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             JSONObject data = new JSONObject();
             data.put("K_LEAVE_K_ID", StringUtils.EMPTY);
             data.put("K_LEAVE_LEAVE_REASON", "调休");
-            data.put("K_LEAVE_A0188", employee.getEhrBn());
+            data.put("K_LEAVE_A0188", employeePO.getEhrBn());
             data.put("K_LEAVE_LEAVE_TYPE", "19");
             data.put("K_LEAVE_LEAVE_BEGIN", reqVO.getBeginTime());
             data.put("K_LEAVE_LEAVE_END", reqVO.getEndTime());
@@ -240,13 +180,13 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             reqJsonObject.put("JDataXML", jDataXml);
             reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
             String json = JSON.toJSONString(reqJsonObject);
-            String result = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
+            String result = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
                     json, false);
             try {
                 final String addedId = "AddedID";
                 if (StringUtils.contains(result, addedId)) {
                     String signIds = result.split("<AddedID>")[1].split("</AddedID>")[0];
-                    return CommonResult.createResult(SUCCESS, startWf("050102", signIds, employee), reqVO);
+                    return CommonResult.createResult(SUCCESS, startWf(signIds, employeePO), reqVO);
                 } else {
                     return CommonResult.createResult(SUCCESS, URLDecoder.decode(result.split("<Message>")[1].split("</Message>")[0], "utf-8"), reqVO);
                 }
@@ -293,7 +233,6 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
     }
 
     private List<KaoQinInfoVO> getKaoQinInfoVOList(Integer year, Integer month, EmployeePO employee) {
-        employeeMap.put(employee.getBn(), employee);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -432,9 +371,9 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         return result;
     }
 
-    private String startWf(String spbm, String signIds, EmployeePO employee) throws IOException {
+    private String startWf(String signIds, EmployeePO employee) throws IOException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("spbm", spbm);
+        jsonObject.put("spbm", "050102");
         jsonObject.put("signIDs", signIds);
         jsonObject.put("A0188", employee.getEhrBn());
         return HttpConnectionUtils.doPost("https://ehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),

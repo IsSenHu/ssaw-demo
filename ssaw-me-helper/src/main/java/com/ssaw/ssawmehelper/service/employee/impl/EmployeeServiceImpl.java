@@ -10,7 +10,9 @@ import com.ssaw.ssawmehelper.service.consumption.BaseService;
 import com.ssaw.ssawmehelper.service.employee.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
@@ -31,6 +33,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
 
     /**
      * 新增员工
+     *
      * @param employeePO 员工数据模型
      * @return 新增结果
      */
@@ -49,5 +52,19 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
             employeeMapper.updateById(employeePO);
         }
         return CommonResult.createResult(SUCCESS, "注册成功", null);
+    }
+
+    /**
+     * 查询员工
+     *
+     * @param bn 员工编码
+     * @return 员工
+     */
+    @Override
+    public EmployeePO getEmployeePO(String bn) {
+        QueryWrapper<EmployeePO> findByBn = new QueryWrapper<>();
+        findByBn.eq("bn", bn);
+        List<EmployeePO> employeePOList = employeeMapper.selectList(findByBn);
+        return CollectionUtils.isEmpty(employeePOList) ? null : employeePOList.get(0);
     }
 }
