@@ -1,5 +1,6 @@
 package com.ssaw.ssawmehelper.dao.redis;
 
+import com.ssaw.ssawmehelper.model.vo.kaoqin.CommitLeaveReqVO;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.CommitOverTimeInfoReqVO;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.IForgetPlayCardReqVO;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.IOnlineReqVO;
@@ -28,6 +29,8 @@ public class KaoQinDao {
     private static final String I_FORGET_TABLE_PREFIX = "i_forget_";
 
     private static final String I_COMMIT_OVER_TIME_PREFIX = "i_commit_over_time_";
+
+    private static final String I_COMMIT_LEAVE_PREFIX = "i_commit_leave_";
 
     @Autowired
     public KaoQinDao(StringRedisTemplate stringRedisTemplate) {
@@ -124,6 +127,32 @@ public class KaoQinDao {
         try {
             SetOperations<String, String> set = stringRedisTemplate.opsForSet();
             Set<String> members = set.members(I_COMMIT_OVER_TIME_PREFIX.concat(bn));
+            members = Objects.isNull(members) ? new HashSet<>() : members;
+            return members;
+        } catch (Exception e) {
+            log.error("allCommitOverTime fail:", e);
+            return new HashSet<>(0);
+        }
+    }
+
+    public boolean insertCommitLeave(CommitLeaveReqVO reqVO) {
+        try {
+            SetOperations<String, String> set = stringRedisTemplate.opsForSet();
+            Set<String> members = set.members(I_COMMIT_LEAVE_PREFIX.concat(reqVO.getBn()));
+            members = Objects.nonNull(members) ? members : new HashSet<>();
+            members.add(reqVO.getDutyTime());
+            set.add(I_COMMIT_LEAVE_PREFIX.concat(reqVO.getBn()), members.toArray(new String[0]));
+            return true;
+        } catch (Exception e) {
+            log.error("insertCommitOverTime fail:", e);
+            return false;
+        }
+    }
+
+    public Set<String> allCommitLeave(String bn) {
+        try {
+            SetOperations<String, String> set = stringRedisTemplate.opsForSet();
+            Set<String> members = set.members(I_COMMIT_LEAVE_PREFIX.concat(bn));
             members = Objects.isNull(members) ? new HashSet<>() : members;
             return members;
         } catch (Exception e) {

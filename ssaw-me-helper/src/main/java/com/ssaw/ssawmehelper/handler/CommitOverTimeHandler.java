@@ -9,6 +9,7 @@ import com.ssaw.ssawmehelper.api.constants.KaoqinConstants;
 import com.ssaw.ssawmehelper.dao.mapper.employee.CommitOverTimeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.CommitOverTimePO;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
+import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.CommitOverTimeInfoReqVO;
 import com.ssaw.ssawmehelper.service.employee.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,6 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author HuSen
@@ -30,18 +30,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
-public class CommitOverTimeHandler {
+public class CommitOverTimeHandler extends BaseHandler {
 
     private final CommitOverTimeMapper commitOverTimeMapper;
 
-    private Map<String, EmployeePO> employeePOMap = new ConcurrentHashMap<>();
-
     private final EmployeeService employeeService;
 
+    private final KaoQinDao kaoQinDao;
+
     @Autowired
-    public CommitOverTimeHandler(CommitOverTimeMapper commitOverTimeMapper, EmployeeService employeeService) {
+    public CommitOverTimeHandler(CommitOverTimeMapper commitOverTimeMapper, EmployeeService employeeService, KaoQinDao kaoQinDao) {
         this.commitOverTimeMapper = commitOverTimeMapper;
         this.employeeService = employeeService;
+        this.kaoQinDao = kaoQinDao;
     }
 
     public void work(CommitOverTimeInfoReqVO reqVO) {
@@ -50,9 +51,12 @@ public class CommitOverTimeHandler {
             if (Objects.isNull(employee)) {
                 return;
             }
+            // 记录redis 该加班申请已提交过了
+            boolean commitOverTime = kaoQinDao.insertCommitOverTime(reqVO);
+            log.info("记录redis 该加班申请已提交过了:{}", commitOverTime);
             realWork(reqVO, employee);
         } catch (Exception e) {
-            log.error("提交加班申请失败，结果：{}");
+            log.error("提交加班申请失败，结果:", e);
             CommitOverTimePO commitOverTimePO = CopyUtil.copyProperties(reqVO, new CommitOverTimePO());
             commitOverTimePO.setSuccess(false);
             commitOverTimeMapper.insert(commitOverTimePO);
@@ -131,6 +135,7 @@ public class CommitOverTimeHandler {
         queryWrapper.eq("success", false);
         List<CommitOverTimePO> commitOverTimePOList = commitOverTimeMapper.selectList(queryWrapper);
         if (CollectionUtils.isEmpty(commitOverTimePOList)) {
+            log.info("没有失败的提交加班记录:{}", commitOverTimePOList);
             return;
         }
         for (CommitOverTimePO commitOverTimePO : commitOverTimePOList) {
@@ -147,50 +152,6 @@ public class CommitOverTimeHandler {
             } catch (Exception e) {
                 // 什么都不做
                 log.error("出现异常, 加班单:{}, 补偿失败:", commitOverTimePO, e);
-            }
-        }
-    }
-
-    private int getMonth(int i) {
-        switch (i) {
-            case 0: {
-                return Calendar.JANUARY;
-            }
-            case 1: {
-                return Calendar.FEBRUARY;
-            }
-            case 2: {
-                return Calendar.MARCH;
-            }
-            case 3: {
-                return Calendar.APRIL;
-            }
-            case 4: {
-                return Calendar.MAY;
-            }
-            case 5: {
-                return Calendar.JUNE;
-            }
-            case 6: {
-                return Calendar.JULY;
-            }
-            case 7: {
-                return Calendar.AUGUST;
-            }
-            case 8: {
-                return Calendar.SEPTEMBER;
-            }
-            case 9: {
-                return Calendar.OCTOBER;
-            }
-            case 10: {
-                return Calendar.NOVEMBER;
-            }
-            case 11: {
-                return Calendar.DECEMBER;
-            }
-            default: {
-                return Calendar.JANUARY;
             }
         }
     }

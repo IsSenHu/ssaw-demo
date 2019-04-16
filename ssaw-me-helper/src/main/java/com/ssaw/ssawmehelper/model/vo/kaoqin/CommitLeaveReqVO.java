@@ -22,4 +22,6 @@ public class CommitLeaveReqVO implements Serializable {
     private BigDecimal leaveTime;
 
     private BigDecimal leaveDays;
+
+    private String dutyTime;
 }

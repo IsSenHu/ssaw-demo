@@ -11,14 +11,13 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
-import com.ssaw.ssawmehelper.api.constants.KaoqinConstants;
 import com.ssaw.ssawmehelper.dao.mapper.employee.EmployeeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
+import com.ssaw.ssawmehelper.handler.CommitLeaveHandler;
 import com.ssaw.ssawmehelper.handler.CommitOverTimeHandler;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.*;
 import com.ssaw.ssawmehelper.service.consumption.BaseService;
-import com.ssaw.ssawmehelper.service.employee.EmployeeService;
 import com.ssaw.ssawmehelper.service.kaoqin.KaoQinService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -28,9 +27,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,16 +48,19 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
     @Resource(name = "commitOverTimeExecutor")
     private ThreadPoolTaskExecutor commitOverTimeExecutor;
 
-    private final EmployeeService employeeService;
+    @Resource(name = "commitLeaveExecutor")
+    private ThreadPoolTaskExecutor commitLeaveExecutor;
 
     private final CommitOverTimeHandler commitOverTimeHandler;
 
+    private final CommitLeaveHandler commitLeaveHandler;
+
     @Autowired
-    public KaoQinServiceImpl(EmployeeMapper employeeMapper, KaoQinDao kaoQinDao, CommitOverTimeHandler commitOverTimeHandler, EmployeeService employeeService) {
+    public KaoQinServiceImpl(EmployeeMapper employeeMapper, KaoQinDao kaoQinDao, CommitOverTimeHandler commitOverTimeHandler, CommitLeaveHandler commitLeaveHandler) {
         this.employeeMapper = employeeMapper;
         this.kaoQinDao = kaoQinDao;
         this.commitOverTimeHandler = commitOverTimeHandler;
-        this.employeeService = employeeService;
+        this.commitLeaveHandler = commitLeaveHandler;
     }
 
     /**
@@ -89,12 +88,14 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             Set<String> allOnlineTime = kaoQinDao.allOnlineTime(employeePO.getBn());
             Set<String> allForgetTime = kaoQinDao.allForgetTime(employeePO.getBn());
             Set<String> allCommitOverTime = kaoQinDao.allCommitOverTime(employeePO.getBn());
+            Set<String> allCommitLeave = kaoQinDao.allCommitLeave(employeePO.getBn());
 
             kaoQinInfoVOList.forEach(k -> {
                 String dutyDate = k.getDutyDate();
                 k.setOnline(allOnlineTime.contains(dutyDate));
                 k.setForget(allForgetTime.contains(dutyDate));
                 k.setCommitOverTime(allCommitOverTime.contains(dutyDate));
+                k.setCommitLeave(allCommitLeave.contains(dutyDate));
             });
 
             tableData.setContent(kaoQinInfoVOList);
@@ -113,8 +114,6 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
     @Override
     public CommonResult<CommitOverTimeInfoReqVO> commitOverTimeInfo(CommitOverTimeInfoReqVO reqVO) {
         commitOverTimeExecutor.execute(() -> commitOverTimeHandler.work(reqVO));
-        // 记录redis 该加班申请已提交过了
-        kaoQinDao.insertCommitOverTime(reqVO);
         return CommonResult.createResult(SUCCESS, "提交成功，请等待执行结果", reqVO);
     }
 
@@ -126,78 +125,8 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
      */
     @Override
     public CommonResult<CommitLeaveReqVO> commitLeave(CommitLeaveReqVO reqVO) {
-        JSONObject calLeaveTimeObj = new JSONObject();
-        EmployeePO employeePO = employeeService.getEmployeePO(reqVO.getBn());
-        if (Objects.isNull(employeePO)) {
-            return CommonResult.createResult(DATA_NOT_EXIST, "该工作人员未录入该系统", reqVO);
-        }
-        calLeaveTimeObj.put("A0188", employeePO.getEhrBn());
-        calLeaveTimeObj.put("A0188s", employeePO.getEhrBn());
-        calLeaveTimeObj.put("LEAVE_BEGIN", reqVO.getBeginTime());
-        calLeaveTimeObj.put("LEAVE_END", reqVO.getEndTime());
-        calLeaveTimeObj.put("LEAVE_TYPE", "19");
-        calLeaveTimeObj.put("ID", 0);
-        calLeaveTimeObj.put("flag", 0);
-        try {
-            String leaveTime = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
-                    calLeaveTimeObj.toJSONString(), false);
-            assert leaveTime != null;
-            String errorMsg = ((JSONObject) JSON.parseArray(leaveTime).get(0)).getString("ErrorMsg");
-            if (!Objects.equals(errorMsg, StringUtils.EMPTY)) {
-                BigDecimal last = errorMsg.contains("期初") ? new BigDecimal(errorMsg.split("剩余")[2].split("小时")[0]) : BigDecimal.ZERO;
-                BigDecimal over = new BigDecimal(errorMsg.split("加班单")[1].split("小时")[0]);
-                BigDecimal leave = new BigDecimal(errorMsg.split("请假")[2].split("小时")[0]);
-                return CommonResult.createResult(ERROR, "可调休时间剩余: " + last.add(over).subtract(leave) +
-                        " 小时, 需要: " + reqVO.getLeaveTime().setScale(2, RoundingMode.HALF_DOWN) + " 小时", reqVO);
-            }
-            JSONObject jOriginalDataXml = JSON.parseObject(KaoqinConstants.TIAO_XIU_J_ORIGINAL_DATA_XML);
-            JSONObject tables = JSON.parseObject(KaoqinConstants.TIAO_XIU_TABLES);
-            JSONObject reqJsonObject = new JSONObject();
-            reqJsonObject.put("updateTable", "K_LEAVE");
-            reqJsonObject.put("primaryKey", "K_ID");
-            reqJsonObject.put("userUpdateState", "0|保存");
-            reqJsonObject.put("Tables", tables);
-            JSONObject data = new JSONObject();
-            data.put("K_LEAVE_K_ID", StringUtils.EMPTY);
-            data.put("K_LEAVE_LEAVE_REASON", "调休");
-            data.put("K_LEAVE_A0188", employeePO.getEhrBn());
-            data.put("K_LEAVE_LEAVE_TYPE", "19");
-            data.put("K_LEAVE_LEAVE_BEGIN", reqVO.getBeginTime());
-            data.put("K_LEAVE_LEAVE_END", reqVO.getEndTime());
-            data.put("K_LEAVE_LEAVE_TIME", reqVO.getLeaveTime());
-            data.put("K_LEAVE_LEAVE_DAYS", reqVO.getLeaveDays());
-            data.put("K_LEAVE_LEAVEFILE", StringUtils.EMPTY);
-            data.put("K_LEAVE_SIGNED", "0");
-            data.put("DataRightType", "0");
-            data.put("ValidateState", "1");
-            data.put("FormulaState", "1");
-            data.put("SequenceID", "0");
-            data.put("@RowState", "Added");
-            JSONObject dataSet = new JSONObject();
-            dataSet.put("DATA", data);
-            JSONObject jDataXml = new JSONObject();
-            jDataXml.put("DataSet", dataSet);
-            reqJsonObject.put("JDataXML", jDataXml);
-            reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
-            String json = JSON.toJSONString(reqJsonObject);
-            String result = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
-                    json, false);
-            try {
-                final String addedId = "AddedID";
-                if (StringUtils.contains(result, addedId)) {
-                    String signIds = result.split("<AddedID>")[1].split("</AddedID>")[0];
-                    return CommonResult.createResult(SUCCESS, startWf(signIds, employeePO), reqVO);
-                } else {
-                    return CommonResult.createResult(SUCCESS, URLDecoder.decode(result.split("<Message>")[1].split("</Message>")[0], "utf-8"), reqVO);
-                }
-            } catch (Exception e) {
-                log.error("保存数据失败，结果：{}", result);
-                return CommonResult.createResult(ERROR, "保存数据库失败", reqVO);
-            }
-        } catch (Exception e) {
-            log.error("执行失败:", e);
-            return CommonResult.createResult(ERROR, "执行失败", reqVO);
-        }
+        commitLeaveExecutor.execute(() -> commitLeaveHandler.work(reqVO));
+        return CommonResult.createResult(SUCCESS, "提交成功，请等待执行结果", reqVO);
     }
 
     /**
@@ -378,49 +307,5 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         jsonObject.put("A0188", employee.getEhrBn());
         return HttpConnectionUtils.doPost("https://ehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),
                 jsonObject.toJSONString(), false);
-    }
-
-    private int getMonth(int i) {
-        switch (i) {
-            case 0: {
-                return Calendar.JANUARY;
-            }
-            case 1: {
-                return Calendar.FEBRUARY;
-            }
-            case 2: {
-                return Calendar.MARCH;
-            }
-            case 3: {
-                return Calendar.APRIL;
-            }
-            case 4: {
-                return Calendar.MAY;
-            }
-            case 5: {
-                return Calendar.JUNE;
-            }
-            case 6: {
-                return Calendar.JULY;
-            }
-            case 7: {
-                return Calendar.AUGUST;
-            }
-            case 8: {
-                return Calendar.SEPTEMBER;
-            }
-            case 9: {
-                return Calendar.OCTOBER;
-            }
-            case 10: {
-                return Calendar.NOVEMBER;
-            }
-            case 11: {
-                return Calendar.DECEMBER;
-            }
-            default: {
-                return Calendar.JANUARY;
-            }
-        }
     }
 }

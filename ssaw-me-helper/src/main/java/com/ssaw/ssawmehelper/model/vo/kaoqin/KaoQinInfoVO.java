@@ -153,4 +153,7 @@ public class KaoQinInfoVO implements Serializable {
 
     /** 是否已提交加班申请 */
     private Boolean commitOverTime;
+
+    /** 是否已提交调休申请 */
+    private Boolean commitLeave;
 }

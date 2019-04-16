@@ -30,4 +30,22 @@ public class ThreadPoolConfig {
         taskExecutor.initialize();
         return taskExecutor;
     }
+
+    @Bean(name = "commitLeaveExecutor")
+    public ThreadPoolTaskExecutor commitLeaveExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        // 核心线程数
+        taskExecutor.setCorePoolSize(Runtime.getRuntime().availableProcessors());
+        // 最大线程数
+        taskExecutor.setMaxPoolSize(Runtime.getRuntime().availableProcessors() * 2);
+        // 线程池所使用的缓冲队列大小
+        taskExecutor.setQueueCapacity(50);
+        // 允许空闲的时间
+        taskExecutor.setKeepAliveSeconds(200);
+        // 对拒绝task的处理策略 直接在调用线程中运行被拒绝的任务
+        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        // 初始化线程池
+        taskExecutor.initialize();
+        return taskExecutor;
+    }
 }
