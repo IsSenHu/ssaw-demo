@@ -299,13 +299,4 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         }
         return result;
     }
-
-    private String startWf(String signIds, EmployeePO employee) throws IOException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("spbm", "050102");
-        jsonObject.put("signIDs", signIds);
-        jsonObject.put("A0188", employee.getEhrBn());
-        return HttpConnectionUtils.doPost("https://ehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),
-                jsonObject.toJSONString(), false);
-    }
 }

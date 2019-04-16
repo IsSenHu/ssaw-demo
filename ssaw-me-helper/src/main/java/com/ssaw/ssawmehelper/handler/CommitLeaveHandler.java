@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Objects;
 
@@ -125,6 +126,14 @@ public class CommitLeaveHandler extends BaseHandler {
         String result = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
                 json, false);
         log.info("提交调休申请结果:{}", result);
+        final String addedID = "AddedID";
+        if (StringUtils.contains(result, addedID)) {
+            String signIds = result.split("<AddedID>")[1].split("</AddedID>")[0];
+            String startWf = startWf("050102", signIds, employeePO);
+            log.info("提交审批结果:{}", startWf);
+        } else {
+            log.info("调休申请可能有异常:{}", URLDecoder.decode(result.split("<Message>")[1].split("</Message>")[0], "utf-8"));
+        }
     }
 
     /**

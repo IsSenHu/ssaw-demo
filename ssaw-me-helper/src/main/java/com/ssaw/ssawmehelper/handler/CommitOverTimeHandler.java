@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -124,6 +125,14 @@ public class CommitOverTimeHandler extends BaseHandler {
         String resp = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
                 json, false);
         log.info("提交加班申请结果:{}", resp);
+        final String addedID = "AddedID";
+        if (StringUtils.contains(resp, addedID)) {
+            String signIds = resp.split("<AddedID>")[1].split("</AddedID>")[0];
+            String startWf = startWf("050104", signIds, employee);
+            log.info("提交审批结果:{}", startWf);
+        } else {
+            log.info("加班申请可能有异常:{}", URLDecoder.decode(resp.split("<Message>")[1].split("</Message>")[0], "utf-8"));
+        }
     }
 
     /**

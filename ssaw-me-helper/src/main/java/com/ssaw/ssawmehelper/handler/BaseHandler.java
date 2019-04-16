@@ -1,5 +1,10 @@
 package com.ssaw.ssawmehelper.handler;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ssaw.commons.util.http.HttpConnectionUtils;
+import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
+
+import java.io.IOException;
 import java.util.Calendar;
 
 /**
@@ -46,5 +51,14 @@ public class BaseHandler {
                 return Calendar.JANUARY;
             }
         }
+    }
+
+     String startWf(String spbm, String signIds, EmployeePO employee) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("spbm", spbm);
+        jsonObject.put("signIDs", signIds);
+        jsonObject.put("A0188", employee.getEhrBn());
+        return HttpConnectionUtils.doPost("https://ehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),
+                jsonObject.toJSONString(), false);
     }
 }
