@@ -57,6 +57,9 @@ public class CommitLeaveHandler extends BaseHandler {
             // 记录redis 该调休申请已经提交过了
             boolean commitLeave = kaoQinDao.insertCommitLeave(reqVO);
             log.info("记录redis 该调休申请已经提交过了:{}", commitLeave);
+            if (!commitLeave) {
+                throw new IllegalArgumentException("记录redis失败!");
+            }
             realWork(reqVO, employeePO);
         } catch (Exception e) {
             log.error("提交调休申请失败:", e);

@@ -55,6 +55,9 @@ public class CommitOverTimeHandler extends BaseHandler {
             // 记录redis 该加班申请已提交过了
             boolean commitOverTime = kaoQinDao.insertCommitOverTime(reqVO);
             log.info("记录redis 该加班申请已提交过了:{}", commitOverTime);
+            if (!commitOverTime) {
+                throw new IllegalArgumentException("记录redis失败!");
+            }
             realWork(reqVO, employee);
         } catch (Exception e) {
             log.error("提交加班申请失败，结果:", e);
