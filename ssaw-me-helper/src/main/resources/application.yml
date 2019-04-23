@@ -106,5 +106,8 @@ ssaw:
     self: true
     icon: el-icon-share
     white-list: /api/test
+  snow-flake:
+    data-center-id: 1
+    machine-id: 1
 mybatis-plus:
   mapper-locations: classpath:mapper/*Mapper.xml

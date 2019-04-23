@@ -1,5 +1,6 @@
 package com.ssaw.ssawmehelper;
 
+import com.ssaw.commons.annotations.EnableSnowFlake;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableAutoAuthenticateInfo;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableSetUserInfo;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableFeignClients(basePackages = "com.ssaw")
 @EnableScheduling
+@EnableSnowFlake
 public class SsawMeHelperApplication {
 
 //    @Bean
