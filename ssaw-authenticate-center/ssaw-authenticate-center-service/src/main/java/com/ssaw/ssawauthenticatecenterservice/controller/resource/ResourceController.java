@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/resource")
-@SecurityApi(index = "1", group = "授权管理", menu = @Menu(index = "1-1", title = "资源服务", scope = "RESOURCE_MANAGE", to = "/authenticate/center/resource"))
+@SecurityApi(index = "1", group = "授权管理", menu = @Menu(index = "1-1", title = "资源服务", scope = "资源管理", to = "/authenticate/center/resource"))
 public class ResourceController extends BaseController {
 
     private final ResourceService resourceService;
@@ -43,7 +43,7 @@ public class ResourceController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增资源服务")
-    @SecurityMethod(antMatcher = "/api/resource/add", scope = "RESOURCE_CREATE", button = "RESOURCE_CREATE", buttonName = "添加")
+    @SecurityMethod(antMatcher = "/api/resource/add", scope = "创建资源", button = "RESOURCE_CREATE", buttonName = "添加")
     public CommonResult<CreateResourceVO> add(@RequestBody CreateResourceVO createResourceVO) {
         return resourceService.add(createResourceVO);
     }
@@ -55,7 +55,7 @@ public class ResourceController extends BaseController {
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询资源服务")
-    @SecurityMethod(antMatcher = "/api/resource/page", scope = "RESOURCE_READ", button = "RESOURCE_READ", buttonName = "搜索")
+    @SecurityMethod(antMatcher = "/api/resource/page", scope = "读取资源信息", button = "RESOURCE_READ", buttonName = "搜索")
     public TableData<ResourceVO> page(@RequestBody PageReqVO<QueryResourceVO> pageReqVO) {
         return resourceService.page(pageReqVO);
     }
@@ -67,7 +67,7 @@ public class ResourceController extends BaseController {
      */
     @GetMapping("/findById/{id}")
     @RequestLog(desc = "根据ID查询资源服务")
-    @SecurityMethod(antMatcher = "/api/resource/findById/*", scope = "RESOURCE_READ")
+    @SecurityMethod(antMatcher = "/api/resource/findById/*", scope = "读取资源信息")
     public CommonResult<ResourceVO> findById(@PathVariable(name = "id") Long id) {
         return resourceService.findById(id);
     }
@@ -80,7 +80,7 @@ public class ResourceController extends BaseController {
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改资源服务")
-    @SecurityMethod(antMatcher = "/api/resource/update", scope = "RESOURCE_UPDATE", button = "RESOURCE_UPDATE", buttonName = "编辑")
+    @SecurityMethod(antMatcher = "/api/resource/update", scope = "修改资源", button = "RESOURCE_UPDATE", buttonName = "编辑")
     public CommonResult<UpdateResourceVO> update(@RequestBody UpdateResourceVO updateResourceVO) {
         return resourceService.update(updateResourceVO);
     }
@@ -92,7 +92,7 @@ public class ResourceController extends BaseController {
      */
     @PostMapping("/delete/{id}")
     @RequestLog(desc = "根据ID删除资源服务")
-    @SecurityMethod(antMatcher = "/api/resource/delete/*", scope = "RESOURCE_DELETE", button = "RESOURCE_DELETE", buttonName = "删除")
+    @SecurityMethod(antMatcher = "/api/resource/delete/*", scope = "删除资源", button = "RESOURCE_DELETE", buttonName = "删除")
     public CommonResult<Long> delete(@PathVariable(name = "id") Long id) {
         return resourceService.delete(id);
     }
@@ -104,7 +104,7 @@ public class ResourceController extends BaseController {
      */
     @GetMapping("/search/{resourceId}")
     @RequestLog(desc = "根据资源ID查询资源")
-    @SecurityMethod(antMatcher = "/api/resource/search/*", scope = "RESOURCE_READ")
+    @SecurityMethod(antMatcher = "/api/resource/search/*", scope = "读取资源信息")
     public CommonResult<List<ResourceVO>> search(@PathVariable(name = "resourceId") String resourceId) {
         return resourceService.search(resourceId);
     }
@@ -115,7 +115,7 @@ public class ResourceController extends BaseController {
      */
     @GetMapping("/findAll")
     @RequestLog(desc = "查询所有的资源服务")
-    @SecurityMethod(antMatcher = "/api/resource/findAll", scope = "RESOURCE_READ")
+    @SecurityMethod(antMatcher = "/api/resource/findAll", scope = "读取资源信息")
     public CommonResult<List<ResourceVO>> findAll() {
         return resourceService.findAll();
     }
@@ -127,7 +127,7 @@ public class ResourceController extends BaseController {
      */
     @GetMapping("/findAllScopeByResourceIds")
     @RequestLog(desc = "根据资源ID查询出树结构作用域")
-    @SecurityMethod(antMatcher = "/api/resource/findAllScopeByResourceIds", scope = "RESOURCE_READ")
+    @SecurityMethod(antMatcher = "/api/resource/findAllScopeByResourceIds", scope = "读取资源信息")
     public CommonResult<EditClientScopeVO> findAllScopeByResourceIds(String ids) {
         return resourceService.findAllScopeByResourceIds(ids);
     }

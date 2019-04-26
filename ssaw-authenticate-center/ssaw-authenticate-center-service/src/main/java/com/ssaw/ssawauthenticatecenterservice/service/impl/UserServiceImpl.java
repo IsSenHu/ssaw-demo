@@ -6,6 +6,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.event.local.RefreshClientFinishEvent;
 import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.user.*;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -324,7 +326,21 @@ public class UserServiceImpl extends BaseService implements UserService {
         return createResult(SUCCESS, "成功", createUserVO.getUsername());
     }
 
-    @Scheduled(fixedDelay = 86400, initialDelay = 5000)
+    @EventListener(RefreshClientFinishEvent.class)
+    public void loadUser() {
+        log.info("开始加载系统内部用户......");
+        List<UserEntity> allByInner = userRepository.findAllByInner(true);
+        for (UserEntity entity : allByInner) {
+            try {
+                CacheManager.refreshUser(baseLogin(entity.getUsername()).getData());
+            } catch (Exception e) {
+                log.error("加载:{} - 用户失败:", entity.getUsername(), e);
+            }
+        }
+        log.info("结束加载系统内部用户......");
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
     public void loadUserTask() {
         log.info("开始加载系统内部用户......");
         List<UserEntity> allByInner = userRepository.findAllByInner(true);

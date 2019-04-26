@@ -42,7 +42,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/consumption")
-@SecurityApi(index = "1", group = "生活", menu = @Menu(index = "1-1", title = "我的收入", scope = "MY_CONSUMPTION", to = "/my/helper/myConsumption"))
+@SecurityApi(index = "1", group = "生活", menu = @Menu(index = "1-1", title = "我的收入", scope = "我的收入", to = "/my/helper/myConsumption"))
 public class MyConsumptionController extends BaseController {
 
     private final MyConsumptionService myConsumptionService;
@@ -60,7 +60,7 @@ public class MyConsumptionController extends BaseController {
      * @throws IOException IO异常
      */
     @PostMapping("/importData")
-    @SecurityMethod(antMatcher = "/api/consumption/importData", scope = "MY_CONSUMPTION_WRITE")
+    @SecurityMethod(antMatcher = "/api/consumption/importData", scope = "导入收入")
     public CommonResult importData(MultipartFile file) throws IOException {
         if (file == null) {
             return CommonResult.createResult(Constants.ResultCodes.PARAM_ERROR, "文件不能为空", null);
@@ -120,7 +120,7 @@ public class MyConsumptionController extends BaseController {
      */
     @RequestLog(desc = "分页查询我的消费")
     @PostMapping("/page")
-    @SecurityMethod(antMatcher = "/api/consumption/page", scope = "MY_CONSUMPTION_READ")
+    @SecurityMethod(antMatcher = "/api/consumption/page", scope = "读取收入信息")
     public TableData<MyConsumptionVO> page(@RequestBody PageReqVO<MyConsumptionQueryVO> pageReqVO) {
         return myConsumptionService.page(pageReqVO);
     }
@@ -133,7 +133,7 @@ public class MyConsumptionController extends BaseController {
      */
     @RequestLog(desc = "获取我的消费折线图所需数据")
     @GetMapping("/getMyConsumptionLineData/{start}/{end}")
-    @SecurityMethod(antMatcher = "/api/consumption/getMyConsumptionLineData/*/*", scope = "MY_CONSUMPTION_LINE_DATA")
+    @SecurityMethod(antMatcher = "/api/consumption/getMyConsumptionLineData/*/*", scope = "收入统计")
     public CommonResult<List<MyConsumptionStatisticsVO>> getMyConsumptionLineData(@PathVariable(name = "start") String start, @PathVariable(name = "end") String end) {
         return myConsumptionService.getMyConsumptionLineData(start, end);
     }

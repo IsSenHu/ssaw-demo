@@ -43,7 +43,7 @@ import static com.ssaw.commons.constant.Constants.ResultCodes.PARAM_ERROR;
 @Slf4j
 @RestController
 @RequestMapping("/api/kaoqin")
-@SecurityApi(index = "2", group = "工作", menu = @Menu(index = "2-1", title = "考勤信息", scope = "MY_KAOQIN", to = "/my/helper/kaoqin"))
+@SecurityApi(index = "2", group = "工作", menu = @Menu(index = "2-1", title = "考勤信息", scope = "我的考勤", to = "/my/helper/kaoqin"))
 public class KaoqinController extends BaseController {
 
     private final EmployeeService employeeService;
@@ -65,7 +65,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询考勤信息")
-    @SecurityMethod(antMatcher = "/api/kaoqin/page", scope = "MY_KAOQIN_READ")
+    @SecurityMethod(antMatcher = "/api/kaoqin/page", scope = "读取考勤信息")
     public TableData<KaoQinInfoVO> page(@RequestBody PageReqVO<KaoQinInfoQueryVO> pageReqVO) {
         return kaoQinService.page(pageReqVO);
     }
@@ -78,7 +78,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/commitOverTimeInfo")
     @RequestLog(desc = "提交加班申请单")
-    @SecurityMethod(antMatcher = "/api/kaoqin/commitOverTimeInfo", scope = "MY_KAOQIN_COMMIT_OVER_TIME")
+    @SecurityMethod(antMatcher = "/api/kaoqin/commitOverTimeInfo", scope = "提交加班申请")
     public CommonResult<CommitOverTimeInfoReqVO> commitOverTimeInfo(@RequestBody CommitOverTimeInfoReqVO reqVO) {
         return kaoQinService.commitOverTimeInfo(reqVO);
     }
@@ -92,7 +92,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/commitLateLeaveInfo")
     @RequestLog(desc = "提交迟到调休申请单")
-    @SecurityMethod(antMatcher = "/api/kaoqin/commitLateLeaveInfo", scope = "MY_KAOQIN_COMMIT_LATE_LEAVE")
+    @SecurityMethod(antMatcher = "/api/kaoqin/commitLateLeaveInfo", scope = "提交调休申请")
     public CommonResult<CommitLeaveReqVO> commitLeaveInfo(@RequestBody CommitLeaveReqVO reqVO) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 首先判断打卡时间是否大于9点，大于9点要进行调休
@@ -141,7 +141,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/commitEarlyGoLeave")
     @RequestLog(desc = "提交早退调休申请单")
-    @SecurityMethod(antMatcher = "/api/kaoqin/commitEarlyGoLeave", scope = "MY_KAOQIN_COMMIT_EARLY_GO_LEAVE")
+    @SecurityMethod(antMatcher = "/api/kaoqin/commitEarlyGoLeave", scope = "提交调休申请")
     public CommonResult<CommitLeaveReqVO> commitEarlyGoLeave(@RequestBody CommitLeaveReqVO reqVO) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 下班打卡时间小于18点 需要早退调休
@@ -184,7 +184,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/register")
     @RequestLog(desc = "考勤系统注册员工")
-    @SecurityMethod(antMatcher = "/api/kaoqin/register", scope = "MY_KAOQIN_WRITE")
+    @SecurityMethod(antMatcher = "/api/kaoqin/register", scope = "绑定工号")
     public CommonResult<EmployeeRegisterReqVO> register(@RequestBody EmployeeRegisterReqVO registerReqVO) {
         if (StringUtils.isBlank(registerReqVO.getBn()) || StringUtils.isBlank(registerReqVO.getPassword())) {
             return CommonResult.createResult(PARAM_ERROR, "工号或密码不能为空", registerReqVO);
@@ -217,7 +217,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/iOnline")
     @RequestLog(desc = "确认我上线了")
-    @SecurityMethod(antMatcher = "/api/kaoqin/iOnline", scope = "MY_KAOQIN_I_ONLINE")
+    @SecurityMethod(antMatcher = "/api/kaoqin/iOnline", scope = "上线确认")
     public CommonResult<IOnlineReqVO> iOnline(@RequestBody IOnlineReqVO reqVO) {
         return kaoQinService.iOnline(reqVO);
     }
@@ -230,7 +230,7 @@ public class KaoqinController extends BaseController {
      */
     @PostMapping("/iForgetPlayCard")
     @RequestLog(desc = "确认我忘记打卡了")
-    @SecurityMethod(antMatcher = "/api/kaoqin/iForgetPlayCard", scope = "MY_KAOQIN_I_FORGET_PLAY_CARD")
+    @SecurityMethod(antMatcher = "/api/kaoqin/iForgetPlayCard", scope = "忘打卡确认")
     public CommonResult<IForgetPlayCardReqVO> iForgetPlayCard(@RequestBody IForgetPlayCardReqVO reqVO) {
         return kaoQinService.iForgetPlayCard(reqVO);
     }

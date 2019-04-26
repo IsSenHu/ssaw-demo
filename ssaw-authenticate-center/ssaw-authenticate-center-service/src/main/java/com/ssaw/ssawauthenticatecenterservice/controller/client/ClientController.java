@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/client")
-@SecurityApi(index = "1", group = "授权管理", menu = @Menu(index = "1-3", title = "客户端", scope = "CLIENT_MANAGE", to = "/authenticate/center/client"))
+@SecurityApi(index = "1", group = "授权管理", menu = @Menu(index = "1-3", title = "客户端", scope = "客户端管理", to = "/authenticate/center/client"))
 public class ClientController extends BaseController {
     private final ClientService clientService;
 
@@ -43,7 +43,7 @@ public class ClientController extends BaseController {
      */
     @GetMapping("/get/{clientId}")
     @RequestLog(desc = "根据clientId查询客户端")
-    @SecurityMethod(antMatcher = "/api/client/get/*", scope = "CLIENT_READ")
+    @SecurityMethod(antMatcher = "/api/client/get/*", scope = "读取客户端信息")
     public CommonResult<ClientDetailsInfoVO> findById(@PathVariable(name = "clientId") String clientId) {
         return clientService.findById(clientId);
     }
@@ -56,7 +56,7 @@ public class ClientController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增客户端")
-    @SecurityMethod(antMatcher = "/api/client/add", scope = "CLIENT_CREATE", button = "CLIENT_CREATE", buttonName = "添加")
+    @SecurityMethod(antMatcher = "/api/client/add", scope = "创建客户端", button = "CLIENT_CREATE", buttonName = "添加")
     public CommonResult<CreateClientVO> add(@RequestBody CreateClientVO createClientVO) {
         return clientService.save(createClientVO);
     }
@@ -68,7 +68,7 @@ public class ClientController extends BaseController {
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询客户端")
-    @SecurityMethod(antMatcher = "/api/client/page", scope = "CLIENT_READ", button = "CLIENT_READ", buttonName = "搜索")
+    @SecurityMethod(antMatcher = "/api/client/page", scope = "读取客户端信息", button = "CLIENT_READ", buttonName = "搜索")
     public TableData<ClientVO> page(PageReqVO<QueryClientVO> pageReq) {
         return clientService.page(pageReq);
     }
@@ -80,7 +80,7 @@ public class ClientController extends BaseController {
      */
     @PostMapping("/delete/{id}")
     @RequestLog(desc = "根据Id删除客户端")
-    @SecurityMethod(antMatcher = "/api/client/delete/*", scope = "CLIENT_DELETE", button = "CLIENT_DELETE", buttonName = "删除")
+    @SecurityMethod(antMatcher = "/api/client/delete/*", scope = "删除客户端", button = "CLIENT_DELETE", buttonName = "删除")
     public CommonResult<String> delete(@PathVariable(name = "id") String id) {
         return clientService.delete(id);
     }

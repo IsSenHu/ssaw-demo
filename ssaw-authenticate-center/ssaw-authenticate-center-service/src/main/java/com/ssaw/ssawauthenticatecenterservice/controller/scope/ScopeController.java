@@ -26,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/scope")
-@SecurityApi(index = "1", group = "授权管理", menu = @Menu(index = "1-2", title = "作用域", scope = "SCOPE_MANAGE", to = "/authenticate/center/scope"))
+@SecurityApi(index = "1", group = "授权管理", menu = @Menu(index = "1-2", title = "作用域", scope = "作用域管理", to = "/authenticate/center/scope"))
 public class ScopeController extends BaseController {
 
     private final ScopeService scopeService;
@@ -45,7 +45,7 @@ public class ScopeController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增作用域")
-    @SecurityMethod(antMatcher = "/api/scope/add", scope = "SCOPE_CREATE", button = "SCOPE_CREATE", buttonName = "添加")
+    @SecurityMethod(antMatcher = "/api/scope/add", scope = "创建作用域", button = "SCOPE_CREATE", buttonName = "添加")
     public CommonResult<CreateScopeVO> add(@RequestBody CreateScopeVO createScopeVO) {
         return scopeService.add(createScopeVO);
     }
@@ -57,7 +57,7 @@ public class ScopeController extends BaseController {
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询作用域")
-    @SecurityMethod(antMatcher = "/api/scope/page", scope = "SCOPE_READ", button = "SCOPE_READ", buttonName = "搜索")
+    @SecurityMethod(antMatcher = "/api/scope/page", scope = "读取作用域信息", button = "SCOPE_READ", buttonName = "搜索")
     public TableData<ScopeVO> page(@RequestBody PageReqVO<QueryScopeVO> pageReqVO) {
         return scopeService.page(pageReqVO);
     }
@@ -69,7 +69,7 @@ public class ScopeController extends BaseController {
      */
     @PostMapping("/delete/{id}")
     @RequestLog(desc = "根据ID删除作用域")
-    @SecurityMethod(antMatcher = "/api/scope/delete/*", scope = "SCOPE_DELETE", button = "SCOPE_DELETE", buttonName = "删除")
+    @SecurityMethod(antMatcher = "/api/scope/delete/*", scope = "删除作用域", button = "SCOPE_DELETE", buttonName = "删除")
     public CommonResult<Long> delete(@PathVariable(name = "id") Long id) {
         return scopeService.delete(id);
     }
@@ -81,7 +81,7 @@ public class ScopeController extends BaseController {
      */
     @GetMapping("/findById/{id}")
     @RequestLog(desc = "根据ID查询作用域")
-    @SecurityMethod(antMatcher = "/api/scope/findById/*", scope = "SCOPE_READ")
+    @SecurityMethod(antMatcher = "/api/scope/findById/*", scope = "读取作用域信息")
     public CommonResult<ScopeVO> findById(@PathVariable(name = "id") Long id) {
         return scopeService.findById(id);
     }
@@ -94,7 +94,7 @@ public class ScopeController extends BaseController {
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改作用域请求对象")
-    @SecurityMethod(antMatcher = "/api/scope/update", scope = "SCOPE_UPDATE", button = "SCOPE_UPDATE", buttonName = "编辑")
+    @SecurityMethod(antMatcher = "/api/scope/update", scope = "修改作用域", button = "SCOPE_UPDATE", buttonName = "编辑")
     public CommonResult<UpdateScopeVO> update(@RequestBody UpdateScopeVO updateScopeVO) {
         return scopeService.update(updateScopeVO);
     }
@@ -106,7 +106,7 @@ public class ScopeController extends BaseController {
      */
     @GetMapping("/search/{scope}")
     @RequestLog(desc = "根据作用域名称搜索作用域")
-    @SecurityMethod(antMatcher = "/api/scope/search/*", scope = "SCOPE_READ")
+    @SecurityMethod(antMatcher = "/api/scope/search/*", scope = "读取作用域信息")
     public CommonResult<List<ScopeVO>> search(@PathVariable(name = "scope") String scope) {
         return scopeService.search(scope);
     }
@@ -118,7 +118,7 @@ public class ScopeController extends BaseController {
      */
     @GetMapping("/searchForUpdate/{scope}")
     @RequestLog(desc = "ScopeController.searchForUpdate(Long scopeId)")
-    @SecurityMethod(antMatcher = "/api/scope/searchForUpdate/*", scope = "SCOPE_READ")
+    @SecurityMethod(antMatcher = "/api/scope/searchForUpdate/*", scope = "读取作用域信息")
     public CommonResult<List<ScopeVO>> searchForUpdate(@PathVariable(name = "scope") String scope) {
         return scopeService.searchForUpdate(scope);
     }

@@ -47,7 +47,7 @@ public class UserController extends BaseController {
      */
     @RequestLog(desc = "分页查询用户")
     @PostMapping("/page")
-    @SecurityMethod(antMatcher = "/api/user/page", scope = "USER_READ", button = "USER_READ", buttonName = "搜索")
+    @SecurityMethod(antMatcher = "/api/user/page", scope = "读取用户信息", button = "USER_READ", buttonName = "搜索")
     public TableData<UserVO> page(@RequestBody PageReqVO<QueryUserVO> pageReq) {
         return userService.page(pageReq);
     }
@@ -60,7 +60,7 @@ public class UserController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增用户")
-    @SecurityMethod(antMatcher = "/api/user/add", scope = "USER_CREATE", button = "USER_CREATE", buttonName = "编辑")
+    @SecurityMethod(antMatcher = "/api/user/add", scope = "创建用户", button = "USER_CREATE", buttonName = "编辑")
     public CommonResult<CreateUserVO> add(@RequestBody CreateUserVO createUserVO) {
         return userService.add(createUserVO);
     }
@@ -72,7 +72,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/findByUsername/{username}")
     @RequestLog(desc = "通过用户名查询用户")
-    @SecurityMethod(antMatcher = "/api/user/findByUsername/*", scope = "USER_READ")
+    @SecurityMethod(antMatcher = "/api/user/findByUsername/*", scope = "读取用户信息")
     public CommonResult<ShowUpdateUserVO> findByUsername(@PathVariable(value = "username") String username) {
         return userService.findByUsername(username);
     }
@@ -84,7 +84,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/delete/{id}")
     @RequestLog(desc = "根据ID删除用户")
-    @SecurityMethod(antMatcher = "/api/user/delete/*", scope = "USER_DELETE", button = "USER_DELETE", buttonName = "删除")
+    @SecurityMethod(antMatcher = "/api/user/delete/*", scope = "删除用户", button = "USER_DELETE", buttonName = "删除")
     public CommonResult<Long> delete(@PathVariable(value = "id") Long id) {
         return userService.delete(id);
     }
@@ -97,7 +97,7 @@ public class UserController extends BaseController {
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改用户")
-    @SecurityMethod(antMatcher = "/api/user/update", scope = "USER_UPDATE", button = "USER_UPDATE", buttonName = "编辑")
+    @SecurityMethod(antMatcher = "/api/user/update", scope = "更新用户", button = "USER_UPDATE", buttonName = "编辑")
     public CommonResult<UpdateUserVO> update(@RequestBody UpdateUserVO updateUserVO) {
         return userService.update(updateUserVO);
     }
@@ -120,7 +120,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/register")
     @RequestLog(desc = "注册系统内部后台用户接口")
-    @SecurityMethod(antMatcher = "/api/user/register", scope = "USER_REGISTER")
+    @SecurityMethod(antMatcher = "/api/user/register", scope = "注册用户")
     public CommonResult<String> register(@RequestBody CreateUserVO createUserVO) {
         return userService.register(createUserVO);
     }

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/permission")
-@SecurityApi(index = "2", group = "用户管理", menu = @Menu(index = "2-3", title = "权限", scope = "PERMISSION_MANAGE", to = "/authenticate/center/permission"))
+@SecurityApi(index = "2", group = "用户管理", menu = @Menu(index = "2-3", title = "权限", scope = "权限管理", to = "/authenticate/center/permission"))
 public class PermissionController extends BaseController {
 
     private final PermissionService permissionService;
@@ -43,7 +43,7 @@ public class PermissionController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增权限")
-    @SecurityMethod(antMatcher = "/api/permission/add", scope = "PERMISSION_CREATE", button = "PERMISSION_CREATE", buttonName = "添加")
+    @SecurityMethod(antMatcher = "/api/permission/add", scope = "创建权限", button = "PERMISSION_CREATE", buttonName = "添加")
     public CommonResult<CreatePermissionVO> add(@RequestBody CreatePermissionVO createPermissionVO) {
         return permissionService.add(createPermissionVO);
     }
@@ -55,7 +55,7 @@ public class PermissionController extends BaseController {
      */
     @GetMapping("/findById/{id}")
     @RequestLog(desc = "根据ID查询权限")
-    @SecurityMethod(antMatcher = "/api/permission/findById/*", scope = "PERMISSION_READ")
+    @SecurityMethod(antMatcher = "/api/permission/findById/*", scope = "读取权限信息")
     public CommonResult<PermissionVO> findById(@PathVariable(name = "id") Long id) {
         return permissionService.findById(id);
     }
@@ -67,7 +67,7 @@ public class PermissionController extends BaseController {
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询权限")
-    @SecurityMethod(antMatcher = "/api/permission/page", scope = "PERMISSION_READ", button = "PERMISSION_READ", buttonName = "搜索")
+    @SecurityMethod(antMatcher = "/api/permission/page", scope = "读取权限信息", button = "PERMISSION_READ", buttonName = "搜索")
     public TableData<PermissionVO> page(@RequestBody PageReqVO<QueryPermissionVO> pageReqVO) {
         return permissionService.page(pageReqVO);
     }
@@ -79,7 +79,7 @@ public class PermissionController extends BaseController {
      */
     @PostMapping("/delete/{id}")
     @RequestLog(desc = "根据ID删除权限")
-    @SecurityMethod(antMatcher = "/api/permission/delete/*", scope = "PERMISSION_DELETE", button = "PERMISSION_DELETE", buttonName = "删除")
+    @SecurityMethod(antMatcher = "/api/permission/delete/*", scope = "删除权限", button = "PERMISSION_DELETE", buttonName = "删除")
     public CommonResult<Long> delete(@PathVariable(name = "id") Long id) {
         return permissionService.delete(id);
     }
@@ -92,7 +92,7 @@ public class PermissionController extends BaseController {
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改权限")
-    @SecurityMethod(antMatcher = "/api/permission/update", scope = "PERMISSION_UPDATE", button = "PERMISSION_UPDATE", buttonName = "编辑")
+    @SecurityMethod(antMatcher = "/api/permission/update", scope = "修改权限", button = "PERMISSION_UPDATE", buttonName = "编辑")
     public CommonResult<UpdatePermissionVO> update(@RequestBody UpdatePermissionVO updatePermissionVO) {
         return permissionService.update(updatePermissionVO);
     }

@@ -89,7 +89,7 @@ spring:
 ssaw:
   resource:
     code: 1
-    resource-id: SSAW_AUTHENTICATE_CENTER
+    resource-id: 认证授权中心
     description: 认证中心
     self: true
     icon: el-icon-location

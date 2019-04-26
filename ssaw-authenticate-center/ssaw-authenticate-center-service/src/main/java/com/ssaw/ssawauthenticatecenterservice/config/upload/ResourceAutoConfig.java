@@ -130,7 +130,7 @@ public class ResourceAutoConfig  {
     @EventListener(UploadScopeAndWhiteListFinishedEvent.class)
     public void refreshScopes(UploadScopeAndWhiteListFinishedEvent event) {
         String resourceId = (String) event.getSource();
-        log.info("因为:{} 完成认证信息上传, 重新刷新作用域", resourceId);
+        log.info("因为:{} 完成认证信息上传, 重新刷新作用域和内部用户信息", resourceId);
         scopeService.refreshScope(resourceId);
         context.publishEvent(new AppFinishedEvent(resourceId));
     }
