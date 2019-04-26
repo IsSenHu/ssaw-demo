@@ -5,7 +5,7 @@
 
     <artifactId>ssaw-authenticate-center-feign</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>ssaw-authenticate-center-feign</name>
     <description>FEIGN SDK</description>
 
