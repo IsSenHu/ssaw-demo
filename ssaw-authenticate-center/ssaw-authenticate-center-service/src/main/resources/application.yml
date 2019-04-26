@@ -99,6 +99,9 @@ ssaw:
     client-secret: 521428Slyp
     client-registered-redirect-uris: localhost:8080
     client-expire: 604800  ##七天
+  snow-flake:
+    data-center-id: 2
+    machine-id: 2
 
 management:
   endpoints:
