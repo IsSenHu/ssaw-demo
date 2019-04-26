@@ -1,8 +1,10 @@
 package com.ssaw.ssawmehelper.service.collection;
 
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionCreateRequestVO;
+import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionQueryVO;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionVO;
 
 import java.util.Set;
@@ -47,8 +49,8 @@ public interface MyCollectionService {
     /**
      * 收藏列表
      *
-     * @param byTime 是否通过时间排序
+     * @param pageReqVO 分页参数
      * @return 收藏列表
      */
-    TableData<MyCollectionVO> list(boolean byTime);
+    TableData<MyCollectionVO> list(PageReqVO<MyCollectionQueryVO> pageReqVO);
 }

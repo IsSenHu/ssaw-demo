@@ -2,9 +2,11 @@ package com.ssaw.ssawmehelper.api.collection;
 
 import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawmehelper.api.BaseController;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionCreateRequestVO;
+import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionQueryVO;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionVO;
 import com.ssaw.ssawmehelper.service.collection.MyCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +81,12 @@ public class MyCollectionController extends BaseController {
     /**
      * 收藏列表
      *
-     * @param byTime 是否通过时间排序
+     * @param pageReqVO 分页参数
      * @return 收藏列表
      */
     @RequestLog(desc = "收藏列表")
-    @RequestMapping("/list/{byTime}")
-    public TableData<MyCollectionVO> list(@PathVariable(name = "byTime") boolean byTime) {
-        return myCollectionService.list(byTime);
+    @RequestMapping("/list")
+    public TableData<MyCollectionVO> list(@RequestBody PageReqVO<MyCollectionQueryVO> pageReqVO) {
+        return myCollectionService.list(pageReqVO);
     }
 }

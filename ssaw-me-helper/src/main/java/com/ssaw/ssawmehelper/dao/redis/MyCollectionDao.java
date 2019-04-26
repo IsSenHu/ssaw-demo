@@ -2,19 +2,27 @@ package com.ssaw.ssawmehelper.dao.redis;
 
 import com.google.common.collect.Lists;
 import com.ssaw.commons.id.DefaultIdService;
+import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
+import com.ssaw.commons.vo.PageReqVO;
+import com.ssaw.commons.vo.TableData;
+import com.ssaw.redis.dao.BaseDao;
+import com.ssaw.redis.request.PageRequest;
 import com.ssaw.ssawmehelper.dao.ro.MyCollectionRO;
+import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionQueryVO;
+import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author HuSen
@@ -22,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Repository
-public class MyCollectionDao {
+public class MyCollectionDao extends BaseDao<MyCollectionRO> {
 
     private final DefaultIdService defaultIdService;
 
@@ -38,6 +46,8 @@ public class MyCollectionDao {
 
     private static final String CLASSIFICATION = "classification_set";
 
+    private static final String GROUP_PREFIX = "group:";
+
     private static final long ONE_TIME_SCORE = 86400000;
 
     public String idToKey(Long id) {
@@ -46,6 +56,7 @@ public class MyCollectionDao {
 
     @Autowired
     public MyCollectionDao(StringRedisTemplate stringRedisTemplate, DefaultIdService defaultIdService) {
+        super(stringRedisTemplate);
         this.stringRedisTemplate = stringRedisTemplate;
         this.defaultIdService = defaultIdService;
     }
@@ -77,6 +88,11 @@ public class MyCollectionDao {
             log.error("插入收藏失败:", e);
             throw new RuntimeException("插入收藏失败");
         }
+    }
+
+    public Long insertInGroup(String key, String classification) {
+        SetOperations<String, String> set = stringRedisTemplate.opsForSet();
+        return set.add(GROUP_PREFIX.concat(classification), key);
     }
 
     public Long insertTimeScore(String key, Long unix) {
@@ -122,37 +138,9 @@ public class MyCollectionDao {
         }
     }
 
-    /**
-     * 获取分数排在前十的收藏
-     *
-     * @return 分数排在前十的收藏
-     */
-    public List<MyCollectionRO> getFirstTenByScore() {
-        try {
-            ZSetOperations<String, String> zSet = stringRedisTemplate.opsForZSet();
-            Set<String> keys = zSet.reverseRangeByScore(COLLECTION_SCORE, Double.MIN_VALUE, Double.MAX_VALUE, 0, 10);
-            Assert.notNull(keys, "获取分数排在前十的收藏的键集合为空");
-            return keys.stream().map(this::findOne).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("获取分数排在前十的收藏:", e);
-            return Lists.newArrayList();
-        }
-    }
-
-    /**
-     * 获取最近发布的前十的收藏
-     * @return 最近发布的前十的收藏
-     */
-    public List<MyCollectionRO> getFirstTenByTime() {
-        try {
-            ZSetOperations<String, String> zSet = stringRedisTemplate.opsForZSet();
-            Set<String> keys = zSet.reverseRangeByScore(COLLECTION_TIME_SCORE, Double.MIN_VALUE, Double.MAX_VALUE, 0, 10);
-            Assert.notNull(keys, "获取分数排在前十的收藏的键集合为空");
-            return keys.stream().map(this::findOne).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("获取分数排在前十的收藏:", e);
-            return Lists.newArrayList();
-        }
+    public Long addVotes(String key) {
+        HashOperations<String, String, String> hash = stringRedisTemplate.opsForHash();
+        return hash.increment(key, "votes", 1);
     }
 
     /**
@@ -172,5 +160,29 @@ public class MyCollectionDao {
      */
     public Set<String> allClassification() {
         return stringRedisTemplate.opsForSet().members(CLASSIFICATION);
+    }
+
+    public TableData<MyCollectionVO> list(PageReqVO<MyCollectionQueryVO> pageReqVO) {
+        TableData<MyCollectionVO> tableData = new TableData<>();
+        // 说明要进行分组查询
+        MyCollectionQueryVO query = pageReqVO.getData();
+        Integer size = pageReqVO.getSize();
+        String witchScore = query.getByTime() != null && query.getByTime() ? COLLECTION_TIME_SCORE : COLLECTION_SCORE;
+        ZSetOperations<String, String> zSet = stringRedisTemplate.opsForZSet();
+        PageRequest<MyCollectionRO> pageRequest;
+        if (!StringUtils.isEmpty(query.getClassification())) {
+            String group = GROUP_PREFIX.concat(query.getClassification());
+            // 目标Key
+            String distKey = group.concat("_").concat(witchScore);
+            Long count = zSet.intersectAndStore(group, Lists.newArrayList(witchScore), distKey, RedisZSetCommands.Aggregate.MAX);
+            // 5秒后过期
+            stringRedisTemplate.expire(distKey, 5, TimeUnit.SECONDS);
+            pageRequest = PageRequest.of(Long.valueOf(pageReqVO.getPage()), pageReqVO.getSize(), false, count);
+            page(distKey, pageRequest, this::findOne);
+        } else {
+            pageRequest = PageRequest.of(Long.valueOf(pageReqVO.getPage()), pageReqVO.getSize(), false);
+            page(witchScore, pageRequest, this::findOne);
+        }
+        return pageRequest.toViews(input -> CopyUtil.copyProperties(input, new MyCollectionVO()));
     }
 }

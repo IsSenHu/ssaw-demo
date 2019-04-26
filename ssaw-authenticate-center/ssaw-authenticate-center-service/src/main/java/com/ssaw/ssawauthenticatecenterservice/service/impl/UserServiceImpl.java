@@ -9,6 +9,7 @@ import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.user.*;
+import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
 import com.ssaw.ssawauthenticatecenterservice.constants.client.ClientConstant;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RolePermissionEntity;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -215,7 +217,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         if(Objects.isNull(id)) {
             return createResult(PARAM_ERROR, "用户ID不能为空!", null);
         }
-        userRepository.deleteById(id);
+        Optional<UserEntity> byId = userRepository.findById(id);
+        if (byId.isPresent() && byId.get().getInner()) {
+            CacheManager.removeUser(byId.get().getUsername());
+            userRepository.deleteById(id);
+        }
         // TODO 删除用户，同时删除用户相关的其他信息
         return createResult(SUCCESS, "成功!", id);
     }
@@ -259,7 +265,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         oldUser.setIsEnable(updateUserVO.getIsEnable());
         oldUser.setDescription(updateUserVO.getDescription());
         userRepository.save(oldUser);
-
+        if (oldUser.getInner()) {
+            CacheManager.refreshUser(baseLogin(oldUser.getUsername()).getData());
+        }
         return createResult(SUCCESS, "成功!", updateUserVO);
     }
 
@@ -270,10 +278,68 @@ public class UserServiceImpl extends BaseService implements UserService {
      */
     @Override
     public CommonResult<UserInfoVO> login(UserLoginVO userLoginVO) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) loadUserByUsername(userLoginVO.getUsername());
-        if (!ApplicationContextUtil.getBean(PasswordEncoder.class).matches(userLoginVO.getPassword(), userDetails.getPassword())) {
-            return createResult(ERROR, "失败", null);
+        UserInfoVO user = CacheManager.getUser(userLoginVO.getUsername());
+        if (Objects.isNull(user)) {
+            return createResult(FORBIDDEN, "用户名或密码错误", null);
         }
+        if (!ApplicationContextUtil.getBean(PasswordEncoder.class).matches(userLoginVO.getPassword(), user.getPassword())) {
+            return createResult(FORBIDDEN, "用户名或密码错误", null);
+        }
+        // 隐藏密码
+        user.setPassword(null);
+        return createResult(SUCCESS, "登录成功", user);
+    }
+
+    /**
+     * 用户登出
+     * @param request HttpServletRequest
+     * @return 登出结果
+     */
+    @Override
+    public CommonResult<String> logout(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (StringUtils.isNotBlank(authorization)) {
+            return createResult(ERROR, "失败", "没有token信息");
+        } else {
+            String token = StringUtils.substringBetween(authorization, "Bearer ");
+            RedisTokenStore redisTokenStore = ApplicationContextUtil.getBean(RedisTokenStore.class);
+            redisTokenStore.removeAccessToken(token);
+            return createResult(SUCCESS, "成功", "登出成功");
+        }
+    }
+
+    /**
+     * 注册系统内部后台用户接口
+     * @param createUserVO 用户注册请求对象
+     * @return 注册结果
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public CommonResult<String> register(CreateUserVO createUserVO) {
+        CommonResult<CreateUserVO> result = this.add(createUserVO);
+        if (result.getCode() != SUCCESS) {
+            throw new RuntimeException("注册用户失败");
+        }
+        CacheManager.refreshUser(baseLogin(createUserVO.getUsername()).getData());
+        return createResult(SUCCESS, "成功", createUserVO.getUsername());
+    }
+
+    @Scheduled(fixedDelay = 86400, initialDelay = 5000)
+    public void loadUserTask() {
+        log.info("开始加载系统内部用户......");
+        List<UserEntity> allByInner = userRepository.findAllByInner(true);
+        for (UserEntity entity : allByInner) {
+            try {
+                CacheManager.refreshUser(baseLogin(entity.getUsername()).getData());
+            } catch (Exception e) {
+                log.error("加载:{} - 用户失败:", entity.getUsername(), e);
+            }
+        }
+        log.info("结束加载系统内部用户......");
+    }
+
+    private CommonResult<UserInfoVO> baseLogin(String username) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) loadUserByUsername(username);
         // 获取客户端配置
         SpringSummerAutumnWinterManageProperties manageProperties = ApplicationContextUtil.getBean(SpringSummerAutumnWinterManageProperties.class);
         JwtAccessTokenConverter jwtAccessTokenConverter = ApplicationContextUtil.getBean(JwtAccessTokenConverter.class);
@@ -325,39 +391,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         // 保存新的Token
         redisTokenStore.storeAccessToken(enhance, oAuth2Authentication);
-        return createResult(SUCCESS, "成功", new UserInfoVO(userDetails.getId(), userDetails.getUsername(), scope, menuService.getMenus(scope, resourceIds), enhance.getValue(), JSON.parseObject(userDetails.getOtherInfo(), Map.class), menuService.getButtons(scope, resourceIds)));
-    }
-
-    /**
-     * 用户登出
-     * @param request HttpServletRequest
-     * @return 登出结果
-     */
-    @Override
-    public CommonResult<String> logout(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        if (StringUtils.isNotBlank(authorization)) {
-            return createResult(ERROR, "失败", "没有token信息");
-        } else {
-            String token = StringUtils.substringBetween(authorization, "Bearer ");
-            RedisTokenStore redisTokenStore = ApplicationContextUtil.getBean(RedisTokenStore.class);
-            redisTokenStore.removeAccessToken(token);
-            return createResult(SUCCESS, "成功", "登出成功");
-        }
-    }
-
-    /**
-     * 注册系统内部后台用户接口
-     * @param createUserVO 用户注册请求对象
-     * @return 注册结果
-     */
-    @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<String> register(CreateUserVO createUserVO) {
-        CommonResult<CreateUserVO> result = this.add(createUserVO);
-        if (result.getCode() != SUCCESS) {
-            throw new RuntimeException("注册用户失败");
-        }
-        return createResult(SUCCESS, "成功", createUserVO.getUsername());
+        return createResult(SUCCESS, "成功", new UserInfoVO(userDetails.getId(), userDetails.getUsername(), userDetails.getPassword(), scope, menuService.getMenus(scope, resourceIds), enhance.getValue(), JSON.parseObject(userDetails.getOtherInfo(), Map.class), menuService.getButtons(scope, resourceIds)));
     }
 }

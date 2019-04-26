@@ -6,10 +6,12 @@ import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.ButtonVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.MenuVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserInfoVO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -32,6 +34,43 @@ public class CacheManager {
 
     private static final Cache<String, List<String>> WHITE_LIST_CACHE = CacheBuilder.newBuilder().build();
     private static final ReadWriteLock WHITE_LIST_READ_WHITE_LOCK = new ReentrantReadWriteLock();
+
+    private static final ConcurrentMap<String, UserInfoVO> USER_CACHE = new ConcurrentHashMap<>();
+    private static final ReadWriteLock USER_READ_TRITE_LOCK = new ReentrantReadWriteLock();
+
+    public static UserInfoVO getUser(String username) {
+        Lock readLock = USER_READ_TRITE_LOCK.readLock();
+        try {
+            readLock.lock();
+            return USER_CACHE.get(username);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public static void refreshUser(UserInfoVO userInfoVO) {
+        Lock writeLock = USER_READ_TRITE_LOCK.writeLock();
+        try {
+            writeLock.lock();
+            if (USER_CACHE.containsKey(userInfoVO.getUsername())) {
+                USER_CACHE.replace(userInfoVO.getUsername(), userInfoVO);
+            } else {
+                USER_CACHE.put(userInfoVO.getUsername(), userInfoVO);
+            }
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    public static void removeUser(String username) {
+        Lock writeLock = USER_READ_TRITE_LOCK.writeLock();
+        try {
+            writeLock.lock();
+            USER_CACHE.remove(username);
+        } finally {
+            writeLock.unlock();
+        }
+    }
 
     /**
      * 刷新作用域

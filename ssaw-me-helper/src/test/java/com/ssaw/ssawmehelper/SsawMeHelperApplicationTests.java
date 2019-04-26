@@ -1,5 +1,6 @@
 package com.ssaw.ssawmehelper;
 
+import com.ssaw.ssawmehelper.dao.redis.GoodsDemoDao;
 import com.ssaw.ssawmehelper.dao.redis.MyCollectionDao;
 import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
 import org.junit.Test;
@@ -20,10 +21,17 @@ public class SsawMeHelperApplicationTests {
     private MyCollectionDao myCollectionDao;
 
     @Autowired
+    private GoodsDemoDao goodsDemoDao;
+
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     @Test
-    public void contextLoads() {
-
+    public void contextLoads() throws InterruptedException {
+//        for (long i = 0; i < 1000L; i++) {
+//            Thread.sleep(1);
+//            goodsDemoDao.insertViewedUser(i);
+//        }
+         stringRedisTemplate.opsForZSet().removeRange("viewed_user", 0L, -2);
     }
 }

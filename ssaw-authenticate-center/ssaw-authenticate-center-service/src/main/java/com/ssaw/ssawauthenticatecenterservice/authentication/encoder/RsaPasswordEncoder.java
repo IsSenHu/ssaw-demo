@@ -60,11 +60,4 @@ public class RsaPasswordEncoder implements PasswordEncoder {
         String decrypt = RsaUtil.decrypt(encodedPassword, privateKey);
         return StringUtils.equals(rawPassword.toString(), decrypt);
     }
-
-    public static void main(String[] args) {
-        RsaPasswordEncoder passwordEncoder = new RsaPasswordEncoder("F:\\my\\ssaw\\ssaw-authenticate-center\\ssaw-authenticate-center-service\\src\\main\\resources\\public.key", "F:\\my\\ssaw\\ssaw-authenticate-center\\ssaw-authenticate-center-service\\src\\main\\resources\\private.key");
-        String encode = passwordEncoder.encode("123456");
-        System.out.println(encode);
-        System.out.println(passwordEncoder.matches("123456", encode));
-    }
 }

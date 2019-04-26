@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author HuSen.
  * @date 2018/11/27 18:46.
@@ -25,4 +27,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpec
      * @return 数量
      */
     Integer countByUsername(String username);
+
+    /**
+     * 根据是否系统内部用户获取所有用户
+     * @param isInner 是否内部用户
+     * @return 用户集合
+     */
+    List<UserEntity> findAllByInner(boolean isInner);
 }

@@ -2,11 +2,13 @@ package com.ssaw.ssawmehelper.service.collection.impl;
 
 import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
+import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawmehelper.dao.redis.MyCollectionDao;
 import com.ssaw.ssawmehelper.dao.ro.MyCollectionRO;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionCreateRequestVO;
+import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionQueryVO;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionVO;
 import com.ssaw.ssawmehelper.service.collection.MyCollectionService;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +82,8 @@ public class MyCollectionServiceImpl implements MyCollectionService {
         String key = myCollectionDao.insert(ro);
         Long timeScore = myCollectionDao.insertTimeScore(key, time);
         Long edenScore = myCollectionDao.insertScore(key, time);
-        log.info("创建我的收藏成功:{} - {} - {}", key, timeScore, edenScore);
+        Long groupChange = myCollectionDao.insertInGroup(key, requestVO.getClassification());
+        log.info("创建我的收藏成功:{} - {} - {} - {}", key, timeScore, edenScore, groupChange);
         return CommonResult.createResult(SUCCESS, "成功", requestVO);
     }
 
@@ -96,29 +99,19 @@ public class MyCollectionServiceImpl implements MyCollectionService {
         String key = myCollectionDao.idToKey(id);
         Double score = myCollectionDao.addScore(key);
         log.info("增加收藏分数成功{} - {}", key, score);
+        Long votes = myCollectionDao.addVotes(key);
+        log.info("增加浏览次数成功{} - {}", key, votes);
         return CommonResult.createResult(SUCCESS, "成功", id);
     }
 
     /**
      * 收藏列表
      *
-     * @param byTime 是否通过时间排序
+     * @param pageReqVO 分页参数
      * @return 收藏列表
      */
     @Override
-    public TableData<MyCollectionVO> list(boolean byTime) {
-        List<MyCollectionRO> ros;
-        if (byTime) {
-            ros = myCollectionDao.getFirstTenByTime();
-        } else {
-            ros = myCollectionDao.getFirstTenByScore();
-        }
-        TableData<MyCollectionVO> tableData = new TableData<>();
-        tableData.setPage(1);
-        tableData.setSize(10);
-        tableData.setTotals((long) ros.size());
-        tableData.setTotalPages(1);
-        tableData.setContent(ros.stream().map(input -> CopyUtil.copyProperties(input, new MyCollectionVO())).collect(Collectors.toList()));
-        return tableData;
+    public TableData<MyCollectionVO> list(PageReqVO<MyCollectionQueryVO> pageReqVO) {
+        return myCollectionDao.list(pageReqVO);
     }
 }

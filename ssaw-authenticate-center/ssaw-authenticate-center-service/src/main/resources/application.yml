@@ -98,7 +98,7 @@ ssaw:
     client-id: INNER_MANAGE
     client-secret: 521428Slyp
     client-registered-redirect-uris: localhost:8080
-    client-expire: 7200
+    client-expire: 604800  ##七天
 
 management:
   endpoints:

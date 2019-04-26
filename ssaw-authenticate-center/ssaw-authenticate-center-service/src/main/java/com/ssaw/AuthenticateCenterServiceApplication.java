@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author HS
@@ -19,6 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoRequestResolve
+@EnableScheduling
 public class AuthenticateCenterServiceApplication {
 
 //	@Bean
