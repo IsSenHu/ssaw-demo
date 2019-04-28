@@ -12,6 +12,7 @@ import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
 import com.ssaw.ssawmehelper.api.BaseController;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
+import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.*;
 import com.ssaw.ssawmehelper.service.employee.EmployeeService;
 import com.ssaw.ssawmehelper.service.kaoqin.KaoQinService;
@@ -32,6 +33,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.ERROR;
 import static com.ssaw.commons.constant.Constants.ResultCodes.PARAM_ERROR;
@@ -50,11 +52,14 @@ public class KaoqinController extends BaseController {
 
     private final KaoQinService kaoQinService;
 
+    private final KaoQinDao kaoQinDao;
+
     @Autowired
-    public KaoqinController(ApplicationContext context, EmployeeService employeeService, KaoQinService kaoQinService) {
+    public KaoqinController(ApplicationContext context, EmployeeService employeeService, KaoQinService kaoQinService, KaoQinDao kaoQinDao) {
         super(context);
         this.employeeService = employeeService;
         this.kaoQinService = kaoQinService;
+        this.kaoQinDao = kaoQinDao;
     }
 
     /**
@@ -95,13 +100,16 @@ public class KaoqinController extends BaseController {
     @SecurityMethod(antMatcher = "/api/kaoqin/commitLateLeaveInfo", scope = "提交调休申请")
     public CommonResult<CommitLeaveReqVO> commitLeaveInfo(@RequestBody CommitLeaveReqVO reqVO) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Set<String> allOnlineTime = kaoQinDao.allOnlineTime(reqVO.getBn());
+        Date parse = simpleDateFormat.parse(reqVO.getBeginTime());
+        String format = DateFormatUtils.format(parse, "yyyy-MM-dd 00:00:00+08:00").replace(" ", "T");
         // 首先判断打卡时间是否大于9点，大于9点要进行调休
         Calendar calendar = Calendar.getInstance();
         final int start = 9;
         final int half = 30;
         final int dayHalf = 12;
         calendar.setTime(simpleDateFormat.parse(reqVO.getBeginTime()));
-        if (calendar.get(Calendar.HOUR_OF_DAY) >= start) {
+        if (!allOnlineTime.contains(format) && calendar.get(Calendar.HOUR_OF_DAY) >= start) {
             calendar.set(Calendar.HOUR_OF_DAY, start);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -117,12 +125,12 @@ public class KaoqinController extends BaseController {
                 calendar.set(Calendar.MINUTE, half);
             }
             Date endTime = calendar.getTime();
-            reqVO.setEndTime(DateFormatUtils.format(endTime, "yyyy-MM-dd HH:mm:ss"));
-            reqVO.setLeaveTime(new BigDecimal(endTime.getTime() - beginTime.getTime()).divide(new BigDecimal(3600000), 8, RoundingMode.HALF_DOWN));
+            reqVO.setEndTime(DateFormatUtils.format(endTime, allOnlineTime.contains(format) ? "yyyy-MM-dd 18:00:00" : "yyyy-MM-dd HH:mm:ss"));
+            reqVO.setLeaveTime(allOnlineTime.contains(format) ? BigDecimal.valueOf(8) : new BigDecimal(endTime.getTime() - beginTime.getTime()).divide(new BigDecimal(3600000), 8, RoundingMode.HALF_DOWN));
             // 12点整至1点整 均为3小时调休时间
-            if (calendar.get(Calendar.HOUR_OF_DAY) == dayHalf) {
+            if (!allOnlineTime.contains(format) && calendar.get(Calendar.HOUR_OF_DAY) == dayHalf) {
                 reqVO.setLeaveTime(BigDecimal.valueOf(3L));
-            } else if (calendar.get(Calendar.HOUR_OF_DAY) >= dayHalf + 1) {
+            } else if (!allOnlineTime.contains(format) && calendar.get(Calendar.HOUR_OF_DAY) >= dayHalf + 1) {
                 reqVO.setLeaveTime(reqVO.getLeaveTime().subtract(BigDecimal.ONE));
             }
             reqVO.setLeaveDays(reqVO.getLeaveTime().divide(BigDecimal.valueOf(8L), 8, RoundingMode.HALF_UP));
