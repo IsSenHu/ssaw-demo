@@ -109,7 +109,7 @@ public class KaoqinController extends BaseController {
         final int half = 30;
         final int dayHalf = 12;
         calendar.setTime(simpleDateFormat.parse(reqVO.getBeginTime()));
-        if (!allOnlineTime.contains(format) || calendar.get(Calendar.HOUR_OF_DAY) >= start) {
+        if (allOnlineTime.contains(format) || calendar.get(Calendar.HOUR_OF_DAY) >= start) {
             calendar.set(Calendar.HOUR_OF_DAY, start);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
