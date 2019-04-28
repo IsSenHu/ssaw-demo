@@ -94,7 +94,7 @@ ssaw:
     self: true
     icon: el-icon-location
     white-list: /api/user/login,/api/user/logout,/api/authenticate,/api/resource/uploadAuthenticateInfo
-    system-white-list: /api/user/login,/api/resource/uploadAuthenticateInfo,/api/authenticate
+    system-white-list: /api/user/login,/api/resource/uploadAuthenticateInfo,/api/authenticate,/oauth/authorize*,/oauth/token*
   manage:
     client-id: INNER_MANAGE
     client-secret: 521428Slyp
