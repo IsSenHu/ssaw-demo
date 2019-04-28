@@ -38,7 +38,7 @@ public class CacheManager {
     private static final ConcurrentMap<String, UserInfoVO> USER_CACHE = new ConcurrentHashMap<>();
     private static final ReadWriteLock USER_READ_TRITE_LOCK = new ReentrantReadWriteLock();
 
-    public static UserInfoVO getUser(String username) {
+    private static UserInfoVO getUser(String username) {
         Lock readLock = USER_READ_TRITE_LOCK.readLock();
         try {
             readLock.lock();
@@ -48,7 +48,7 @@ public class CacheManager {
         }
     }
 
-    public static void refreshUser(UserInfoVO userInfoVO) {
+    private static void refreshUser(UserInfoVO userInfoVO) {
         Lock writeLock = USER_READ_TRITE_LOCK.writeLock();
         try {
             writeLock.lock();
@@ -62,7 +62,7 @@ public class CacheManager {
         }
     }
 
-    public static void removeUser(String username) {
+    private static void removeUser(String username) {
         Lock writeLock = USER_READ_TRITE_LOCK.writeLock();
         try {
             writeLock.lock();

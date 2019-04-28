@@ -4,6 +4,7 @@ import com.ssaw.commons.annotations.EnableSnowFlake;
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableAutoAuthenticateInfo;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableSetUserInfo;
+import com.ssaw.support.uaa.annotation.EnableUaa;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
@@ -23,6 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableFeignClients(basePackages = "com.ssaw")
 @EnableScheduling
 @EnableSnowFlake
+//@EnableUaa
 public class SsawMeHelperApplication {
 
 //    @Bean

@@ -86,7 +86,7 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         Page<PermissionEntity> page = permissionRepository.findAll(new PermissionSpecification(pageReqVO.getData()), pageable);
         TableData<PermissionVO> tableData = new TableData<>();
         setTableData(page, tableData);
-        tableData.setContent(page.getContent().stream().map(permissionTransfer::entity2Dto).collect(Collectors.toList()));
+        tableData.setContent(page.getContent().stream().map(permissionEntity -> permissionTransfer.entity2Dto(permissionEntity, true)).collect(Collectors.toList()));
         return tableData;
     }
 
@@ -146,7 +146,7 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
     @Override
     public CommonResult<PermissionVO> findById(Long id) {
         return permissionRepository.findById(id)
-                .map(entity -> CommonResult.createResult(SUCCESS, "成功!", permissionTransfer.entity2Dto(entity)))
+                .map(entity -> CommonResult.createResult(SUCCESS, "成功!", permissionTransfer.entity2Dto(entity, true)))
                 .orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", null));
     }
 }

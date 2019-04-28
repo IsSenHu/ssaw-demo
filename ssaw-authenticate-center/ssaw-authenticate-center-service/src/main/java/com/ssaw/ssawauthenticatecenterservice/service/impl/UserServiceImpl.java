@@ -6,22 +6,23 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.event.local.RefreshClientFinishEvent;
 import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.user.*;
-import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
-import com.ssaw.ssawauthenticatecenterservice.constants.client.ClientConstant;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RoleEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.role.RolePermissionEntity;
+import com.ssaw.ssawauthenticatecenterservice.dao.entity.scope.ScopeEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.user.UserEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.user.UserRoleEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.permission.PermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.resource.ResourceRepository;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.RoleRepository;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.role.permission.RolePermissionRepository;
+import com.ssaw.ssawauthenticatecenterservice.dao.repository.scope.ScopeRepository;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.user.UserRepository;
 import com.ssaw.ssawauthenticatecenterservice.dao.repository.user.UserRoleRepository;
-import com.ssaw.ssawauthenticatecenterservice.properties.SpringSummerAutumnWinterManageProperties;
 import com.ssaw.ssawauthenticatecenterservice.service.MenuService;
 import com.ssaw.ssawauthenticatecenterservice.specification.UserSpecification;
 import com.ssaw.ssawauthenticatecenterservice.transfer.PermissionTransfer;
@@ -31,22 +32,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,9 +67,11 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final PermissionTransfer permissionTransfer;
     private final UserRepository userRepository;
     private final MenuService menuService;
+    private final ScopeRepository scopeRepository;
+    private final ResourceRepository resourceRepository;
 
     @Autowired
-    public UserServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository, PermissionRepository permissionRepository, PermissionTransfer permissionTransfer, UserRepository userRepository, MenuService menuService) {
+    public UserServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository, PermissionRepository permissionRepository, PermissionTransfer permissionTransfer, UserRepository userRepository, MenuService menuService, ScopeRepository scopeRepository, ResourceRepository resourceRepository) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.rolePermissionRepository = rolePermissionRepository;
@@ -84,6 +79,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         this.permissionTransfer = permissionTransfer;
         this.userRepository = userRepository;
         this.menuService = menuService;
+        this.scopeRepository = scopeRepository;
+        this.resourceRepository = resourceRepository;
     }
 
     /**
@@ -122,10 +119,21 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (null != userRole) {
             List<RolePermissionEntity> rolePermissionEntityList = rolePermissionRepository.findAllByRoleId(userRole.getRoleId());
             if (CollectionUtils.isNotEmpty(rolePermissionEntityList)) {
-                List<PermissionVO> permissionVOList = rolePermissionEntityList.stream().map(rolePermissionEntity -> permissionRepository.findById(rolePermissionEntity.getPermissionId()))
-                        .filter(Optional::isPresent).map(Optional::get).map(permissionTransfer::entity2Dto).collect(Collectors.toList());
+                Set<Long> permissionIdSet = rolePermissionEntityList.stream().map(RolePermissionEntity::getPermissionId).collect(Collectors.toSet());
+                List<PermissionEntity> permissionEntities = permissionRepository.findAllById(permissionIdSet);
+                Set<Long> scopeIdSet = permissionEntities.stream().map(PermissionEntity::getScopeId).collect(Collectors.toSet());
+                Map<Long, ScopeEntity> scopeEntityMap = new HashMap<>(scopeIdSet.size());
+                scopeRepository.findAllById(scopeIdSet).forEach(x -> scopeEntityMap.put(x.getId(), x));
+                Set<Long> resourceIdSet = permissionEntities.stream().map(PermissionEntity::getResourceId).collect(Collectors.toSet());
+                List<ResourceEntity> resourceEntities = resourceRepository.findAllById(resourceIdSet);
+                Map<Long, ResourceEntity> resourceEntityMap = new HashMap<>(resourceEntities.size());
+                resourceEntities.forEach(x -> resourceEntityMap.put(x.getId(), x));
+                List<PermissionVO> permissionVOList = permissionEntities.stream().map(x -> permissionTransfer.entity2Dto(x, false)).collect(Collectors.toList());
+                permissionVOList.forEach(x -> x.setScopeName(scopeEntityMap.get(x.getScopeId()).getScope()));
+                permissionVOList.forEach(x -> x.setResourceName(resourceEntityMap.get(x.getResourceId()).getResourceId()));
                 Set<SimpleGrantedAuthority> simpleGrantedAuthorities = permissionVOList.stream().map(scope -> new SimpleGrantedAuthority(scope.getScopeName())).collect(Collectors.toSet());
                 userDetailsImpl.setGrantedAuthorities(simpleGrantedAuthorities);
+                userDetailsImpl.setResourceIds(resourceEntities.stream().map(ResourceEntity::getResourceId).collect(Collectors.toSet()));
             }
         } else {
             userDetailsImpl.setGrantedAuthorities(new ArrayList<>(0));
@@ -221,7 +229,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         Optional<UserEntity> byId = userRepository.findById(id);
         if (byId.isPresent() && byId.get().getInner()) {
-            CacheManager.removeUser(byId.get().getUsername());
             userRepository.deleteById(id);
         }
         // TODO 删除用户，同时删除用户相关的其他信息
@@ -267,9 +274,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         oldUser.setIsEnable(updateUserVO.getIsEnable());
         oldUser.setDescription(updateUserVO.getDescription());
         userRepository.save(oldUser);
-        if (oldUser.getInner()) {
-            CacheManager.refreshUser(baseLogin(oldUser.getUsername()).getData());
-        }
         return createResult(SUCCESS, "成功!", updateUserVO);
     }
 
@@ -280,16 +284,7 @@ public class UserServiceImpl extends BaseService implements UserService {
      */
     @Override
     public CommonResult<UserInfoVO> login(UserLoginVO userLoginVO) {
-        UserInfoVO user = CacheManager.getUser(userLoginVO.getUsername());
-        if (Objects.isNull(user)) {
-            return createResult(FORBIDDEN, "用户名或密码错误", null);
-        }
-        if (!ApplicationContextUtil.getBean(PasswordEncoder.class).matches(userLoginVO.getPassword(), user.getPassword())) {
-            return createResult(FORBIDDEN, "用户名或密码错误", null);
-        }
-        // 隐藏密码
-        user.setPassword(null);
-        return createResult(SUCCESS, "登录成功", user);
+        return baseLogin(userLoginVO);
     }
 
     /**
@@ -322,91 +317,19 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (result.getCode() != SUCCESS) {
             throw new RuntimeException("注册用户失败");
         }
-        CacheManager.refreshUser(baseLogin(createUserVO.getUsername()).getData());
         return createResult(SUCCESS, "成功", createUserVO.getUsername());
     }
 
-    @EventListener(RefreshClientFinishEvent.class)
-    public void loadUser() {
-        log.info("开始加载系统内部用户......");
-        List<UserEntity> allByInner = userRepository.findAllByInner(true);
-        for (UserEntity entity : allByInner) {
-            try {
-                CacheManager.refreshUser(baseLogin(entity.getUsername()).getData());
-            } catch (Exception e) {
-                log.error("加载:{} - 用户失败:", entity.getUsername(), e);
-            }
+    private CommonResult<UserInfoVO> baseLogin(UserLoginVO vo) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) loadUserByUsername(vo.getUsername());
+        // 判断用户密码是否正确
+        if (!ApplicationContextUtil.getBean(PasswordEncoder.class).matches(vo.getPassword(), userDetails.getPassword())) {
+            return createResult(FORBIDDEN, "用户名或密码错误", null);
         }
-        log.info("结束加载系统内部用户......");
-    }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void loadUserTask() {
-        log.info("开始加载系统内部用户......");
-        List<UserEntity> allByInner = userRepository.findAllByInner(true);
-        for (UserEntity entity : allByInner) {
-            try {
-                CacheManager.refreshUser(baseLogin(entity.getUsername()).getData());
-            } catch (Exception e) {
-                log.error("加载:{} - 用户失败:", entity.getUsername(), e);
-            }
-        }
-        log.info("结束加载系统内部用户......");
-    }
-
-    private CommonResult<UserInfoVO> baseLogin(String username) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) loadUserByUsername(username);
-        // 获取客户端配置
-        SpringSummerAutumnWinterManageProperties manageProperties = ApplicationContextUtil.getBean(SpringSummerAutumnWinterManageProperties.class);
-        JwtAccessTokenConverter jwtAccessTokenConverter = ApplicationContextUtil.getBean(JwtAccessTokenConverter.class);
-
-        // DefaultOauth2AccessToken
-        DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(UUID.randomUUID().toString());
-        token.setExpiration(new Date(System.currentTimeMillis() + manageProperties.getClientExpire() * 1000));
-        token.setTokenType(ClientConstant.BEARER);
 
         // 用户的权限
         Set<String> scope = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-        Set<String> resourceIds = new HashSet<>();
-        UserRoleEntity userRole = userRoleRepository.findByUserId(userDetails.getId());
-        if (null != userRole) {
-            List<RolePermissionEntity> rolePermissionEntityList = rolePermissionRepository.findAllByRoleId(userRole.getRoleId());
-            if (CollectionUtils.isNotEmpty(rolePermissionEntityList)) {
-                List<PermissionVO> permissionVOList = rolePermissionEntityList.stream().map(rolePermissionEntity -> permissionRepository.findById(rolePermissionEntity.getPermissionId()))
-                        .filter(Optional::isPresent).map(Optional::get).map(permissionTransfer::entity2Dto).collect(Collectors.toList());
-                resourceIds = permissionVOList.stream().map(PermissionVO::getResourceName).collect(Collectors.toSet());
-            }
-        }
-
-        token.setScope(scope);
-
-        // Oauth2Authentication
-        String clientId = manageProperties.getClientId().concat(userDetails.getUsername());
-        Map<String, String> requestParameters = new HashMap<>(6);
-        requestParameters.put("code", UUID.randomUUID().toString());
-        requestParameters.put("grant_type", ClientConstant.AuthorizedGrantTypes.AUTHORIZATION_CODE.getValue());
-        requestParameters.put("client_id", clientId);
-        requestParameters.put("client_secret", manageProperties.getClientSecret());
-        requestParameters.put("redirect_uri", manageProperties.getClientRegisteredRedirectUris());
-        requestParameters.put("response_type", "code");
-
-        OAuth2Request oAuth2Request = new OAuth2Request(requestParameters, clientId, CollectionUtils.emptyCollection(), true,
-                scope, resourceIds, manageProperties.getClientRegisteredRedirectUris(), ClientConstant.CODE, new HashMap<>(0));
-
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, usernamePasswordAuthenticationToken);
-        oAuth2Authentication.setAuthenticated(true);
-
-        OAuth2AccessToken enhance = jwtAccessTokenConverter.enhance(token, oAuth2Authentication);
-
-        // 移除旧Token
-        RedisTokenStore redisTokenStore = ApplicationContextUtil.getBean(RedisTokenStore.class);
-        Collection<OAuth2AccessToken> oldTokens = redisTokenStore.findTokensByClientId(clientId);
-        oldTokens.forEach(redisTokenStore::removeAccessToken);
-
-        // 保存新的Token
-        redisTokenStore.storeAccessToken(enhance, oAuth2Authentication);
-        return createResult(SUCCESS, "成功", new UserInfoVO(userDetails.getId(), userDetails.getUsername(), userDetails.getPassword(), scope, menuService.getMenus(scope, resourceIds), enhance.getValue(), JSON.parseObject(userDetails.getOtherInfo(), Map.class), menuService.getButtons(scope, resourceIds)));
+        Set<String> resourceIds = userDetails.getResourceIds();
+        return createResult(SUCCESS, "成功", new UserInfoVO(userDetails.getId(), userDetails.getUsername(), null, scope, menuService.getMenus(scope, resourceIds), "", JSON.parseObject(userDetails.getOtherInfo(), Map.class), menuService.getButtons(scope, resourceIds)));
     }
 }

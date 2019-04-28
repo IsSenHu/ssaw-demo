@@ -3,6 +3,8 @@ package com.ssaw.ssawauthenticatecenterfeign.feign;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.vo.*;
 import com.ssaw.ssawauthenticatecenterfeign.fallback.AuthenticateFeignFallback;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserInfoVO;
+import com.ssaw.ssawauthenticatecenterfeign.vo.user.UserLoginVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -31,4 +33,12 @@ public interface AuthenticateFeign {
      */
     @PostMapping("/api/resource/uploadAuthenticateInfo")
     CommonResult<UploadVO> uploadAuthenticateInfo(@RequestBody UploadVO uploadVO);
+
+    /**
+     * 用户登录
+     * @param userLoginVO 用户登录请求对象
+     * @return 登录结果
+     */
+    @PostMapping("/api/user/login")
+    CommonResult<UserInfoVO> login(@RequestBody UserLoginVO userLoginVO);
 }

@@ -41,7 +41,7 @@ public class RoleController extends BaseController {
     @Validating
     @PostMapping("/add")
     @RequestLog(desc = "新增角色")
-    @SecurityMethod(antMatcher = "/api/role/add", scope = "ROLE_CREATE", button = "创建角色", buttonName = "添加")
+    @SecurityMethod(antMatcher = "/api/role/add", scope = "创建角色", button = "ROLE_CREATE", buttonName = "添加")
     public CommonResult<CreateRoleVO> add(@RequestBody CreateRoleVO createRoleVO) {
         return roleService.add(createRoleVO);
     }
@@ -65,7 +65,7 @@ public class RoleController extends BaseController {
      */
     @PostMapping("/page")
     @RequestLog(desc = "分页查询角色")
-    @SecurityMethod(antMatcher = "/api/role/page", scope = "ROLE_READ", button = "读取角色信息", buttonName = "搜索")
+    @SecurityMethod(antMatcher = "/api/role/page", scope = "读取角色信息", button = "ROLE_READ", buttonName = "搜索")
     public TableData<RoleVO> page(@RequestBody PageReqVO<QueryRoleVO> pageReqVO) {
         return roleService.page(pageReqVO);
     }
@@ -78,7 +78,7 @@ public class RoleController extends BaseController {
     @Validating
     @PostMapping("/update")
     @RequestLog(desc = "修改角色")
-    @SecurityMethod(antMatcher = "/api/role/update", scope = "ROLE_UPDATE", button = "修改角色", buttonName = "编辑")
+    @SecurityMethod(antMatcher = "/api/role/update", scope = "修改角色", button = "ROLE_UPDATE", buttonName = "编辑")
     public CommonResult<UpdateRoleVO> update(@RequestBody UpdateRoleVO updateRoleVO) {
         return roleService.update(updateRoleVO);
     }
@@ -90,7 +90,7 @@ public class RoleController extends BaseController {
      */
     @PostMapping("/delete/{id}")
     @RequestLog(desc = "根据ID删除角色")
-    @SecurityMethod(antMatcher = "/api/role/delete/*", scope = "ROLE_DELETE", button = "删除角色", buttonName = "删除")
+    @SecurityMethod(antMatcher = "/api/role/delete/*", scope = "删除角色", button = "ROLE_DELETE", buttonName = "删除")
     public CommonResult<Long> delete(@PathVariable(value = "id") Long id) {
         return roleService.delete(id);
     }

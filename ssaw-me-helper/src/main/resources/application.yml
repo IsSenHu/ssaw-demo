@@ -101,7 +101,7 @@ management:
 ssaw:
   resource:
     code: 2
-    resource-id: SSAW_MY_HELPER
+    resource-id: 我的小帮手
     description: 我的小帮手
     self: true
     icon: el-icon-share

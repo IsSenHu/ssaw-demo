@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/api/user")
-@SecurityApi(index = "2", group = "用户管理", menu = @Menu(index = "2-1", title = "用户", scope = "USER_MANAGE", to = "/authenticate/center/user"))
+@SecurityApi(index = "2", group = "用户管理", menu = @Menu(index = "2-1", title = "用户", scope = "用户管理", to = "/authenticate/center/user"))
 public class UserController extends BaseController {
 
     private final UserService userService;

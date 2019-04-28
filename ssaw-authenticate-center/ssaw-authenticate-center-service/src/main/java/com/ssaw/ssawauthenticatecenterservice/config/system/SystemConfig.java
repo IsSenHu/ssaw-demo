@@ -1,7 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.config.system;
 
 import com.ssaw.ssawauthenticatecenterfeign.event.local.AppFinishedEvent;
-import com.ssaw.ssawauthenticatecenterfeign.event.local.RefreshClientFinishEvent;
 import com.ssaw.ssawauthenticatecenterservice.constants.client.ClientConstant;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.resource.ResourceEntity;
@@ -92,8 +91,6 @@ public class SystemConfig {
             clientDetailsEntity.setCreateTime(LocalDateTime.now());
             clientDetailsEntity.setUpdateTime(LocalDateTime.now());
             clientRepository.save(clientDetailsEntity);
-
-            applicationContext.publishEvent(new RefreshClientFinishEvent(appFinishedEvent.getSource()));
         });
     }
 }

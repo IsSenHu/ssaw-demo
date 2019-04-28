@@ -38,7 +38,7 @@ public class PermissionTransfer {
         return entity;
     }
 
-    public PermissionVO entity2Dto(PermissionEntity entity) {
+    public PermissionVO entity2Dto(PermissionEntity entity, boolean details) {
         PermissionVO dto = new PermissionVO();
         if(null != entity) {
             dto.setId(entity.getId());
@@ -49,11 +49,11 @@ public class PermissionTransfer {
             dto.setModifyMan(entity.getModifyMan());
             dto.setModifyTime(entity.getModifyTime());
             dto.setScopeId(entity.getScopeId());
-            if(!Objects.isNull(entity.getScopeId())) {
+            if(details && !Objects.isNull(entity.getScopeId())) {
                 scopeRepository.findById(entity.getScopeId()).ifPresent(scope -> dto.setScopeName(scope.getScope()));
             }
             dto.setResourceId(entity.getResourceId());
-            if(!Objects.isNull(entity.getResourceId())) {
+            if(details && !Objects.isNull(entity.getResourceId())) {
                 resourceRepository.findById(entity.getResourceId()).ifPresent(resource -> dto.setResourceName(resource.getResourceId()));
             }
         }

@@ -1,4 +1,4 @@
-//package com.ssaw.smscenter.controller;
+//package com.ssaw.smscenter.api;
 //
 //import com.ssaw.commons.util.json.jack.JsonUtils;
 //import com.ssaw.smscenter.dao.entity.mo.NoteMo;
