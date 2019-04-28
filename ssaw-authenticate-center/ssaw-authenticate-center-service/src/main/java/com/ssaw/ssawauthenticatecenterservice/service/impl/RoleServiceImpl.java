@@ -4,7 +4,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawauthenticatecenterfeign.vo.role.*;
 import com.ssaw.ssawauthenticatecenterfeign.vo.TreeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
@@ -76,7 +76,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
         }
         RoleEntity entity = CopyUtil.copyProperties(createRoleVO, new RoleEntity());
         entity.setCreateTime(LocalDateTime.now());
-        entity.setCreateMan(UserUtils.getUser().getUsername());
+        entity.setCreateMan(UserContextHolder.currentUser().getUsername());
         roleRepository.save(entity);
         return CommonResult.createResult(SUCCESS, "成功!", createRoleVO);
     }
@@ -184,7 +184,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
                     }
                 }
                 rolePermissionRepository.saveAll(rolePermissionEntities);
-                entity.setModifyMan(UserUtils.getUser().getUsername());
+                entity.setModifyMan(UserContextHolder.currentUser().getUsername());
                 roleRepository.save(entity);
                 return CommonResult.createResult(SUCCESS, "成功!", updateRoleVO);
             })

@@ -5,7 +5,7 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.security.util.SecurityUtils;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawauthenticatecenterfeign.vo.client.ClientDetailsInfoVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.client.ClientVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.client.CreateClientVO;
@@ -124,7 +124,7 @@ public class ClientServiceImpl extends BaseService implements ClientService {
             createClientVO.setRefreshTokenValiditySeconds(null == createClientVO.getRefreshTokenValiditySeconds() ? 60 * 60 * 24 * 30 : createClientVO.getRefreshTokenValiditySeconds());
 
             ClientDetailsEntity entity = CopyUtil.copyProperties(createClientVO, new ClientDetailsEntity());
-            entity.setCreateMan(UserUtils.getUser().getUsername());
+            entity.setCreateMan(UserContextHolder.currentUser().getUsername());
             clientRepository.save(entity);
             return CommonResult.createResult(SUCCESS, "成功!", createClientVO);
         }

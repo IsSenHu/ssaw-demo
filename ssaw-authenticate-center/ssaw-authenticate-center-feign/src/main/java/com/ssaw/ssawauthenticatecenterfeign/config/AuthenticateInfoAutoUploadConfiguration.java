@@ -5,6 +5,7 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
+import com.ssaw.ssawauthenticatecenterfeign.store.AuthorizeStore;
 import com.ssaw.ssawauthenticatecenterfeign.vo.ButtonVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.MenuVO;
 import com.ssaw.ssawauthenticatecenterfeign.feign.AuthenticateFeign;
@@ -86,6 +87,7 @@ public class AuthenticateInfoAutoUploadConfiguration {
                 SecurityMethod securityMethod = AnnotationUtils.findAnnotation(method, SecurityMethod.class);
                 if (Objects.nonNull(securityMethod)) {
                     securityMethods.add(securityMethod);
+                    AuthorizeStore.URL_SCOPE.put(securityMethod.antMatcher(), enableResourceAutoProperties.getResourceId().concat("_").concat(securityMethod.scope()));
                 }
             }
         }
@@ -114,6 +116,7 @@ public class AuthenticateInfoAutoUploadConfiguration {
 
     private void setWhiteList(UploadVO uploadVO) {
         List<String> whiteList = enableResourceAutoProperties.getWhiteList();
+        AuthorizeStore.WHITE_SET.addAll(whiteList);
         uploadVO.setWhiteList(whiteList);
     }
 

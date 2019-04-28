@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author HuSen
@@ -34,4 +35,6 @@ public class SimpleUserAttributeVO implements Serializable {
     private Boolean isEnable;
     /** 其它信息 */
     private String otherInfo;
+    /** 权限 */
+    private Set<String> permissions;
 }

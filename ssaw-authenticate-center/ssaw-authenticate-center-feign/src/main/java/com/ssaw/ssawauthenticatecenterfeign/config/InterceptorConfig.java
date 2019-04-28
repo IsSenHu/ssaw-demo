@@ -1,10 +1,14 @@
 package com.ssaw.ssawauthenticatecenterfeign.config;
 
+import com.ssaw.ssawauthenticatecenterfeign.interceptor.RestTemplateUserContextInterceptor;
 import com.ssaw.ssawauthenticatecenterfeign.interceptor.SetUserInfoInterceptor;
+import com.ssaw.ssawauthenticatecenterfeign.interceptor.UserContextInterceptor;
 import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,11 +19,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    private final ApplicationContext applicationContext;
+    private final EnableResourceAutoProperties e;
 
     @Autowired
-    public InterceptorConfig(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public InterceptorConfig(EnableResourceAutoProperties e) {
+        this.e = e;
     }
 
     /**
@@ -28,9 +32,19 @@ public class InterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        EnableResourceAutoProperties properties = applicationContext.getBean(EnableResourceAutoProperties.class);
-        registry.addInterceptor(new SetUserInfoInterceptor()).addPathPatterns("/**")
-                // 排除白名单
-                .excludePathPatterns(properties.getWhiteList());
+        registry.addInterceptor(new SetUserInfoInterceptor()).addPathPatterns("/**").order(Integer.MIN_VALUE).excludePathPatterns(e.getSystemWhiteList());
+        registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**").order(Integer.MIN_VALUE + 1).excludePathPatterns(e.getWhiteList());
+    }
+
+    /**
+     * RestTemplate 拦截器，在发送请求前设置鉴权的用户上下文信息
+     * @return RestTemplate
+     */
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new RestTemplateUserContextInterceptor());
+        return restTemplate;
     }
 }

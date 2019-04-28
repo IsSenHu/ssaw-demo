@@ -10,7 +10,7 @@ import com.ssaw.commons.util.http.HttpConnectionUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawmehelper.dao.mapper.employee.EmployeeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
@@ -77,7 +77,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         tableData.setSize(page.getSize());
         KaoQinInfoQueryVO data = pageReqVO.getData();
         QueryWrapper<EmployeePO> queryWrapper = new QueryWrapper<EmployeePO>()
-                .eq("username", UserUtils.getUser().getUsername());
+                .eq("username", UserContextHolder.currentUser().getUsername());
         EmployeePO employeePO = employeeMapper.selectOne(queryWrapper);
         if (Objects.isNull(employeePO)) {
             tableData.setTotals(0L);

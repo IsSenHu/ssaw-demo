@@ -1,10 +1,9 @@
 package com.ssaw.ssawmehelper.service.collection.impl;
 
-import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawmehelper.dao.redis.MyCollectionDao;
 import com.ssaw.ssawmehelper.dao.ro.MyCollectionRO;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionCreateRequestVO;
@@ -16,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
 
@@ -70,7 +67,7 @@ public class MyCollectionServiceImpl implements MyCollectionService {
     @Transactional(rollbackFor = Exception.class)
     public CommonResult<MyCollectionCreateRequestVO> create(MyCollectionCreateRequestVO requestVO) {
         MyCollectionRO ro = new MyCollectionRO();
-        Long userId = UserUtils.getUser().getId();
+        Long userId = UserContextHolder.currentUser().getId();
         ro.setUserId(userId);
         ro.setTitle(requestVO.getTitle());
         ro.setLink(requestVO.getLink());

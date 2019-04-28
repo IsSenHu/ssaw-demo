@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 public class ResourceProperties implements Serializable {
+    private static final long serialVersionUID = 2131331614752412638L;
     private String antMatchers;
     private String scope;
 

@@ -4,7 +4,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.CreatePermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.QueryPermissionVO;
@@ -66,7 +66,7 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
         Optional<ScopeEntity> optionalScopeEntity = scopeRepository.findById(createPermissionVO.getScopeId());
         optionalScopeEntity.ifPresent(scope -> entity.setResourceId(scope.getResourceId()));
         entity.setCreateTime(LocalDateTime.now());
-        entity.setCreateMan(UserUtils.getUser().getUsername());
+        entity.setCreateMan(UserContextHolder.currentUser().getUsername());
         PermissionEntity save = permissionRepository.save(entity);
         optionalScopeEntity.ifPresent(scope -> {
             scope.setPermissionId(save.getId());
@@ -132,7 +132,7 @@ public class PermissionServiceImpl extends BaseService implements PermissionServ
                         });
             }
             entity.setModifyTime(LocalDateTime.now());
-            entity.setModifyMan(UserUtils.getUser().getUsername());
+            entity.setModifyMan(UserContextHolder.currentUser().getUsername());
             permissionRepository.save(entity);
             return CommonResult.createResult(SUCCESS, "成功!", updatePermissionVO);
         }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该权限不存在!", updatePermissionVO));

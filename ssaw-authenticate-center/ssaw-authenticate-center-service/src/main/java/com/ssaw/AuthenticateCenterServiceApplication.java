@@ -2,7 +2,7 @@ package com.ssaw;
 
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
-import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableSetUserInfo;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.EnableUaa;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,12 +15,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author HS
  */
 @Slf4j
-@EnableSetUserInfo
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoRequestResolve
 @EnableScheduling
+@EnableUaa
 public class AuthenticateCenterServiceApplication {
 
 //	@Bean

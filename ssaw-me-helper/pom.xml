@@ -96,12 +96,6 @@
             <artifactId>support-redis</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>support-uaa</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>

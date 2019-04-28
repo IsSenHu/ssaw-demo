@@ -33,4 +33,7 @@ public class EnableResourceAutoProperties {
 
     /** 白名单 */
     private List<String> whiteList = new ArrayList<>(0);
+
+    /** 系统白名单 */
+    private List<String> systemWhiteList = new ArrayList<>(0);
 }

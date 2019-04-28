@@ -1,5 +1,6 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.filter;
 
+import com.google.common.collect.Sets;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
@@ -164,7 +165,7 @@ public class MyOauth2ClientAuthenticationProcessingFilter implements Filter, Ini
 
                 UserDetailsImpl userDetailsImpl = SecurityUtils.getUserDetails(UserDetailsImpl.class);
                 SimpleUserAttributeVO simpleUserAttributeVO = new SimpleUserAttributeVO(userDetailsImpl.getId(), userDetailsImpl.getUsername(), userDetailsImpl.getRealName(), userDetailsImpl.getDescription(),
-                        userDetailsImpl.getIsEnable(), userDetailsImpl.getOtherInfo());
+                        userDetailsImpl.getIsEnable(), userDetailsImpl.getOtherInfo(), Sets.newHashSet());
                 result = CommonResult.createResult(SUCCESS, "access", JsonUtils.object2JsonString(simpleUserAttributeVO));
             }
             response.getWriter().write(Objects.requireNonNull(JsonUtils.object2JsonString(result)));

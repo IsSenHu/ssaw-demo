@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+import static com.ssaw.commons.constant.Constants.ResultCodes.SUCCESS;
+
 /**
  * @author HuSen
  * @date 2019/4/28 10:21
@@ -26,7 +28,9 @@ public class AuthController {
     @PostMapping("/login")
     public CommonResult<UserInfoVO> login(@RequestBody UserLoginVO userLoginVO) {
         CommonResult<UserInfoVO> result = authenticateFeign.login(userLoginVO);
-        result.getData().setToken(JwtUtil.generateToken(result.getData()));
+        if (result.getCode() == SUCCESS) {
+            result.getData().setToken(JwtUtil.generateToken(result.getData()));
+        }
         return result;
     }
 }

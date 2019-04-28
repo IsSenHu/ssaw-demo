@@ -2,7 +2,7 @@ package com.ssaw.ssawmehelper.service.employee.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ssaw.commons.vo.CommonResult;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawmehelper.dao.mapper.employee.EmployeeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.EmployeeRegisterReqVO;
@@ -39,7 +39,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
      */
     @Override
     public CommonResult<EmployeeRegisterReqVO> insert(EmployeePO employeePO) {
-        String username = UserUtils.getUser().getUsername();
+        String username = UserContextHolder.currentUser().getUsername();
         QueryWrapper<EmployeePO> queryWrapper = new QueryWrapper<EmployeePO>()
                 .eq("bn", employeePO.getBn()).eq("username", username);
         EmployeePO po = employeeMapper.selectOne(queryWrapper);

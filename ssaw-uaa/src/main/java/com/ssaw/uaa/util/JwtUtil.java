@@ -19,6 +19,8 @@ public class JwtUtil {
 
     public static final String HEADER_AUTH = "Authorization";
 
+    public static final String BEARER = "Bearer";
+
     public static String generateToken(UserInfoVO user) {
         HashMap<String, Object> map = new HashMap<>(1);
         map.put("user", user);

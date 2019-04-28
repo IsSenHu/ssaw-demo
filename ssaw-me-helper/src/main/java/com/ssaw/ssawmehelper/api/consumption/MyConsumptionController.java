@@ -8,7 +8,7 @@ import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawmehelper.api.BaseController;
 import com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO;
 import com.ssaw.ssawmehelper.model.vo.consumption.MyConsumptionQueryVO;
@@ -107,7 +107,7 @@ public class MyConsumptionController extends BaseController {
             po.setExpenditure(BigDecimal.valueOf(expenditure));
             po.setIncome(BigDecimal.valueOf(income));
             po.setNetExpenditure(BigDecimal.valueOf(netExpenditure));
-            po.setUserId(UserUtils.getUser().getId());
+            po.setUserId(UserContextHolder.currentUser().getId());
             myConsumptionPOS.add(po);
         }
         return myConsumptionService.saveAll(myConsumptionPOS);

@@ -4,7 +4,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.QueryScopeVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.CreateScopeVO;
@@ -71,7 +71,7 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
             return CommonResult.createResult(DATA_EXIST, "该scope或uri已存在!", createScopeVO);
         }
         entity.setCreateTime(LocalDateTime.now());
-        entity.setCreateMan(UserUtils.getUser().getUsername());
+        entity.setCreateMan(UserContextHolder.currentUser().getUsername());
         scopeRepository.save(entity);
         return CommonResult.createResult(SUCCESS, "成功!", createScopeVO);
     }
@@ -141,7 +141,7 @@ public class ScopeServiceImpl extends BaseService implements ScopeService {
                     entity.setUri(updateScopeVO.getUri());
                     entity.setResourceId(updateScopeVO.getResourceId());
                     entity.setModifyTime(LocalDateTime.now());
-                    entity.setModifyMan(UserUtils.getUser().getUsername());
+                    entity.setModifyMan(UserContextHolder.currentUser().getUsername());
                     scopeRepository.save(entity);
                     return CommonResult.createResult(SUCCESS, "成功!", updateScopeVO);
                 }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该作用域不存在!", updateScopeVO));

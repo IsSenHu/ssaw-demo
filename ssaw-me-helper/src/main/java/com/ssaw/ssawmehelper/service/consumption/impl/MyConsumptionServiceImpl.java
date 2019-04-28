@@ -8,7 +8,7 @@ import com.ssaw.commons.util.time.DateUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawmehelper.dao.mapper.consumption.MyConsumptionMapper;
 import com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO;
 import com.ssaw.ssawmehelper.model.constant.consumption.ConsumptionConstant;
@@ -52,7 +52,7 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         if (CollectionUtils.isEmpty(myConsumptionPOS)) {
             return CommonResult.createResult(Constants.ResultCodes.PARAM_ERROR, "导入数据为空", null);
         }
-        Long userId = UserUtils.getUser().getId();
+        Long userId = UserContextHolder.currentUser().getId();
         List<MyConsumptionPO> newPos = new ArrayList<>();
         for (MyConsumptionPO myConsumptionPO : myConsumptionPOS) {
             MyConsumptionPO po = myConsumptionMapper.findByCostDateAndUserId(myConsumptionPO.getCostDate(), userId);
@@ -81,7 +81,7 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
         pageReqVO = getPage(pageReqVO);
         IPage<MyConsumptionPO> iPage = new Page<MyConsumptionPO>()
                 .setCurrent(pageReqVO.getPage()).setSize(pageReqVO.getSize()).setDesc("cost_date");
-        iPage = myConsumptionMapper.findAll(iPage, pageReqVO.getData(), UserUtils.getUser().getId());
+        iPage = myConsumptionMapper.findAll(iPage, pageReqVO.getData(), UserContextHolder.currentUser().getId());
         TableData<MyConsumptionVO> tableData = new TableData<>();
         tableData.setPage(pageReqVO.getPage());
         tableData.setSize(pageReqVO.getSize());
@@ -100,7 +100,7 @@ public class MyConsumptionServiceImpl extends BaseService implements MyConsumpti
      */
     @Override
     public CommonResult<List<MyConsumptionStatisticsVO>> getMyConsumptionLineData(String start, String end) {
-        Long id = UserUtils.getUser().getId();
+        Long id = UserContextHolder.currentUser().getId();
         List<MyConsumptionPO> pos = myConsumptionMapper.findAllByUserIdAndStartAndEnd(id, start, end);
         List<MyConsumptionStatisticsVO> result = new ArrayList<>();
         // 我的消费每日折线

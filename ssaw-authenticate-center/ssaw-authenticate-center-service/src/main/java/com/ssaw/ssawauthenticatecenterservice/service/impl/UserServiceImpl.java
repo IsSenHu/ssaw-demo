@@ -6,7 +6,7 @@ import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawauthenticatecenterfeign.vo.permission.PermissionVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.user.*;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.permission.PermissionEntity;
@@ -250,13 +250,13 @@ public class UserServiceImpl extends BaseService implements UserService {
             userRoleEntity = new UserRoleEntity();
             userRoleEntity.setUserId(updateUserVO.getId());
             userRoleEntity.setRoleId(updateUserVO.getRoleId());
-            userRoleEntity.setCreateMan(UserUtils.getUser().getUsername());
+            userRoleEntity.setCreateMan(UserContextHolder.currentUser().getUsername());
             userRoleEntity.setCreateTime(LocalDateTime.now());
             userRoleRepository.save(userRoleEntity);
         } else {
             byUserId.setRoleId(updateUserVO.getRoleId());
             byUserId.setModifyTime(LocalDateTime.now());
-            byUserId.setModifyMan(UserUtils.getUser().getUsername());
+            byUserId.setModifyMan(UserContextHolder.currentUser().getUsername());
             userRoleRepository.save(byUserId);
         }
         // 调用用户服务修改用户

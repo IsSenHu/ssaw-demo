@@ -7,6 +7,7 @@ import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
 import com.ssaw.ssawauthenticatecenterfeign.event.local.AppFinishedEvent;
 import com.ssaw.ssawauthenticatecenterfeign.event.local.UploadScopeAndWhiteListFinishedEvent;
+import com.ssaw.ssawauthenticatecenterfeign.store.AuthorizeStore;
 import com.ssaw.ssawauthenticatecenterfeign.vo.resource.UploadResourceVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterfeign.properties.EnableResourceAutoProperties;
@@ -90,6 +91,7 @@ public class ResourceAutoConfig  {
                     SecurityMethod securityMethod = AnnotationUtils.findAnnotation(method, SecurityMethod.class);
                     if (Objects.nonNull(securityMethod)) {
                         securityMethods.add(securityMethod);
+                        AuthorizeStore.URL_SCOPE.put(securityMethod.antMatcher(), enableResourceAutoProperties.getResourceId().concat("_").concat(securityMethod.scope()));
                     }
                 }
             }
@@ -120,6 +122,7 @@ public class ResourceAutoConfig  {
 
             List<String> whiteList = enableResourceAutoProperties.getWhiteList();
             log.info("上传白名单:{}", JsonUtils.object2JsonString(whiteList));
+            AuthorizeStore.WHITE_SET.addAll(whiteList);
             CommonResult<String> uploadWhiteListResult = menuService.uploadWhiteList(whiteList, enableResourceAutoProperties.getResourceId());
             Assert.state(uploadWhiteListResult.getCode() == SUCCESS, "上传白名单失败");
 

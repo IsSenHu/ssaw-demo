@@ -5,7 +5,7 @@ import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
 import com.ssaw.ssawauthenticatecenterfeign.event.local.UploadScopeAndWhiteListFinishedEvent;
-import com.ssaw.ssawauthenticatecenterfeign.util.UserUtils;
+import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
 import com.ssaw.ssawauthenticatecenterfeign.vo.UploadVO;
 import com.ssaw.ssawauthenticatecenterfeign.vo.resource.*;
 import com.ssaw.ssawauthenticatecenterfeign.vo.TreeVO;
@@ -76,7 +76,7 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
             return CommonResult.createResult(DATA_EXIST, "该资源ID已存在!", createResourceVO);
         }
         entity.setCreateTime(LocalDateTime.now());
-        entity.setCreateMan(UserUtils.getUser().getUsername());
+        entity.setCreateMan(UserContextHolder.currentUser().getUsername());
         resourceRepository.save(entity);
         return CommonResult.createResult(SUCCESS, "成功!", createResourceVO);
     }
@@ -127,7 +127,7 @@ public class ResourceServiceImpl extends BaseService implements ResourceService 
             entity.setResourceId(updateResourceVO.getResourceId());
             entity.setDescription(updateResourceVO.getDescription());
             entity.setModifyTime(LocalDateTime.now());
-            entity.setModifyMan(UserUtils.getUser().getUsername());
+            entity.setModifyMan(UserContextHolder.currentUser().getUsername());
             resourceRepository.save(entity);
             return CommonResult.createResult(SUCCESS, "成功!", updateResourceVO);
         }).orElseGet(() -> CommonResult.createResult(DATA_NOT_EXIST, "该资源不存在!", updateResourceVO));
