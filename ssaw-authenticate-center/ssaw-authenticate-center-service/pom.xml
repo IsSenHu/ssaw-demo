@@ -23,6 +23,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- thymeleaf 支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 		<!-- spring-cloud服务注册与发现 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

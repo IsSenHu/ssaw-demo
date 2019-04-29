@@ -85,6 +85,9 @@ spring:
     port: 6379
     password: 521428Slyt
     database: 10
+  thymeleaf:
+    cache: false
+    enable-spring-el-compiler: true
 
 ssaw:
   resource:
@@ -103,6 +106,7 @@ ssaw:
   snow-flake:
     data-center-id: 2
     machine-id: 2
+
 
 management:
   endpoints:
