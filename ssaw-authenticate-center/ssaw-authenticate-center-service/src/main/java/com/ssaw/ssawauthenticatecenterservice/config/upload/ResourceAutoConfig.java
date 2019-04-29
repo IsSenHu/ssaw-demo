@@ -122,7 +122,6 @@ public class ResourceAutoConfig  {
 
             List<String> whiteList = enableResourceAutoProperties.getWhiteList();
             log.info("上传白名单:{}", JsonUtils.object2JsonString(whiteList));
-            AuthorizeStore.WHITE_SET.addAll(whiteList);
             CommonResult<String> uploadWhiteListResult = menuService.uploadWhiteList(whiteList, enableResourceAutoProperties.getResourceId());
             Assert.state(uploadWhiteListResult.getCode() == SUCCESS, "上传白名单失败");
 

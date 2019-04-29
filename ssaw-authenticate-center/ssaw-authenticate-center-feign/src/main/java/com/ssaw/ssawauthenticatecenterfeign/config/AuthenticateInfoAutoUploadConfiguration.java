@@ -116,7 +116,6 @@ public class AuthenticateInfoAutoUploadConfiguration {
 
     private void setWhiteList(UploadVO uploadVO) {
         List<String> whiteList = enableResourceAutoProperties.getWhiteList();
-        AuthorizeStore.WHITE_SET.addAll(whiteList);
         uploadVO.setWhiteList(whiteList);
     }
 

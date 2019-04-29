@@ -24,7 +24,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         response.setContentType("application/json; charset=utf-8");
         CommonResult<String> result;
         if (e instanceof BadCredentialsException) {
-            result = CommonResult.createResult(ERROR, "身份认证为通过!", e.getMessage());
+            result = CommonResult.createResult(ERROR, "身份认证未通过!", e.getMessage());
         } else {
             result = CommonResult.createResult(ERROR, "forbidden", e.getMessage());
         }

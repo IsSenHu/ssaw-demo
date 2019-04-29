@@ -27,17 +27,23 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
     /**
-     *添加拦截器
+     * 添加拦截器
+     *
      * @param registry 拦截注册器
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new SetUserInfoInterceptor()).addPathPatterns("/**").order(Integer.MIN_VALUE).excludePathPatterns(e.getSystemWhiteList());
-        registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**").order(Integer.MIN_VALUE + 1).excludePathPatterns(e.getWhiteList());
+        registry.addInterceptor(new SetUserInfoInterceptor())
+                .addPathPatterns("/**").order(Integer.MIN_VALUE)
+                .excludePathPatterns(e.getSystemWhiteList());
+        registry.addInterceptor(new UserContextInterceptor())
+                .addPathPatterns("/**").order(Integer.MIN_VALUE + 1)
+                .excludePathPatterns(e.getWhiteList()).excludePathPatterns(e.getSystemWhiteList());
     }
 
     /**
      * RestTemplate 拦截器，在发送请求前设置鉴权的用户上下文信息
+     *
      * @return RestTemplate
      */
     @Bean

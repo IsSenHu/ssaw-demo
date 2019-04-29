@@ -4,6 +4,7 @@ import com.ssaw.commons.util.json.jack.JsonUtils;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.ssawauthenticatecenterfeign.store.AuthorizeStore;
 import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
+import com.ssaw.ssawauthenticatecenterfeign.util.AuthUtil;
 import com.ssaw.ssawauthenticatecenterfeign.vo.user.SimpleUserAttributeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.AntPathMatcher;
@@ -31,21 +32,19 @@ public class UserContextInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
+        // OAUTH2跳过此过滤器
+        String xUseAuth = request.getHeader(AuthUtil.AUTH_TYPE_HEADER_NAME);
+        if (StringUtils.equalsIgnoreCase(xUseAuth, AuthUtil.OAUTH2_AUTH_TYPE)) {
+            return true;
+        }
+
         String uri = request.getRequestURI();
 
         if (StringUtils.equalsIgnoreCase(uri, ERROR_URI)) {
             return true;
         }
 
-        Set<String> whiteSet = AuthorizeStore.WHITE_SET;
-        for (String white : whiteSet) {
-            // 白名单 直接放过
-            if (antPathMatcher.match(white, uri)) {
-                return true;
-            }
-        }
-
-        // 除了白名单以外用户都必须登录
+        // 用户必须登录
         SimpleUserAttributeVO currentUser = UserContextHolder.currentUser();
         if (Objects.isNull(currentUser)) {
             response.setHeader("Content-Type", "application/json");

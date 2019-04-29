@@ -2,6 +2,7 @@ package com.ssaw.ssawauthenticatecenterfeign.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.ssaw.ssawauthenticatecenterfeign.store.UserContextHolder;
+import com.ssaw.ssawauthenticatecenterfeign.util.AuthUtil;
 import com.ssaw.ssawauthenticatecenterfeign.vo.user.SimpleUserAttributeVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,9 +25,12 @@ public class SetUserInfoInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String userInfo = null;
         try {
-            userInfo = URLDecoder.decode(request.getHeader("userInfo"), "UTF-8");
+            String userInfoHeader = request.getHeader(AuthUtil.USER_INFO);
+            if (StringUtils.isNotBlank(userInfoHeader)) {
+                userInfo = URLDecoder.decode(userInfoHeader, "UTF-8");
+            }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("解析用户信息失败:", e);
         }
         if (StringUtils.isNotBlank(userInfo)) {
             try {

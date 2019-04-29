@@ -21,6 +21,9 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
+    /**
+     * 使用Feign时会执行该拦截器 添加请求头
+     */
     @Configuration
     public class FeignConfiguration implements RequestInterceptor {
 
