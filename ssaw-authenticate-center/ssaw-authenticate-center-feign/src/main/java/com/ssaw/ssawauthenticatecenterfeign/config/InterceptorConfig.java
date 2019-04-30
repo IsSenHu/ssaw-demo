@@ -35,10 +35,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SetUserInfoInterceptor())
                 .addPathPatterns("/**").order(Integer.MIN_VALUE)
-                .excludePathPatterns(e.getSystemWhiteList());
+                .excludePathPatterns(e.getSystemWhiteList()).excludePathPatterns(e.getStaticResourceList());
         registry.addInterceptor(new UserContextInterceptor())
                 .addPathPatterns("/**").order(Integer.MIN_VALUE + 1)
-                .excludePathPatterns(e.getWhiteList()).excludePathPatterns(e.getSystemWhiteList());
+                .excludePathPatterns(e.getWhiteList()).excludePathPatterns(e.getSystemWhiteList()).excludePathPatterns(e.getStaticResourceList());
     }
 
     /**

@@ -61,13 +61,6 @@ public interface UserService extends UserDetailsService {
      */
     CommonResult<UserInfoVO> login(UserLoginVO userLoginVO);
 
-    /**
-     * 注册系统内部后台用户接口
-     * @param createUserVO 用户注册请求对象
-     * @return 注册结果
-     */
-    CommonResult<String> register(CreateUserVO createUserVO);
-
 
     /**
      * 根据ID查询用户

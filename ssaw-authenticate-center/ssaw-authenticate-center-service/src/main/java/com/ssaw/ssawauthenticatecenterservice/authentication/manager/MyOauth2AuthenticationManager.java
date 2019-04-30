@@ -1,9 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.authentication.manager;
 
-import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.ssawauthenticatecenterfeign.vo.scope.ScopeVO;
 import com.ssaw.ssawauthenticatecenterservice.dao.entity.client.ClientDetailsEntity;
-import com.ssaw.ssawauthenticatecenterservice.properties.SpringSummerAutumnWinterManageProperties;
 import com.ssaw.ssawauthenticatecenterservice.authentication.cache.CacheManager;
 import com.ssaw.ssawauthenticatecenterservice.details.UserDetailsImpl;
 import lombok.Setter;
@@ -136,8 +134,7 @@ public class MyOauth2AuthenticationManager implements AuthenticationManager, Ini
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         ClientDetailsEntity client;
-        SpringSummerAutumnWinterManageProperties springSummerAutumnWinterManageProperties = ApplicationContextUtil.getBean(SpringSummerAutumnWinterManageProperties.class);
-        String clientId = user.getInner() ? springSummerAutumnWinterManageProperties.getClientId() : auth.getOAuth2Request().getClientId();
+        String clientId = auth.getOAuth2Request().getClientId();
         try {
             client = (ClientDetailsEntity) clientDetailsService.loadClientByClientId(clientId);
         } catch (ClientRegistrationException e) {

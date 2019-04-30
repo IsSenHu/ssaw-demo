@@ -36,4 +36,7 @@ public class EnableResourceAutoProperties {
 
     /** 系统白名单 */
     private List<String> systemWhiteList = new ArrayList<>(0);
+
+    /** 静态资源路径 */
+    private List<String> staticResourceList = new ArrayList<>(0);
 }

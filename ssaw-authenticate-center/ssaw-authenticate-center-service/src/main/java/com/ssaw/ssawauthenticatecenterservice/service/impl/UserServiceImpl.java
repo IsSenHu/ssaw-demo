@@ -1,6 +1,7 @@
 package com.ssaw.ssawauthenticatecenterservice.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Sets;
 import com.ssaw.commons.util.app.ApplicationContextUtil;
 import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.vo.CommonResult;
@@ -269,7 +270,6 @@ public class UserServiceImpl extends BaseService implements UserService {
             return createResult(ERROR, "用户名不能修改", updateUserVO);
         }
         oldUser.setUpdateTime(LocalDateTime.now());
-        // TODO 是否内部用户 和 自定义信息
         oldUser.setRealName(updateUserVO.getRealName());
         oldUser.setIsEnable(updateUserVO.getIsEnable());
         oldUser.setDescription(updateUserVO.getDescription());
@@ -305,21 +305,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
     }
 
-    /**
-     * 注册系统内部后台用户接口
-     * @param createUserVO 用户注册请求对象
-     * @return 注册结果
-     */
-    @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public CommonResult<String> register(CreateUserVO createUserVO) {
-        CommonResult<CreateUserVO> result = this.add(createUserVO);
-        if (result.getCode() != SUCCESS) {
-            throw new RuntimeException("注册用户失败");
-        }
-        return createResult(SUCCESS, "成功", createUserVO.getUsername());
-    }
-
     private CommonResult<UserInfoVO> baseLogin(UserLoginVO vo) {
         UserDetailsImpl userDetails = (UserDetailsImpl) loadUserByUsername(vo.getUsername());
         // 判断用户密码是否正确
@@ -328,8 +313,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
 
         // 用户的权限
-        Set<String> scope = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-        Set<String> resourceIds = userDetails.getResourceIds();
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        Set<String> scope = CollectionUtils.isNotEmpty(authorities) ? authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()) : Sets.newHashSet();
+        Set<String> resourceIds = CollectionUtils.isNotEmpty(userDetails.getResourceIds()) ? userDetails.getResourceIds() : Sets.newHashSet();
         return createResult(SUCCESS, "成功", new UserInfoVO(userDetails.getId(), userDetails.getUsername(), null, scope, menuService.getMenus(scope, resourceIds), "", JSON.parseObject(userDetails.getOtherInfo(), Map.class), menuService.getButtons(scope, resourceIds)));
     }
 }

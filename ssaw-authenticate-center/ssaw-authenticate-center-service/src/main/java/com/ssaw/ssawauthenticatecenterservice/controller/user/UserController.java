@@ -19,7 +19,6 @@ import com.ssaw.ssawauthenticatecenterservice.controller.BaseController;
 import com.ssaw.ssawauthenticatecenterservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,18 +111,6 @@ public class UserController extends BaseController {
     @RequestLog(desc = "用户登录")
     public CommonResult<UserInfoVO> login(@RequestBody UserLoginVO userLoginVO) {
         return userService.login(userLoginVO);
-    }
-
-    /**
-     * 注册系统内部后台用户接口
-     * @param createUserVO 用户注册请求对象
-     * @return 注册结果
-     */
-    @PostMapping("/register")
-    @RequestLog(desc = "注册系统内部后台用户接口")
-    @SecurityMethod(antMatcher = "/api/user/register", scope = "注册用户")
-    public CommonResult<String> register(@RequestBody CreateUserVO createUserVO) {
-        return userService.register(createUserVO);
     }
 
     /**

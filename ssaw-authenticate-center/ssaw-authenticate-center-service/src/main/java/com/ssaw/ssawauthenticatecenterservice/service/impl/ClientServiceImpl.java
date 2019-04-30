@@ -68,7 +68,7 @@ public class ClientServiceImpl extends BaseService implements ClientService {
         // 校验client与用户的绑定关系
         UserDetailsImpl userDetails = SecurityUtils.getUserDetails(UserDetailsImpl.class);
         ClientDetailsEntity clientDetailsEntity = optionalDetailsEntity.get();
-        if(!Objects.isNull(userDetails) && !userDetails.getInner() && !userDetails.getId().equals(clientDetailsEntity.getUserId())) {
+        if(!Objects.isNull(userDetails) && !userDetails.getId().equals(clientDetailsEntity.getUserId())) {
             throw new InvalidClientException("This user(" + userDetails.getId() + ") is not match this client(" + clientId + ")");
         }
         return clientDetailsEntity;

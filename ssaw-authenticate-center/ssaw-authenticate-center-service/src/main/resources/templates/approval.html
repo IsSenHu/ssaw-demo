@@ -16,7 +16,7 @@
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <h2 class="panel-title">
-                            您正在进行授权!
+                            您正在进行授权 !!!
                         </h2>
                     </div>
                     <div class="panel-body">
@@ -28,19 +28,25 @@
                             <input th:if="${csrfToken != null}" th:name="${csrfToken.parameterName}" th:value="${csrfToken.token}" type="hidden">
                             <ul>
                                 <li th:each="scopeItem:${scopes}">
-                                    <span th:text="${scopeItem.key}"></span>
+                                    <p th:text="${scopeItem.key}"></p>
                                     <ul>
-                                        <li th:each="scope:${scopeItem.value}">
+                                        <li th:each="scope:${scopeItem.value}" style="list-style: none;">
                                             <div class="form-group">
-                                                <span th:text="${scope.key.substring(scope.key.indexOf('_') + 1)}"></span>:
-                                                &nbsp;<label>
-                                                <input th:if="${scope.value.equals('true')}" type="radio" th:name="${scope.key}" checked value="true">
-                                                <input th:if="${!scope.value.equals('true')}" type="radio" th:name="${scope.key}" checked value="true">
-                                            </label>同意
-                                                &nbsp;<label>
-                                                <input th:if="${!scope.key.equals('true')}" type="radio" th:name="${scope.key}" checked value="false">
-                                                <input th:if="${scope.key.equals('true')}" type="radio" th:name="${scope.key}" checked value="false">
-                                            </label>拒绝
+                                                <div class="row clearfix">
+                                                    <div class="col-md-3 column">
+                                                        <span th:text="${scope.key.substring(scope.key.indexOf('_') + 1)}"></span>
+                                                    </div>
+                                                    <div class="col-md-9 column">&nbsp;
+                                                        <label>
+                                                            <input th:if="${scope.value.equals('true')}" type="radio" th:name="${scope.key}" checked value="true">
+                                                            <input th:if="${!scope.value.equals('true')}" type="radio" th:name="${scope.key}" checked value="true">
+                                                        </label>同意&nbsp;
+                                                        <label>
+                                                            <input th:if="${!scope.key.equals('true')}" type="radio" th:name="${scope.key}" checked value="false">
+                                                            <input th:if="${scope.key.equals('true')}" type="radio" th:name="${scope.key}" checked value="false">
+                                                        </label>拒绝
+                                                    </div>
+                                                </div>
                                             </div>
                                         </li>
                                     </ul>
