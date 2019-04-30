@@ -39,13 +39,10 @@ public class CommitLeaveHandler extends BaseHandler {
 
     private final EmployeeService employeeService;
 
-    private final KaoQinDao kaoQinDao;
-
     @Autowired
-    public CommitLeaveHandler(EmployeeService employeeService, CommitLeaveMapper commitLeaveMapper, KaoQinDao kaoQinDao) {
+    public CommitLeaveHandler(EmployeeService employeeService, CommitLeaveMapper commitLeaveMapper) {
         this.employeeService = employeeService;
         this.commitLeaveMapper = commitLeaveMapper;
-        this.kaoQinDao = kaoQinDao;
     }
 
     public void work(CommitLeaveReqVO reqVO) {
@@ -53,12 +50,6 @@ public class CommitLeaveHandler extends BaseHandler {
             EmployeePO employeePO = employeeService.getEmployeePO(reqVO.getBn());
             if (Objects.isNull(employeePO)) {
                 return;
-            }
-            // 记录redis 该调休申请已经提交过了
-            boolean commitLeave = kaoQinDao.insertCommitLeave(reqVO);
-            log.info("记录redis 该调休申请已经提交过了:{}", commitLeave);
-            if (!commitLeave) {
-                throw new IllegalArgumentException("记录redis失败!");
             }
             realWork(reqVO, employeePO);
         } catch (Exception e) {
@@ -80,7 +71,7 @@ public class CommitLeaveHandler extends BaseHandler {
         calLeaveTimeObj.put("LEAVE_TYPE", "19");
         calLeaveTimeObj.put("ID", 0);
         calLeaveTimeObj.put("flag", 0);
-        String leaveTime = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
+        String leaveTime = HttpConnectionUtils.doPost("http://ehr.1919.cn:81/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
                 calLeaveTimeObj.toJSONString(), false);
         assert leaveTime != null;
         String errorMsg = ((JSONObject) JSON.parseArray(leaveTime).get(0)).getString("ErrorMsg");
@@ -126,7 +117,7 @@ public class CommitLeaveHandler extends BaseHandler {
         reqJsonObject.put("JDataXML", jDataXml);
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
         String json = JSON.toJSONString(reqJsonObject);
-        String result = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
+        String result = HttpConnectionUtils.doPost("http://ehr.1919.cn:81/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
                 json, false);
         log.info("提交调休申请结果:{}", result);
         final String addedID = "AddedID";
@@ -140,7 +131,7 @@ public class CommitLeaveHandler extends BaseHandler {
     }
 
     /**
-     * 每小时执行一次
+     * 10分钟执行一次
      */
     @Scheduled(fixedDelay = 1000 * 60 * 60, initialDelay = 30000)
     public void task() {

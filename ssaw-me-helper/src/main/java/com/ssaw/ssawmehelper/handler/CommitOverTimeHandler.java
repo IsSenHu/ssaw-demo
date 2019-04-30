@@ -37,13 +37,10 @@ public class CommitOverTimeHandler extends BaseHandler {
 
     private final EmployeeService employeeService;
 
-    private final KaoQinDao kaoQinDao;
-
     @Autowired
-    public CommitOverTimeHandler(CommitOverTimeMapper commitOverTimeMapper, EmployeeService employeeService, KaoQinDao kaoQinDao) {
+    public CommitOverTimeHandler(CommitOverTimeMapper commitOverTimeMapper, EmployeeService employeeService) {
         this.commitOverTimeMapper = commitOverTimeMapper;
         this.employeeService = employeeService;
-        this.kaoQinDao = kaoQinDao;
     }
 
     public void work(CommitOverTimeInfoReqVO reqVO) {
@@ -51,12 +48,6 @@ public class CommitOverTimeHandler extends BaseHandler {
             EmployeePO employee = employeeService.getEmployeePO(reqVO.getBn());
             if (Objects.isNull(employee)) {
                 return;
-            }
-            // 记录redis 该加班申请已提交过了
-            boolean commitOverTime = kaoQinDao.insertCommitOverTime(reqVO);
-            log.info("记录redis 该加班申请已提交过了:{}", commitOverTime);
-            if (!commitOverTime) {
-                throw new IllegalArgumentException("记录redis失败!");
             }
             realWork(reqVO, employee);
         } catch (Exception e) {
@@ -139,9 +130,9 @@ public class CommitOverTimeHandler extends BaseHandler {
     }
 
     /**
-     * 每小时执行一次
+     * 10分钟执行一次
      */
-    @Scheduled(fixedDelay = 1000 * 60 * 60, initialDelay = 30000)
+    @Scheduled(fixedDelay = 1000 * 60 * 10, initialDelay = 30000)
     public void task() {
         QueryWrapper<CommitOverTimePO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("success", false);

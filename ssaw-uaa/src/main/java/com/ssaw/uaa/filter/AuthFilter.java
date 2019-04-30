@@ -82,7 +82,7 @@ public class AuthFilter implements GlobalFilter {
                         .body(Mono.just(CommonResult.createResult(ERROR, e.getMessage(), null)), CommonResult.class).then();
             }
         }
-        // OAUTH2 认证
+        // OAUTH2 认证git
         else {
             try {
                 String value = request.getPath().value();
