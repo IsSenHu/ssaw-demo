@@ -25,7 +25,7 @@ public class JwtUtil {
 
     public static final String BEARER = "Bearer";
 
-    private static final long ONLINE_TIME = 86400;
+    private static final long ONLINE_TIME = 86400000;
 
     public static String generateToken(UserInfoVO user) {
         HashMap<String, Object> map = new HashMap<>(2);

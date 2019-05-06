@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests().antMatchers(LOGIN_PAGE, LOGOUT_PAGE).permitAll();
-        http.formLogin().loginPage(LOGIN_PAGE).loginProcessingUrl(FORM_ACTION).failureHandler(new MyAuthenticationFailHandler()).defaultSuccessUrl("/index", true);
+        http.formLogin().loginPage(LOGIN_PAGE).loginProcessingUrl(FORM_ACTION).failureHandler(new MyAuthenticationFailHandler()).defaultSuccessUrl("/index", false);
         http.logout().logoutUrl(LOGOUT_PAGE).logoutSuccessUrl(LOGIN_PAGE);
     }
 
