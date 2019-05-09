@@ -84,7 +84,7 @@ public class AuthFilter implements GlobalFilter {
                 return response.writeWith(Mono.just(dataBuffer));
             }
         }
-        // OAUTH2 认证git
+        // OAUTH2 认证
         else {
             try {
                 String value = request.getPath().value();

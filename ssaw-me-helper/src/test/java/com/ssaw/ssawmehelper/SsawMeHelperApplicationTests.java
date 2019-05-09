@@ -1,8 +1,6 @@
 package com.ssaw.ssawmehelper;
 
-import com.ssaw.ssawmehelper.dao.redis.GoodsDemoDao;
-import com.ssaw.ssawmehelper.dao.redis.MyCollectionDao;
-import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
+import com.ssaw.ssawmehelper.dao.redis.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,16 @@ public class SsawMeHelperApplicationTests {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private MarketDao marketDao;
+
+    @Autowired
+    private LogDao logDao;
+
     @Test
-    public void contextLoads() throws InterruptedException {
-//        for (long i = 0; i < 1000L; i++) {
-//            Thread.sleep(1);
-//            goodsDemoDao.insertViewedUser(i);
-//        }
-         stringRedisTemplate.opsForZSet().removeRange("viewed_user", 0L, -2);
+    public void contextLoads() {
+        for (int i = 0; i < 1000; i++) {
+            logDao.recent("日志" + i);
+        }
     }
 }
