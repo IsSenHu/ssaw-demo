@@ -1,4 +1,4 @@
-package com.ssaw.ssawmehelper.api.constants;
+package com.ssaw.ssawmehelper.constants;
 
 /**
  * redmine常量类

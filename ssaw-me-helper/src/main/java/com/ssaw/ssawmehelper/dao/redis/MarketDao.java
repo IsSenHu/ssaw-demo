@@ -18,11 +18,11 @@ public class MarketDao {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    public void watch() {
+    public void watch(String name) {
         stringRedisTemplate.watch("HuSen:1");
 
         stringRedisTemplate.multi();
-        stringRedisTemplate.opsForValue().set("HuSen:1", "haode");
+        stringRedisTemplate.opsForValue().set("HuSen:1", name);
         stringRedisTemplate.exec();
     }
 }

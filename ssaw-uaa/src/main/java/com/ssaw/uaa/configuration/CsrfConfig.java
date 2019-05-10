@@ -45,7 +45,6 @@ public class CsrfConfig {
             if (!CorsUtils.isCorsRequest(request)) {
                 return chain.filter(ctx);
             }
-
             HttpHeaders requestHeaders = request.getHeaders();
             ServerHttpResponse response = ctx.getResponse();
             HttpMethod requestMethod = requestHeaders.getAccessControlRequestMethod();

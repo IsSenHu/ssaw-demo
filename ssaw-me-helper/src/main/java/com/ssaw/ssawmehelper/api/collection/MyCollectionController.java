@@ -4,6 +4,9 @@ import com.ssaw.commons.annotations.RequestLog;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
+import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
 import com.ssaw.ssawmehelper.api.BaseController;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionCreateRequestVO;
 import com.ssaw.ssawmehelper.model.vo.collection.MyCollectionQueryVO;
@@ -21,6 +24,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/api/collection")
+@SecurityApi(index = "1", group = "生活", menu = @Menu(index = "1-2", title = "收藏", scope = "收藏", to = "/my/helper/myCollection"))
 public class MyCollectionController extends BaseController {
 
     private final MyCollectionService myCollectionService;
@@ -39,6 +43,7 @@ public class MyCollectionController extends BaseController {
      */
     @RequestLog(desc = "新增收藏类别")
     @GetMapping("/newClassification")
+    @SecurityMethod(antMatcher = "/api/collection/newClassification*", scope = "新增收藏类别")
     public CommonResult<String> newClassification(@RequestParam("classification") String classification) {
         return myCollectionService.newClassification(classification);
     }
@@ -50,6 +55,7 @@ public class MyCollectionController extends BaseController {
      */
     @RequestLog(desc = "获取所有收藏类别")
     @GetMapping("/allClassification")
+    @SecurityMethod(antMatcher = "/api/collection/allClassification", scope = "获取所有收藏类别")
     public CommonResult<Set<String>> allClassification() {
         return myCollectionService.allClassification();
     }
@@ -62,6 +68,7 @@ public class MyCollectionController extends BaseController {
      */
     @RequestLog(desc = "创建我的收藏")
     @PostMapping("/create")
+    @SecurityMethod(antMatcher = "/api/collection/create", scope = "创建我的收藏")
     public CommonResult<MyCollectionCreateRequestVO> create(@RequestBody MyCollectionCreateRequestVO requestVO) {
         return myCollectionService.create(requestVO);
     }
@@ -74,6 +81,7 @@ public class MyCollectionController extends BaseController {
      */
     @RequestLog(desc = "增加收藏分数")
     @PostMapping("/addScore/{id}")
+    @SecurityMethod(antMatcher = "/api/collection/addScore/*", scope = "增加收藏分数")
     public CommonResult<Long> addScore(@PathVariable(name = "id") Long id) {
         return myCollectionService.addScore(id);
     }
@@ -86,6 +94,7 @@ public class MyCollectionController extends BaseController {
      */
     @RequestLog(desc = "收藏列表")
     @RequestMapping("/list")
+    @SecurityMethod(antMatcher = "/api/collection/list", scope = "收藏列表")
     public TableData<MyCollectionVO> list(@RequestBody PageReqVO<MyCollectionQueryVO> pageReqVO) {
         return myCollectionService.list(pageReqVO);
     }

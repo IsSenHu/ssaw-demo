@@ -30,10 +30,36 @@ public class SsawMeHelperApplicationTests {
     @Autowired
     private LogDao logDao;
 
+    @Autowired
+    private AutoCompletionDao autoCompletionDao;
+
+    @Autowired
+    private LockDao lockDao;
+
     @Test
     public void contextLoads() {
-        for (int i = 0; i < 1000; i++) {
-            logDao.recent("日志" + i);
-        }
+        marketDao.watch("胡森");
+    }
+
+    @Test
+    public void demo2() {
+        marketDao.watch("你好");
+    }
+
+    @Test
+    public void demo3() {
+        autoCompletionDao.get("ac");
+    }
+
+    @Test
+    public void demo4() throws InterruptedException {
+        lockDao.lock("husen");
+        lockDao.unlock("husen");
+    }
+
+    @Test
+    public void demo5() throws InterruptedException {
+        lockDao.lock("husen");
+        lockDao.unlock("husen");
     }
 }
